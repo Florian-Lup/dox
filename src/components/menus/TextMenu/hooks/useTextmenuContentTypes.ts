@@ -12,21 +12,17 @@ export const useTextmenuContentTypes = (editor: Editor) => {
       },
       {
         icon: 'Pilcrow',
-        onClick: () => ctx.editor.chain().focus().lift('taskItem').liftListItem('listItem').setParagraph().run(),
+        onClick: () => ctx.editor.chain().focus().liftListItem('listItem').setParagraph().run(),
         id: 'paragraph',
         disabled: () => !ctx.editor.can().setParagraph(),
         isActive: () =>
-          ctx.editor.isActive('paragraph') &&
-          !ctx.editor.isActive('orderedList') &&
-          !ctx.editor.isActive('bulletList') &&
-          !ctx.editor.isActive('taskList'),
+          ctx.editor.isActive('paragraph') && !ctx.editor.isActive('orderedList') && !ctx.editor.isActive('bulletList'),
         label: 'Paragraph',
         type: 'option',
       },
       {
         icon: 'Heading1',
-        onClick: () =>
-          ctx.editor.chain().focus().lift('taskItem').liftListItem('listItem').setHeading({ level: 1 }).run(),
+        onClick: () => ctx.editor.chain().focus().liftListItem('listItem').setHeading({ level: 1 }).run(),
         id: 'heading1',
         disabled: () => !ctx.editor.can().setHeading({ level: 1 }),
         isActive: () => ctx.editor.isActive('heading', { level: 1 }),
@@ -35,8 +31,7 @@ export const useTextmenuContentTypes = (editor: Editor) => {
       },
       {
         icon: 'Heading2',
-        onClick: () =>
-          ctx.editor.chain().focus().lift('taskItem').liftListItem('listItem').setHeading({ level: 2 }).run(),
+        onClick: () => ctx.editor.chain().focus().liftListItem('listItem').setHeading({ level: 2 }).run(),
         id: 'heading2',
         disabled: () => !ctx.editor.can().setHeading({ level: 2 }),
         isActive: () => ctx.editor.isActive('heading', { level: 2 }),
@@ -45,8 +40,7 @@ export const useTextmenuContentTypes = (editor: Editor) => {
       },
       {
         icon: 'Heading3',
-        onClick: () =>
-          ctx.editor.chain().focus().lift('taskItem').liftListItem('listItem').setHeading({ level: 3 }).run(),
+        onClick: () => ctx.editor.chain().focus().liftListItem('listItem').setHeading({ level: 3 }).run(),
         id: 'heading3',
         disabled: () => !ctx.editor.can().setHeading({ level: 3 }),
         isActive: () => ctx.editor.isActive('heading', { level: 3 }),
