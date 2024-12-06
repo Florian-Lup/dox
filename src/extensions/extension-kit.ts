@@ -31,8 +31,6 @@ import {
   TrailingNode,
   Typography,
   Underline,
-  Columns,
-  Column,
   UniqueID,
 } from '.'
 
@@ -46,8 +44,6 @@ interface ExtensionKitProps {
 
 export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Document,
-  Columns,
-  Column,
   Selection,
   Heading.configure({
     levels: [1, 2, 3, 4, 5, 6],

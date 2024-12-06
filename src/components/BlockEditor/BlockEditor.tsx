@@ -9,7 +9,6 @@ import '@/styles/index.css'
 
 import { Sidebar } from '@/components/Sidebar'
 import ImageBlockMenu from '@/extensions/ImageBlock/components/ImageBlockMenu'
-import { ColumnsMenu } from '@/extensions/MultiColumn/menus'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
@@ -50,7 +49,6 @@ export const BlockEditor = ({
         <ContentItemMenu editor={editor} />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />
         <TextMenu editor={editor} />
-        <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
         <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
       </div>
     </div>
