@@ -25,11 +25,7 @@ import {
   Selection,
   SlashCommand,
   StarterKit,
-  Table,
   TableOfContents,
-  TableCell,
-  TableHeader,
-  TableRow,
   TextAlign,
   TextStyle,
   TrailingNode,
@@ -58,7 +54,7 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   }),
   HorizontalRule,
   UniqueID.configure({
-    types: ['paragraph', 'heading', 'blockquote', 'codeBlock', 'table'],
+    types: ['paragraph', 'heading', 'blockquote', 'codeBlock'],
     filterTransaction: transaction => !isChangeOrigin(transaction),
   }),
   StarterKit.configure({
@@ -116,10 +112,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   }).configure({
     types: ['heading', 'paragraph'],
   }),
-  Table,
-  TableCell,
-  TableHeader,
-  TableRow,
   Typography,
   Placeholder.configure({
     includeChildren: true,
