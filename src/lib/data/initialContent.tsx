@@ -9,12 +9,6 @@ export const initialContent = {
       },
       content: [
         {
-          type: 'emoji',
-          attrs: {
-            name: 'fire',
-          },
-        },
-        {
           type: 'text',
           text: ' Next.js + Common Tongue Block Editor Template',
         },
@@ -464,24 +458,6 @@ export const initialContent = {
                 {
                   type: 'text',
                   text: '@tiptap-pro/extension-drag-handle-react',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap-pro/extension-emoji',
                 },
               ],
             },

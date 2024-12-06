@@ -12,7 +12,6 @@ export type AIDropdownProps = {
   onFixSpelling: () => void
   onMakeShorter: () => void
   onMakeLonger: () => void
-  onEmojify: () => void
   onTldr: () => void
   onTranslate: (language: Language) => void
   onTone: (tone: string) => void
@@ -21,7 +20,6 @@ export type AIDropdownProps = {
 
 export const AIDropdown = ({
   onCompleteSentence,
-  onEmojify,
   onFixSpelling,
   onMakeLonger,
   onMakeShorter,
@@ -93,12 +91,6 @@ export const AIDropdown = ({
             <DropdownButton>
               <Icon name="Ellipsis" />
               Tl;dr:
-            </DropdownButton>
-          </Dropdown.Item>
-          <Dropdown.Item onClick={onEmojify}>
-            <DropdownButton>
-              <Icon name="SmilePlus" />
-              Emojify
             </DropdownButton>
           </Dropdown.Item>
           <Dropdown.Sub>

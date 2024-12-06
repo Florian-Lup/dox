@@ -20,7 +20,6 @@
     "@tippyjs/react": "^4.2.6",
     "@tiptap-pro/extension-drag-handle": "^2.16.0",
     "@tiptap-pro/extension-drag-handle-react": "^2.16.0",
-    "@tiptap-pro/extension-emoji": "^2.16.0",
     "@tiptap-pro/extension-file-handler": "^2.16.0",
     "@tiptap-pro/extension-mathematics": "^2.16.0",
     "@tiptap-pro/extension-node-range": "^2.16.0",

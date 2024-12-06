@@ -27,10 +27,6 @@ export const useTextmenuCommands = (editor: Editor) => {
     () => editor.chain().focus().aiSimplify({ stream: true, format: 'rich-text' }).run(),
     [editor],
   )
-  const onEmojify = useCallback(
-    () => editor.chain().focus().aiEmojify({ stream: true, format: 'rich-text' }).run(),
-    [editor],
-  )
   const onCompleteSentence = useCallback(
     () => editor.chain().focus().aiComplete({ stream: true, format: 'rich-text' }).run(),
     [editor],
@@ -106,7 +102,6 @@ export const useTextmenuCommands = (editor: Editor) => {
     onSetFont,
     onSetFontSize,
     onSimplify,
-    onEmojify,
     onCompleteSentence,
     onFixSpelling,
     onMakeLonger,

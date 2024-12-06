@@ -11,7 +11,6 @@ import {
   Color,
   Document,
   Dropcursor,
-  Emoji,
   Figcaption,
   FileHandler,
   Focus,
@@ -38,7 +37,6 @@ import {
   TrailingNode,
   Typography,
   Underline,
-  emojiSuggestion,
   Columns,
   Column,
   TaskItem,
@@ -118,10 +116,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
           .run()
       })
     },
-  }),
-  Emoji.configure({
-    enableEmoticons: true,
-    suggestion: emojiSuggestion,
   }),
   TextAlign.extend({
     addKeyboardShortcuts() {
