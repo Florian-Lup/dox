@@ -87,6 +87,7 @@ export const useBlockEditor = ({
           autocomplete: 'off',
           autocorrect: 'off',
           autocapitalize: 'off',
+          spellcheck: 'false',
           class: 'min-h-full',
         },
       },
