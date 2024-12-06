@@ -76,15 +76,6 @@ export const useTextmenuContentTypes = (editor: Editor) => {
         label: 'Numbered list',
         type: 'option',
       },
-      {
-        icon: 'ListTodo',
-        onClick: () => ctx.editor.chain().focus().toggleTaskList().run(),
-        id: 'todoList',
-        disabled: () => !ctx.editor.can().toggleTaskList(),
-        isActive: () => ctx.editor.isActive('taskList'),
-        label: 'Todo list',
-        type: 'option',
-      },
     ],
   })
 }

@@ -78,16 +78,6 @@ export const GROUPS: Group[] = [
         },
       },
       {
-        name: 'taskList',
-        label: 'Task List',
-        iconName: 'ListTodo',
-        description: 'Task list with todo items',
-        aliases: ['todo'],
-        action: editor => {
-          editor.chain().focus().toggleTaskList().run()
-        },
-      },
-      {
         name: 'blockquote',
         label: 'Blockquote',
         iconName: 'Quote',

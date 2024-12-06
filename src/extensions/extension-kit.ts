@@ -37,8 +37,6 @@ import {
   Underline,
   Columns,
   Column,
-  TaskItem,
-  TaskList,
   UniqueID,
 } from '.'
 
@@ -53,10 +51,6 @@ interface ExtensionKitProps {
 export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Document,
   Columns,
-  TaskList,
-  TaskItem.configure({
-    nested: true,
-  }),
   Column,
   Selection,
   Heading.configure({

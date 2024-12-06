@@ -18,8 +18,6 @@ export { Paragraph } from '@tiptap/extension-paragraph'
 export { BulletList } from '@tiptap/extension-bullet-list'
 export { OrderedList } from '@tiptap/extension-ordered-list'
 export { Collaboration } from '@tiptap/extension-collaboration'
-export { TaskItem } from '@tiptap/extension-task-item'
-export { TaskList } from '@tiptap/extension-task-list'
 export { FileHandler } from '@tiptap-pro/extension-file-handler'
 export { UniqueID } from '@tiptap-pro/extension-unique-id'
 
