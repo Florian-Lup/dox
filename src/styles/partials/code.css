@@ -1,6 +1,6 @@
 .ProseMirror {
   code {
-    @apply caret-black text-blue-600 bg-blue-100 rounded-sm shadow-sm font-mono;
+    @apply caret-black text-blue-600 bg-blue-100 rounded-sm shadow-sm font-mono px-0.5;
 
     &::selection {
       @apply bg-blue-200;
