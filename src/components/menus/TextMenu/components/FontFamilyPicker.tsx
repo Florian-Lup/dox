@@ -9,24 +9,25 @@ const FONT_FAMILY_GROUPS = [
   {
     label: 'Sans Serif',
     options: [
-      { label: 'Inter', value: '' },
-      { label: 'Arial', value: 'Arial' },
-      { label: 'Helvetica', value: 'Helvetica' },
+      { label: 'Inter', value: 'Inter' },
+      { label: 'Arial', value: 'Arial, sans-serif' },
+      { label: 'Segoe UI', value: '"Segoe UI", sans-serif' },
     ],
   },
   {
     label: 'Serif',
     options: [
-      { label: 'Times New Roman', value: 'Times' },
-      { label: 'Garamond', value: 'Garamond' },
-      { label: 'Georgia', value: 'Georgia' },
+      { label: 'Times New Roman', value: '"Times New Roman", serif' },
+      { label: 'Georgia', value: 'Georgia, serif' },
+      { label: 'Cambria', value: 'Cambria, serif' },
     ],
   },
   {
     label: 'Monospace',
     options: [
-      { label: 'Courier', value: 'Courier' },
-      { label: 'Courier New', value: 'Courier New' },
+      { label: 'Consolas', value: 'Consolas, monospace' },
+      { label: 'Courier New', value: '"Courier New", monospace' },
+      { label: 'Monaco', value: 'Monaco, monospace' },
     ],
   },
 ]
@@ -54,20 +55,17 @@ export const FontFamilyPicker = ({ onChange, value }: FontFamilyPickerProps) => 
       </Dropdown.Trigger>
       <Dropdown.Content asChild>
         <Surface className="flex flex-col gap-1 px-2 py-4">
-          {FONT_FAMILY_GROUPS.map(group => (
-            <div className="mt-2.5 first:mt-0 gap-0.5 flex flex-col" key={group.label}>
-              <DropdownCategoryTitle>{group.label}</DropdownCategoryTitle>
-              {group.options.map(font => (
-                <DropdownButton
-                  isActive={value === font.value}
-                  onClick={selectFont(font.value)}
-                  key={`${font.label}_${font.value}`}
-                >
-                  <span style={{ fontFamily: font.value }}>{font.label}</span>
-                </DropdownButton>
-              ))}
-            </div>
-          ))}
+          {FONT_FAMILY_GROUPS.flatMap(group =>
+            group.options.map(font => (
+              <DropdownButton
+                isActive={value === font.value}
+                onClick={selectFont(font.value)}
+                key={`${font.label}_${font.value}`}
+              >
+                <span style={{ fontFamily: font.value }}>{font.label}</span>
+              </DropdownButton>
+            )),
+          )}
         </Surface>
       </Dropdown.Content>
     </Dropdown.Root>
