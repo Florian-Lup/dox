@@ -320,7 +320,7 @@ export const initialContent = {
               content: [
                 {
                   type: 'text',
-                  text: 'AI implementation with text and image generation and auto completion via the ',
+                  text: 'AI implementation with text generation and auto completion via the ',
                 },
                 {
                   type: 'text',
@@ -774,24 +774,6 @@ export const initialContent = {
                 {
                   type: 'text',
                   text: '@tiptap/extension-horizontal-rule',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap/extension-image',
                 },
               ],
             },

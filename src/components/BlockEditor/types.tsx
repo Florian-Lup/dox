@@ -32,9 +32,3 @@ export type AiToneOption = {
   label: string
   value: AiTone
 }
-
-export type AiImageStyle = {
-  name: string
-  label: string
-  value: string
-}

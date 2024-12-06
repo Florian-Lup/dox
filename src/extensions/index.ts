@@ -23,7 +23,6 @@ export { UniqueID } from '@tiptap-pro/extension-unique-id'
 
 export { Selection } from './Selection'
 export { AiWriter } from './AiWriter'
-export { AiImage } from './AiImage'
 export { HorizontalRule } from './HorizontalRule'
 export { Heading } from './Heading'
 export { CodeBlock } from './CodeBlock'
