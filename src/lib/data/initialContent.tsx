@@ -464,12 +464,6 @@ export const initialContent = {
                 class: null,
                 textAlign: 'left',
               },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap-pro/extension-file-handler',
-                },
-              ],
             },
           ],
         },

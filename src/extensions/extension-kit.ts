@@ -12,7 +12,6 @@ import {
   Document,
   Dropcursor,
   Figcaption,
-  FileHandler,
   Focus,
   FontFamily,
   FontSize,
