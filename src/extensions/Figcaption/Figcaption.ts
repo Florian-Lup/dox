@@ -1,7 +1,5 @@
 import { mergeAttributes, Node } from '@tiptap/core'
 
-import { Image } from '../Image'
-
 export const Figcaption = Node.create({
   name: 'figcaption',
 
@@ -53,7 +51,7 @@ export const Figcaption = Node.create({
       },
 
       // On Backspace at the beginning of line,
-      // dont delete content of image before
+      // allow default behavior
       Backspace: ({ editor }) => {
         const {
           state: {
@@ -63,18 +61,6 @@ export const Figcaption = Node.create({
 
         if (!empty || $from.parent.type !== this.type) {
           return false
-        }
-
-        const isAtStart = $from.parentOffset === 0
-
-        if (!isAtStart) {
-          return false
-        }
-
-        // if the node before is of type image, don't do anything
-        const nodeBefore = editor.state.doc.nodeAt($from.pos - 2)
-        if (nodeBefore?.type.name === Image.name) {
-          return true
         }
 
         return false

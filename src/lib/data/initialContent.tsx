@@ -342,14 +342,6 @@ export const initialContent = {
       ],
     },
     {
-      type: 'imageBlock',
-      attrs: {
-        src: '/placeholder-image.jpg',
-        width: '100%',
-        align: 'center',
-      },
-    },
-    {
       type: 'heading',
       attrs: {
         textAlign: 'left',
