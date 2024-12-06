@@ -10,8 +10,6 @@ export const useTextmenuCommands = (editor: Editor) => {
   const onCode = useCallback(() => editor.chain().focus().toggleCode().run(), [editor])
   const onCodeBlock = useCallback(() => editor.chain().focus().toggleCodeBlock().run(), [editor])
 
-  const onSubscript = useCallback(() => editor.chain().focus().toggleSubscript().run(), [editor])
-  const onSuperscript = useCallback(() => editor.chain().focus().toggleSuperscript().run(), [editor])
   const onAlignLeft = useCallback(() => editor.chain().focus().setTextAlign('left').run(), [editor])
   const onAlignCenter = useCallback(() => editor.chain().focus().setTextAlign('center').run(), [editor])
   const onAlignRight = useCallback(() => editor.chain().focus().setTextAlign('right').run(), [editor])
@@ -89,8 +87,6 @@ export const useTextmenuCommands = (editor: Editor) => {
     onUnderline,
     onCode,
     onCodeBlock,
-    onSubscript,
-    onSuperscript,
     onAlignLeft,
     onAlignCenter,
     onAlignRight,

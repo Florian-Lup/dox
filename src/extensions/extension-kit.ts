@@ -25,8 +25,6 @@ import {
   Selection,
   SlashCommand,
   StarterKit,
-  Subscript,
-  Superscript,
   Table,
   TableOfContents,
   TableCell,
@@ -124,8 +122,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   }).configure({
     types: ['heading', 'paragraph'],
   }),
-  Subscript,
-  Superscript,
   Table,
   TableCell,
   TableHeader,

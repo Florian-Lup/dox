@@ -151,23 +151,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           <Popover.Content side="top" asChild>
             <Toolbar.Wrapper>
               <MemoButton
-                tooltip="Subscript"
-                tooltipShortcut={['Mod', '.']}
-                onClick={commands.onSubscript}
-                active={states.isSubscript}
-              >
-                <Icon name="Subscript" />
-              </MemoButton>
-              <MemoButton
-                tooltip="Superscript"
-                tooltipShortcut={['Mod', ',']}
-                onClick={commands.onSuperscript}
-                active={states.isSuperscript}
-              >
-                <Icon name="Superscript" />
-              </MemoButton>
-              <Toolbar.Divider />
-              <MemoButton
                 tooltip="Align left"
                 tooltipShortcut={['Shift', 'Mod', 'L']}
                 onClick={commands.onAlignLeft}

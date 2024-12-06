@@ -493,24 +493,6 @@ export const initialContent = {
               content: [
                 {
                   type: 'text',
-                  text: '@tiptap-pro/extension-mathematics',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
                   text: '@tiptap-pro/extension-node-range',
                 },
               ],
@@ -872,60 +854,6 @@ export const initialContent = {
                 {
                   type: 'text',
                   text: '@tiptap/extension-paragraph',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap/extension-placeholder',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap/extension-subscript',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'listItem',
-          content: [
-            {
-              type: 'paragraph',
-              attrs: {
-                class: null,
-                textAlign: 'left',
-              },
-              content: [
-                {
-                  type: 'text',
-                  text: '@tiptap/extension-superscript',
                 },
               ],
             },
