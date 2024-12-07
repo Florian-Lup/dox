@@ -8,12 +8,40 @@ import { useCallback } from 'react'
 
 export type AIDropdownProps = {
   disabled?: boolean
+  onCompleteSentence: () => any
+  onFixSpelling: () => any
+  onMakeLonger: () => any
+  onMakeShorter: () => any
+  onSimplify: () => any
+  onTldr: () => any
+  onTone: (tone: string) => any
+  onTranslate: (language: string) => any
 }
 
-export const AIDropdown = ({ disabled = true }: AIDropdownProps) => {
-  const handleAction = useCallback(() => {
-    console.log('AI functionality is disabled')
-  }, [])
+export const AIDropdown = ({
+  disabled = true,
+  onCompleteSentence,
+  onFixSpelling,
+  onMakeLonger,
+  onMakeShorter,
+  onSimplify,
+  onTldr,
+  onTone,
+  onTranslate,
+}: AIDropdownProps) => {
+  const createToneClickHandler = useCallback(
+    (tone: string) => () => {
+      onTone(tone)
+    },
+    [onTone],
+  )
+
+  const createTranslateClickHandler = useCallback(
+    (language: string) => () => {
+      onTranslate(language)
+    },
+    [onTranslate],
+  )
 
   return (
     <Dropdown.Root>
@@ -30,25 +58,25 @@ export const AIDropdown = ({ disabled = true }: AIDropdownProps) => {
       </Dropdown.Trigger>
       <Dropdown.Content asChild>
         <Surface className="p-2 min-w-[10rem]">
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onSimplify}>
             <DropdownButton disabled={disabled}>
               <Icon name="CircleSlash" />
               Simplify
             </DropdownButton>
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onFixSpelling}>
             <DropdownButton disabled={disabled}>
               <Icon name="Eraser" />
               Fix spelling & grammar
             </DropdownButton>
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onMakeShorter}>
             <DropdownButton disabled={disabled}>
               <Icon name="ArrowLeftToLine" />
               Make shorter
             </DropdownButton>
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onMakeLonger}>
             <DropdownButton disabled={disabled}>
               <Icon name="ArrowRightToLine" />
               Make longer
@@ -65,14 +93,14 @@ export const AIDropdown = ({ disabled = true }: AIDropdownProps) => {
             <Dropdown.SubContent>
               <Surface className="flex flex-col min-w-[15rem] p-2 max-h-[20rem] overflow-auto">
                 {tones.map(tone => (
-                  <Dropdown.Item onClick={handleAction} key={tone.value}>
+                  <Dropdown.Item onClick={createToneClickHandler(tone.value)} key={tone.value}>
                     <DropdownButton disabled={disabled}>{tone.label}</DropdownButton>
                   </Dropdown.Item>
                 ))}
               </Surface>
             </Dropdown.SubContent>
           </Dropdown.Sub>
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onTldr}>
             <DropdownButton disabled={disabled}>
               <Icon name="Ellipsis" />
               Tl;dr:
@@ -89,14 +117,14 @@ export const AIDropdown = ({ disabled = true }: AIDropdownProps) => {
             <Dropdown.SubContent>
               <Surface className="flex flex-col min-w-[15rem] p-2 max-h-[20rem] overflow-auto">
                 {languages.map(lang => (
-                  <Dropdown.Item onClick={handleAction} key={lang.value}>
+                  <Dropdown.Item onClick={createTranslateClickHandler(lang.value)} key={lang.value}>
                     <DropdownButton disabled={disabled}>{lang.label}</DropdownButton>
                   </Dropdown.Item>
                 ))}
               </Surface>
             </Dropdown.SubContent>
           </Dropdown.Sub>
-          <Dropdown.Item onClick={handleAction}>
+          <Dropdown.Item onClick={onCompleteSentence}>
             <DropdownButton disabled={disabled}>
               <Icon name="PenLine" />
               Complete sentence
