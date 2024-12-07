@@ -51,8 +51,9 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
             },
           ],
         },
-        maxWidth: 'calc(100vw - 16px)',
+        maxWidth: '100%',
       }}
+      className="sm:w-auto w-[280px] sm:overflow-visible overflow-x-auto sm:scrollbar-default scrollbar-none"
       editor={editor}
       pluginKey="textMenu"
       shouldShow={states.shouldShow}
