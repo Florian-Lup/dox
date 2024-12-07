@@ -62,7 +62,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       <Toolbar.Wrapper>
         <AIDropdown
           onCompleteSentence={commands.onCompleteSentence}
-          onEmojify={commands.onEmojify}
           onFixSpelling={commands.onFixSpelling}
           onMakeLonger={commands.onMakeLonger}
           onMakeShorter={commands.onMakeShorter}
