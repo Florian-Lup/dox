@@ -7,11 +7,14 @@ export const GROUPS: Group[] = [
     commands: [
       {
         name: 'aiWriter',
-        label: 'AI Writer',
+        label: 'AI Writer (Coming Soon)',
         iconName: 'Sparkles',
-        description: 'Let AI finish your thoughts',
+        description: 'AI features are currently disabled',
         shouldBeHidden: editor => editor.isActive('columns'),
-        action: editor => editor.chain().focus().setAiWriter().run(),
+        action: editor => {
+          console.log('Inserting AI Writer component')
+          return editor.chain().focus().setAiWriter().run()
+        },
       },
     ],
   },

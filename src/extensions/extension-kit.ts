@@ -30,6 +30,7 @@ import {
   Typography,
   Underline,
   UniqueID,
+  AiWriter,
 } from '.'
 
 import { TableOfContentsNode } from './TableOfContentsNode'
@@ -94,6 +95,7 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     width: 2,
     class: 'ProseMirror-dropcursor border-black',
   }),
+  AiWriter,
 ]
 
 export default ExtensionKit
