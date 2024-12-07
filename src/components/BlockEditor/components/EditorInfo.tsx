@@ -5,6 +5,8 @@ import { cn } from '../../../lib/utils'
 import { getConnectionText } from '../../../lib/utils/getConnectionText'
 import Tooltip from '../../ui/Tooltip'
 
+const MAX_CHARACTERS = 5000
+
 export type EditorInfoProps = {
   characters: number
   words: number
@@ -13,14 +15,50 @@ export type EditorInfoProps = {
 }
 
 export const EditorInfo = memo(({ characters, collabState, users, words }: EditorInfoProps) => {
+  const percentage = Math.min((characters / MAX_CHARACTERS) * 100, 100)
+  const radius = 8
+  const circumference = 2 * Math.PI * radius
+  const strokeDashoffset = circumference - (percentage / 100) * circumference
+
   return (
     <div className="flex items-center">
       <div className="flex flex-col justify-center pr-4 mr-4 text-right border-r border-neutral-200 dark:border-neutral-800">
-        <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-          {words} {words === 1 ? 'word' : 'words'}
-        </div>
-        <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-          {characters} {characters === 1 ? 'character' : 'characters'}
+        <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 flex items-center">
+          <span>
+            {words} {words === 1 ? 'word' : 'words'}
+          </span>
+          <span className="mx-2 text-neutral-400 dark:text-neutral-500">/</span>
+          <span className="flex items-center gap-2">
+            {characters} {characters === 1 ? 'character' : 'characters'}
+            <Tooltip title={`${characters}/${MAX_CHARACTERS} characters`}>
+              <svg width="20" height="20" className="transform -rotate-90">
+                <circle
+                  cx="10"
+                  cy="10"
+                  r={radius}
+                  fill="transparent"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-neutral-200 dark:text-neutral-800"
+                />
+                <circle
+                  cx="10"
+                  cy="10"
+                  r={radius}
+                  fill="transparent"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                  className={cn('transition-all duration-300', {
+                    'text-green-500 dark:text-green-400': percentage <= 70,
+                    'text-yellow-500 dark:text-yellow-400': percentage > 70 && percentage <= 90,
+                    'text-red-500 dark:text-red-400': percentage > 90,
+                  })}
+                />
+              </svg>
+            </Tooltip>
+          </span>
         </div>
       </div>
       <div className="flex items-center gap-2 mr-2">
