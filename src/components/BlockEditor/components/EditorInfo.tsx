@@ -14,7 +14,7 @@ export type EditorInfoProps = {
 }
 
 export const EditorInfo = memo(({ characters, collabState, users, words, limit }: EditorInfoProps) => {
-  const percentage = Math.min((characters / limit) * 100, 100)
+  const percentage = Math.max(0, Math.min((characters / limit) * 100, 100))
   const radius = 8
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (percentage / 100) * circumference
@@ -29,7 +29,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
           <span className="mx-2 text-neutral-400 dark:text-neutral-500">/</span>
           <span className="flex items-center gap-2">
             {characters} {characters === 1 ? 'character' : 'characters'}
-            <Tooltip title={`${characters}/${limit} characters`}>
+            <Tooltip title={`${characters}/${limit} characters (${percentage.toFixed(1)}%)`}>
               <svg width="20" height="20" className="transform -rotate-90">
                 <circle
                   cx="10"
@@ -54,6 +54,9 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
                     'text-yellow-500 dark:text-yellow-400': percentage > 70 && percentage <= 90,
                     'text-red-500 dark:text-red-400': percentage > 90,
                   })}
+                  style={{
+                    transformOrigin: '50% 50%',
+                  }}
                 />
               </svg>
             </Tooltip>

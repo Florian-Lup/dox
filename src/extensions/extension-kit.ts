@@ -69,7 +69,10 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   }),
   Highlight.configure({ multicolor: true }),
   Underline,
-  CharacterCount.configure({ limit: 5000 }),
+  CharacterCount.configure({
+    limit: 5000,
+    mode: 'textSize',
+  }),
   TableOfContents,
   TableOfContentsNode,
   TextAlign.extend({

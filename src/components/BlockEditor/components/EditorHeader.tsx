@@ -17,17 +17,12 @@ export type EditorHeaderProps = {
 export const EditorHeader = ({ editor, collabState, users, isSidebarOpen, toggleSidebar }: EditorHeaderProps) => {
   const { characters, words, limit } = useEditorState({
     editor,
-    selector: (ctx): { characters: number; words: number; limit: number } => {
-      const { characters, words, limit } = ctx.editor?.storage.characterCount || {
-        characters: () => 0,
-        words: () => 0,
-        limit: 0,
-      }
-
+    selector: ctx => {
+      const characterCount = ctx.editor?.storage.characterCount
       return {
-        characters: characters(),
-        words: words(),
-        limit,
+        characters: characterCount?.characters?.() ?? 0,
+        words: characterCount?.words?.() ?? 0,
+        limit: characterCount?.limit ?? 5000,
       }
     },
   })
