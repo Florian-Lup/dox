@@ -99,7 +99,7 @@ export default function Document({ params }: { params: { room: string } }) {
   return (
     <>
       {DarkModeSwitcher}
-      <BlockEditor aiToken={aiToken ?? undefined} ydoc={providerState.yDoc} provider={providerState.provider} />
+      <BlockEditor ydoc={providerState.yDoc} provider={providerState.provider} />
     </>
   )
 }
