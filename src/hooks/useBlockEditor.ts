@@ -10,7 +10,6 @@ import { ExtensionKit } from '@/extensions/extension-kit'
 import { userColors, userNames } from '../lib/constants'
 import { randomElement } from '../lib/utils'
 import type { EditorUser } from '../components/BlockEditor/types'
-import { initialContent } from '@/lib/data/initialContent'
 
 declare global {
   interface Window {
@@ -43,12 +42,11 @@ export const useBlockEditor = ({
           provider.on('synced', () => {
             setTimeout(() => {
               if (ctx.editor.isEmpty) {
-                ctx.editor.commands.setContent(initialContent)
+                ctx.editor.commands.focus('start', { scrollIntoView: true })
               }
             }, 0)
           })
         } else if (ctx.editor.isEmpty) {
-          ctx.editor.commands.setContent(initialContent)
           ctx.editor.commands.focus('start', { scrollIntoView: true })
         }
       },
