@@ -10,7 +10,6 @@ import {
   Document,
   Dropcursor,
   Figcaption,
-  Focus,
   FontFamily,
   FontSize,
   Heading,
@@ -30,6 +29,8 @@ import {
   UniqueID,
   AiWriter,
 } from '.'
+
+import Focus from '@tiptap/extension-focus'
 
 import { TableOfContentsNode } from './TableOfContentsNode'
 import { isChangeOrigin } from '@tiptap/extension-collaboration'
@@ -89,7 +90,10 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     placeholder: () => '',
   }),
   SlashCommand,
-  Focus,
+  Focus.configure({
+    mode: 'shallowest',
+    className: 'has-focus',
+  }),
   Figcaption,
   BlockquoteFigure,
   Dropcursor.configure({
