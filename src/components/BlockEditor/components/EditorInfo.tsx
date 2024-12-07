@@ -5,17 +5,16 @@ import { cn } from '../../../lib/utils'
 import { getConnectionText } from '../../../lib/utils/getConnectionText'
 import Tooltip from '../../ui/Tooltip'
 
-const MAX_CHARACTERS = 5000
-
 export type EditorInfoProps = {
   characters: number
   words: number
   collabState: WebSocketStatus
   users: EditorUser[]
+  limit: number
 }
 
-export const EditorInfo = memo(({ characters, collabState, users, words }: EditorInfoProps) => {
-  const percentage = Math.min((characters / MAX_CHARACTERS) * 100, 100)
+export const EditorInfo = memo(({ characters, collabState, users, words, limit }: EditorInfoProps) => {
+  const percentage = Math.min((characters / limit) * 100, 100)
   const radius = 8
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (percentage / 100) * circumference
@@ -30,7 +29,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words }: Edito
           <span className="mx-2 text-neutral-400 dark:text-neutral-500">/</span>
           <span className="flex items-center gap-2">
             {characters} {characters === 1 ? 'character' : 'characters'}
-            <Tooltip title={`${characters}/${MAX_CHARACTERS} characters`}>
+            <Tooltip title={`${characters}/${limit} characters`}>
               <svg width="20" height="20" className="transform -rotate-90">
                 <circle
                   cx="10"

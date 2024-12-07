@@ -15,11 +15,20 @@ export type EditorHeaderProps = {
 }
 
 export const EditorHeader = ({ editor, collabState, users, isSidebarOpen, toggleSidebar }: EditorHeaderProps) => {
-  const { characters, words } = useEditorState({
+  const { characters, words, limit } = useEditorState({
     editor,
-    selector: (ctx): { characters: number; words: number } => {
-      const { characters, words } = ctx.editor?.storage.characterCount || { characters: () => 0, words: () => 0 }
-      return { characters: characters(), words: words() }
+    selector: (ctx): { characters: number; words: number; limit: number } => {
+      const { characters, words, limit } = ctx.editor?.storage.characterCount || {
+        characters: () => 0,
+        words: () => 0,
+        limit: 0,
+      }
+
+      return {
+        characters: characters(),
+        words: words(),
+        limit,
+      }
     },
   })
 
@@ -37,7 +46,7 @@ export const EditorHeader = ({ editor, collabState, users, isSidebarOpen, toggle
           </Toolbar.Button>
         </div>
       </div>
-      <EditorInfo characters={characters} words={words} collabState={collabState} users={users} />
+      <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />
     </div>
   )
 }

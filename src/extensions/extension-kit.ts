@@ -2,8 +2,6 @@
 
 import { HocuspocusProvider } from '@hocuspocus/provider'
 
-import { API } from '@/lib/api'
-
 import {
   BlockquoteFigure,
   CharacterCount,
@@ -71,7 +69,7 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   }),
   Highlight.configure({ multicolor: true }),
   Underline,
-  CharacterCount.configure({ limit: 50000 }),
+  CharacterCount.configure({ limit: 5000 }),
   TableOfContents,
   TableOfContentsNode,
   TextAlign.extend({
