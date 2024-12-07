@@ -12,16 +12,16 @@ import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://demos.tiptap.dev'),
+  metadataBase: new URL('https://notion-dev-tan.vercel.app'),
   title: 'Common Tongue',
   description:
     'Common Tongue is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   robots: 'noindex, nofollow',
   icons: [{ url: '/favicon.png' }],
   twitter: {
-    card: 'summary_large_image',
-    site: '@tiptap_editor',
-    creator: '@tiptap_editor',
+    card: 'summary',
+    site: '@commontongue',
+    creator: '@commontongue',
   },
   openGraph: {
     title: 'Common Tongue',
