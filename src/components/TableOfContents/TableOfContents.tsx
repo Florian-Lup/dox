@@ -9,9 +9,10 @@ import { useEditorState } from '@tiptap/react'
 export type TableOfContentsProps = {
   editor: CoreEditor
   onItemClick?: () => void
+  className?: string
 }
 
-export const TableOfContents = memo(({ editor, onItemClick }: TableOfContentsProps) => {
+export const TableOfContents = memo(({ editor, onItemClick, className }: TableOfContentsProps) => {
   const content = useEditorState({
     editor,
     selector: ctx => (ctx.editor.storage.tableOfContents as TableOfContentsStorage).content,
@@ -28,11 +29,15 @@ export const TableOfContents = memo(({ editor, onItemClick }: TableOfContentsPro
             <a
               key={item.id}
               href={`#${item.id}`}
-              style={{ marginLeft: `${1 * item.level - 1}rem` }}
+              style={{
+                paddingLeft: `${1 * item.level}rem`,
+                width: `calc(100% - ${(item.level - 1) * 1}rem)`,
+              }}
               onClick={onItemClick}
               className={cn(
-                'block font-medium text-neutral-500 dark:text-neutral-300 p-1 rounded bg-opacity-10 text-sm hover:text-neutral-800 transition-all hover:bg-black hover:bg-opacity-5 truncate w-full',
-                item.isActive && 'text-neutral-800 bg-neutral-100 dark:text-neutral-100 dark:bg-neutral-900',
+                'block font-medium text-neutral-500 dark:text-neutral-300 p-1 rounded bg-opacity-10 text-sm hover:text-neutral-900 dark:hover:text-neutral-50 transition-all hover:bg-neutral-100 dark:hover:bg-neutral-800 truncate',
+                item.isActive && 'text-neutral-900 bg-neutral-100 dark:text-neutral-50 dark:bg-neutral-800',
+                className,
               )}
             >
               {item.itemIndex}. {item.textContent}

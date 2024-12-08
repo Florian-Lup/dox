@@ -7,11 +7,9 @@ import { useBlockEditor } from '@/hooks/useBlockEditor'
 
 import '@/styles/index.css'
 
-import { Sidebar } from '@/components/Sidebar'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { useSidebar } from '@/hooks/useSidebar'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
@@ -23,8 +21,6 @@ export const BlockEditor = ({
   provider?: TiptapCollabProvider | null | undefined
 }) => {
   const menuContainerRef = useRef(null)
-
-  const leftSidebar = useSidebar()
   const { editor, users, collabState } = useBlockEditor({ ydoc, provider })
 
   if (!editor || !users) {
@@ -33,15 +29,8 @@ export const BlockEditor = ({
 
   return (
     <div className="flex h-full" ref={menuContainerRef}>
-      <Sidebar isOpen={leftSidebar.isOpen} onClose={leftSidebar.close} editor={editor} />
       <div className="relative flex flex-col flex-1 h-full overflow-hidden">
-        <EditorHeader
-          editor={editor}
-          collabState={collabState}
-          users={users}
-          isSidebarOpen={leftSidebar.isOpen}
-          toggleSidebar={leftSidebar.toggle}
-        />
+        <EditorHeader editor={editor} collabState={collabState} users={users} />
         <EditorContent editor={editor} className="flex-1 overflow-y-auto" />
         <ContentItemMenu editor={editor} />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />
