@@ -5,6 +5,7 @@ import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { TiptapCollabProvider, WebSocketStatus } from '@hocuspocus/provider'
 import type { Doc as YDoc } from 'yjs'
+import { CollabHistory } from '@tiptap-pro/extension-collaboration-history'
 
 import { ExtensionKit } from '@/extensions/extension-kit'
 import { userColors, userNames } from '../lib/constants'
@@ -66,6 +67,11 @@ export const useBlockEditor = ({
                 name: randomElement(userNames),
                 color: randomElement(userColors),
               },
+            })
+          : undefined,
+        provider
+          ? CollabHistory.configure({
+              provider,
             })
           : undefined,
       ].filter((e): e is AnyExtension => e !== undefined),
