@@ -29,7 +29,7 @@ export const Sidebar = memo(({ editor }: { editor: Editor }) => {
       <Popover.Root>
         <Popover.Trigger asChild>
           <Toolbar.Button tooltip="Table of contents">
-            <Icon name="ListTree" className="w-5 h-5" />
+            <Icon name="BetweenHorizontalStart" className="w-5 h-5" />
           </Toolbar.Button>
         </Popover.Trigger>
         <Popover.Portal>
