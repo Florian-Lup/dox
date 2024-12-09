@@ -46,8 +46,8 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
   const handleRestoreVersion = useCallback(
     (version: Version) => {
       if (!editor) return
-      editor.commands.revertToVersion(Number(version.id), 'Restored version', 'Unversioned changes before revert')
       setIsHistoryModalOpen(false)
+      editor.commands.revertToVersion(Number(version.id))
     },
     [editor],
   )
