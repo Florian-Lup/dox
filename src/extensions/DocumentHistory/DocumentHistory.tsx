@@ -3,7 +3,7 @@ import { Editor } from '@tiptap/react'
 import * as Popover from '@radix-ui/react-popover'
 import { Icon } from '../../components/ui/Icon'
 import { Toolbar } from '../../components/ui/Toolbar'
-import { DocumentHistoryModal } from './DocumentHistoryModal'
+import { VersionModal } from './VersionModal'
 
 // Mock data for versions - replace with actual data later
 const mockVersions = [
@@ -58,7 +58,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content
-            className="z-100 w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
+            className="z-[150] w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
             sideOffset={15}
             alignOffset={-20}
             align="end"
@@ -98,7 +98,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
         </Popover.Portal>
       </Popover.Root>
 
-      <DocumentHistoryModal
+      <VersionModal
         isOpen={isHistoryModalOpen}
         onClose={handleCloseHistory}
         versions={mockVersions}

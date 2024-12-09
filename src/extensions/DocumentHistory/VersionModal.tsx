@@ -9,14 +9,14 @@ interface Version {
   content: string
 }
 
-interface DocumentHistoryModalProps {
+interface VersionModalProps {
   isOpen: boolean
   onClose: () => void
   versions: Version[]
   onRestore: (version: Version) => void
 }
 
-export const DocumentHistoryModal = memo(({ isOpen, onClose, versions, onRestore }: DocumentHistoryModalProps) => {
+export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: VersionModalProps) => {
   const [selectedVersion, setSelectedVersion] = useState<Version | null>(versions[0] || null)
   const versionRefs = useRef<Record<string, HTMLDivElement>>({})
 
@@ -126,4 +126,4 @@ export const DocumentHistoryModal = memo(({ isOpen, onClose, versions, onRestore
   )
 })
 
-DocumentHistoryModal.displayName = 'DocumentHistoryModal'
+VersionModal.displayName = 'VersionModal'
