@@ -7,6 +7,7 @@ export interface Version {
   name: string
   date: string
   content: string
+  isActive?: boolean
 }
 
 interface VersionModalProps {
@@ -14,6 +15,7 @@ interface VersionModalProps {
   onClose: () => void
   versions: Version[]
   onRestore: (version: Version) => void
+  currentVersion?: number
 }
 
 export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: VersionModalProps) => {
@@ -60,20 +62,34 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
       <div
         key={version.id}
         ref={getVersionRef(version)}
-        className="p-3 rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer group"
+        className={`p-2 rounded border ${
+          version.isActive
+            ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/30'
+            : 'border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'
+        } cursor-pointer group`}
         onClick={getVersionClickHandler(version)}
       >
-        <div className="flex justify-between items-start mb-2">
+        <div className="flex justify-between items-start">
           <div>
-            <h4 className="font-medium text-neutral-900 dark:text-neutral-100">{version.name}</h4>
-            <p className="text-sm text-neutral-500">{version.date}</p>
+            <h4
+              className={`font-medium text-sm ${
+                version.isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-900 dark:text-neutral-100'
+              }`}
+            >
+              {version.name}
+            </h4>
+            <p className="text-xs text-neutral-500">{version.date}</p>
           </div>
           <button
             onClick={getRestoreClickHandler(version)}
-            className="text-sm px-3 py-1.5 rounded-md bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-medium transition-colors group-hover:ring-1 group-hover:ring-blue-400 dark:group-hover:ring-blue-500"
+            className={`text-xs px-2 py-1 rounded-md ${
+              version.isActive
+                ? 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:hover:bg-blue-900/70 text-blue-600 dark:text-blue-400'
+                : 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+            } font-medium transition-colors group-hover:ring-1 group-hover:ring-blue-400 dark:group-hover:ring-blue-500`}
           >
-            <span className="flex items-center gap-1.5">
-              <Icon name="History" className="w-3.5 h-3.5" />
+            <span className="flex items-center gap-1">
+              <Icon name="History" className="w-3 h-3" />
               Restore
             </span>
           </button>
@@ -104,9 +120,9 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
             </div>
 
             {/* Right side - Versions list */}
-            <div className="w-full lg:w-80">
-              <h3 className="text-lg font-medium mb-4 text-neutral-900 dark:text-neutral-100">Versions</h3>
-              <div className="h-[250px] lg:h-[calc(100%-8rem)] overflow-auto space-y-3">
+            <div className="w-full lg:w-72">
+              <h3 className="text-lg font-medium mb-3 text-neutral-900 dark:text-neutral-100">Versions</h3>
+              <div className="h-[250px] lg:h-[calc(100%-6rem)] overflow-auto pr-2 space-y-2">
                 {versions.map(renderVersion)}
               </div>
             </div>

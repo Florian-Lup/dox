@@ -9,8 +9,8 @@ import type { Version } from './VersionModal'
 
 interface StorageVersion {
   version: number
-  timestamp: number
-  title: string
+  date: number
+  name: string
   content: string
 }
 
@@ -20,14 +20,20 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
   const handleCreateVersion = useCallback(() => {
     if (!editor || !versionName.trim()) return
-    const timestamp = Date.now()
-    editor.commands.saveVersion(versionName.trim())
-    const versions = editor.storage.collabHistory.versions || []
-    const latestVersion = versions[versions.length - 1]
-    if (latestVersion) {
-      latestVersion.title = versionName.trim()
-      latestVersion.timestamp = timestamp
+
+    console.log('Creating version with name:', versionName.trim())
+
+    // Create version metadata
+    const versionData = {
+      name: versionName.trim(),
+      date: Date.now(),
+      content: editor.getHTML(),
     }
+
+    // Save version with metadata in the name field
+    editor.commands.saveVersion(JSON.stringify(versionData))
+    console.log('Version saved with data:', versionData)
+
     setVersionName('')
   }, [editor, versionName])
 
@@ -47,20 +53,41 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
     (version: Version) => {
       if (!editor) return
       setIsHistoryModalOpen(false)
-      editor.commands.revertToVersion(Number(version.id))
+      editor.commands.revertToVersion(Number(version.id), `Revert to ${version.name}`)
     },
     [editor],
   )
 
   const versions = editor?.storage.collabHistory?.versions || []
-  const formattedVersions = [...versions].reverse().map(
-    (version: StorageVersion): Version => ({
+  console.log('Current versions in storage:', versions)
+
+  // Get current version from storage
+  const currentVersion = editor?.storage.collabHistory?.currentVersion
+  console.log('Current version:', currentVersion)
+
+  const formattedVersions = [...versions].reverse().map((version: StorageVersion): Version => {
+    let versionData
+    try {
+      versionData = JSON.parse(version.name)
+    } catch (e) {
+      console.log('Failed to parse version metadata:', e)
+      versionData = {
+        name: version.version === 0 ? 'Initial version' : `Version ${version.version}`,
+        date: version.date,
+        content: version.content,
+      }
+    }
+
+    const formatted = {
       id: String(version.version),
-      name: version.title || `Version ${version.version}`,
-      date: renderDate(version.timestamp || Date.now()),
-      content: version.content,
-    }),
-  )
+      name: versionData.name,
+      date: renderDate(versionData.date),
+      content: versionData.content,
+      isActive: currentVersion === version.version,
+    }
+    console.log('Formatting version:', version, 'parsed metadata:', versionData, 'formatted:', formatted)
+    return formatted
+  })
 
   return (
     <>
@@ -117,6 +144,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
         onClose={handleCloseHistory}
         versions={formattedVersions}
         onRestore={handleRestoreVersion}
+        currentVersion={currentVersion}
       />
     </>
   )
