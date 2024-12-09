@@ -17,7 +17,7 @@ export const Sidebar = memo(({ editor }: { editor: Editor }) => {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content
-            className="z-50 w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
+            className="z-100 w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
             sideOffset={15}
             alignOffset={-20}
             align="end"
