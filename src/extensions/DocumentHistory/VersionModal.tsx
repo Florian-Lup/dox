@@ -2,7 +2,7 @@ import { memo, useCallback, useState, useRef } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Icon } from '../../components/ui/Icon'
 
-interface Version {
+export interface Version {
   id: string
   name: string
   date: string

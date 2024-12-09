@@ -4,32 +4,32 @@ import * as Popover from '@radix-ui/react-popover'
 import { Icon } from '../../components/ui/Icon'
 import { Toolbar } from '../../components/ui/Toolbar'
 import { VersionModal } from './VersionModal'
+import { renderDate } from './utils'
+import type { Version } from './VersionModal'
 
-// Mock data for versions - replace with actual data later
-const mockVersions = [
-  {
-    id: '1',
-    name: 'Initial version',
-    date: '2024-01-20 10:00',
-    content: 'Initial content of the document',
-  },
-  {
-    id: '2',
-    name: 'Second draft',
-    date: '2024-01-20 11:30',
-    content: 'Updated content with more details',
-  },
-]
+interface StorageVersion {
+  version: number
+  timestamp: number
+  title: string
+  content: string
+}
 
 export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
   const [versionName, setVersionName] = useState('')
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
   const handleCreateVersion = useCallback(() => {
-    // TODO: Implement version creation logic
-    console.log('Creating version:', versionName)
+    if (!editor || !versionName.trim()) return
+    const timestamp = Date.now()
+    editor.commands.saveVersion(versionName.trim())
+    const versions = editor.storage.collabHistory.versions || []
+    const latestVersion = versions[versions.length - 1]
+    if (latestVersion) {
+      latestVersion.title = versionName.trim()
+      latestVersion.timestamp = timestamp
+    }
     setVersionName('')
-  }, [versionName])
+  }, [editor, versionName])
 
   const handleShowHistory = useCallback(() => {
     setIsHistoryModalOpen(true)
@@ -43,10 +43,24 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
     setVersionName(e.target.value)
   }, [])
 
-  const handleRestoreVersion = useCallback((version: any) => {
-    // TODO: Implement restore logic
-    console.log('Restoring version:', version)
-  }, [])
+  const handleRestoreVersion = useCallback(
+    (version: Version) => {
+      if (!editor) return
+      editor.commands.revertToVersion(Number(version.id), 'Restored version', 'Unversioned changes before revert')
+      setIsHistoryModalOpen(false)
+    },
+    [editor],
+  )
+
+  const versions = editor?.storage.collabHistory?.versions || []
+  const formattedVersions = [...versions].reverse().map(
+    (version: StorageVersion): Version => ({
+      id: String(version.version),
+      name: version.title || `Version ${version.version}`,
+      date: renderDate(version.timestamp || Date.now()),
+      content: version.content,
+    }),
+  )
 
   return (
     <>
@@ -101,7 +115,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
       <VersionModal
         isOpen={isHistoryModalOpen}
         onClose={handleCloseHistory}
-        versions={mockVersions}
+        versions={formattedVersions}
         onRestore={handleRestoreVersion}
       />
     </>
