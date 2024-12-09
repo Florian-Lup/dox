@@ -87,7 +87,7 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:w-[90vw] lg:w-[900px] h-[80vh] lg:h-[600px] max-w-[1200px] bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 md:p-6">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:w-[90vw] lg:w-[900px] h-[80vh] lg:h-[600px] max-w-[1200px] bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 md:p-6 z-[150]">
           <Dialog.Title className="sr-only">Document History</Dialog.Title>
           <Dialog.Description className="sr-only">
             View and restore previous versions of your document
