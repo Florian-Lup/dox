@@ -52,8 +52,30 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
   const handleRestoreVersion = useCallback(
     (version: Version) => {
       if (!editor) return
+      console.log('Restoring version:', {
+        versionId: version.id,
+        versionName: version.name,
+        versionContent: version.content,
+        allVersions: editor.storage.collabHistory?.versions,
+      })
       setIsHistoryModalOpen(false)
-      editor.commands.revertToVersion(Number(version.id), `Revert to ${version.name}`)
+
+      // Create restore version metadata
+      const restoreMetadata = {
+        name: `Restored: ${version.name}`,
+        date: Date.now(),
+        content: version.content,
+      }
+
+      editor.commands.revertToVersion(Number(version.id), JSON.stringify(restoreMetadata))
+
+      // Log versions after restore
+      setTimeout(() => {
+        console.log('Versions after restore:', {
+          versions: editor.storage.collabHistory?.versions,
+          currentVersion: editor.storage.collabHistory?.currentVersion,
+        })
+      }, 100)
     },
     [editor],
   )
