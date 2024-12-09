@@ -43,46 +43,13 @@ const useDarkmode = () => {
 
 export default function Document({ params }: { params: { room: string } }) {
   const { isDarkMode, darkMode, lightMode } = useDarkmode()
-  const [aiToken, setAiToken] = useState<string | null | undefined>()
   const searchParams = useSearchParams()
   const providerState = useCollaboration({
     docId: params.room,
     enabled: parseInt(searchParams?.get('noCollab') as string) !== 1,
   })
 
-  useEffect(() => {
-    // fetch data
-    const dataFetch = async () => {
-      try {
-        const response = await fetch('/api/ai', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error('No AI token provided, please set TIPTAP_AI_SECRET in your environment')
-        }
-        const data = await response.json()
-
-        const { token } = data
-
-        // set state when the data received
-        setAiToken(token)
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error(e.message)
-        }
-        setAiToken(null)
-        return
-      }
-    }
-
-    dataFetch()
-  }, [])
-
-  if (providerState.state === 'loading' || aiToken === undefined) return
+  if (providerState.state === 'loading') return
 
   const DarkModeSwitcher = createPortal(
     <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99999] p-1">
