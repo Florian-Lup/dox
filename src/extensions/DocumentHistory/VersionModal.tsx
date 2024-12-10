@@ -198,17 +198,16 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] md:w-[90vw] lg:w-[900px] h-[80vh] lg:h-[600px] max-w-[1200px] bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-4 md:p-6 z-[150]">
+        <Dialog.Content className="fixed top-[5%] sm:top-1/2 left-1/2 -translate-x-1/2 sm:-translate-y-1/2 w-[95vw] h-[90vh] sm:h-[85vh] lg:h-[80vh] max-h-[800px] max-w-[1200px] bg-white dark:bg-neutral-900 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 md:p-6 z-[100] overflow-hidden">
           <Dialog.Title className="sr-only">Document History</Dialog.Title>
           <Dialog.Description className="sr-only">
             View and restore previous versions of your document
           </Dialog.Description>
 
-          <div className="flex flex-col lg:flex-row h-full gap-4 lg:gap-6 pt-8 lg:pt-0">
+          <div className="flex flex-col lg:flex-row h-full gap-3 sm:gap-4 lg:gap-6 pt-8 lg:pt-0">
             {/* Left side - Preview */}
             <div className="flex-1 lg:border-r border-neutral-200 dark:border-neutral-800 lg:pr-6">
-              <h3 className="text-lg font-medium mb-3 text-neutral-900 dark:text-neutral-100">Preview</h3>
-              <div className="h-[200px] lg:h-[calc(100%-3rem)] overflow-auto">
+              <div className="h-[35vh] sm:h-[40vh] lg:h-full overflow-y-auto">
                 <div className="prose dark:prose-invert max-w-none [&_.ProseMirror]:!p-0 [&_.ProseMirror]:!pt-0">
                   <EditorContent editor={previewEditor} />
                 </div>
@@ -216,20 +215,20 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor
             </div>
 
             {/* Right side - Versions list */}
-            <div className="w-full lg:w-72">
-              <h3 className="text-lg font-medium mb-3 text-neutral-900 dark:text-neutral-100">Versions</h3>
-              <div className="h-[250px] lg:h-[calc(100%-3rem)] overflow-auto pr-2 space-y-2">
-                {versions.map(renderVersion)}
-              </div>
+            <div className="w-full lg:w-80 flex flex-col min-h-0">
+              <h3 className="text-base sm:text-lg font-medium mb-2 sm:mb-3 text-neutral-900 dark:text-neutral-100 flex-shrink-0">
+                Versions
+              </h3>
+              <div className="flex-1 overflow-y-auto pr-2 space-y-2 min-h-0">{versions.map(renderVersion)}</div>
             </div>
           </div>
 
           <Dialog.Close asChild>
             <button
-              className="absolute top-4 right-4 p-1 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 p-1 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               aria-label="Close"
             >
-              <Icon name="X" className="w-5 h-5" />
+              <Icon name="X" className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </Dialog.Close>
         </Dialog.Content>

@@ -52,7 +52,7 @@ export default function Document({ params }: { params: { room: string } }) {
   if (providerState.state === 'loading') return
 
   const DarkModeSwitcher = createPortal(
-    <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99999] p-1">
+    <Surface className="flex items-center gap-1 fixed bottom-6 right-6 z-[99] p-1">
       <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
         <Icon name="Sun" />
       </Toolbar.Button>
