@@ -1,6 +1,9 @@
-import { memo, useCallback, useState, useRef } from 'react'
+import { memo, useCallback, useState, useRef, useEffect } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Icon } from '../../components/ui/Icon'
+import { watchPreviewContent } from '@tiptap-pro/extension-collaboration-history'
+import { Editor, EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 
 export interface Version {
   id: string
@@ -16,15 +19,105 @@ interface VersionModalProps {
   versions: Version[]
   onRestore: (version: Version) => void
   currentVersion?: number
+  editor: Editor
 }
 
-export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: VersionModalProps) => {
-  const [selectedVersion, setSelectedVersion] = useState<Version | null>(versions[0] || null)
+export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor }: VersionModalProps) => {
+  const [selectedVersion, setSelectedVersion] = useState<Version | null>(null)
   const versionRefs = useRef<Record<string, HTMLDivElement>>({})
+  const [previewContent, setPreviewContent] = useState<string>('')
 
-  const handleVersionSelect = useCallback((version: Version) => {
-    setSelectedVersion(version)
-  }, [])
+  const previewEditor = useEditor({
+    extensions: [StarterKit],
+    editable: false,
+    content: selectedVersion?.content || '',
+    immediatelyRender: false,
+    onCreate: ({ editor: previewEditorInstance }) => {
+      console.log('Preview editor created')
+      if (selectedVersion?.content) {
+        previewEditorInstance.commands.setContent(selectedVersion.content)
+      }
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose dark:prose-invert max-w-none focus:outline-none',
+      },
+    },
+  })
+
+  const getProvider = useCallback(() => {
+    if (!editor) {
+      return null
+    }
+
+    const provider = editor.storage.collaboration?.provider
+    return provider || null
+  }, [editor])
+
+  useEffect(() => {
+    if (isOpen && versions.length > 0) {
+      const latestVersion = versions[0]
+      setSelectedVersion(latestVersion)
+
+      const provider = getProvider()
+      if (provider) {
+        provider.sendStateless(
+          JSON.stringify({
+            action: 'version.preview',
+            version: Number(latestVersion.id),
+          }),
+        )
+      } else {
+        if (previewEditor && latestVersion.content) {
+          previewEditor.commands.setContent(latestVersion.content)
+        }
+      }
+    }
+  }, [isOpen, versions, getProvider, previewEditor])
+
+  useEffect(() => {
+    const provider = getProvider()
+    if (!provider) {
+      return
+    }
+
+    const unwatch = watchPreviewContent(provider, content => {
+      if (previewEditor) {
+        previewEditor.commands.setContent(content)
+      }
+    })
+
+    return () => {
+      unwatch?.()
+    }
+  }, [getProvider, previewEditor])
+
+  const handleVersionSelect = useCallback(
+    (version: Version) => {
+      console.log('Version selected:', {
+        versionId: version.id,
+        versionName: version.name,
+      })
+      setSelectedVersion(version)
+
+      const provider = getProvider()
+      if (provider) {
+        console.log('Requesting preview for selected version:', {
+          versionId: version.id,
+          provider: provider.constructor.name,
+        })
+        provider.sendStateless(
+          JSON.stringify({
+            action: 'version.preview',
+            version: Number(version.id),
+          }),
+        )
+      } else {
+        previewEditor?.commands.setContent(version.content)
+      }
+    },
+    [getProvider, previewEditor],
+  )
 
   const handleRestore = useCallback(
     (version: Version) => {
@@ -63,7 +156,7 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
         key={version.id}
         ref={getVersionRef(version)}
         className={`p-2 rounded border ${
-          version.isActive
+          selectedVersion?.id === version.id
             ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/30'
             : 'border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'
         } cursor-pointer group`}
@@ -73,7 +166,9 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
           <div>
             <h4
               className={`font-medium text-sm ${
-                version.isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-900 dark:text-neutral-100'
+                selectedVersion?.id === version.id
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'text-neutral-900 dark:text-neutral-100'
               }`}
             >
               {version.name}
@@ -83,7 +178,7 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
           <button
             onClick={getRestoreClickHandler(version)}
             className={`text-xs px-2 py-1 rounded-md ${
-              version.isActive
+              selectedVersion?.id === version.id
                 ? 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/50 dark:hover:bg-blue-900/70 text-blue-600 dark:text-blue-400'
                 : 'bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400'
             } font-medium transition-colors group-hover:ring-1 group-hover:ring-blue-400 dark:group-hover:ring-blue-500`}
@@ -96,7 +191,7 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
         </div>
       </div>
     ),
-    [getVersionClickHandler, getRestoreClickHandler, getVersionRef],
+    [getVersionClickHandler, getRestoreClickHandler, getVersionRef, selectedVersion],
   )
 
   return (
@@ -112,9 +207,10 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
           <div className="flex flex-col lg:flex-row h-full gap-4 lg:gap-6 pt-8 lg:pt-0">
             {/* Left side - Preview */}
             <div className="flex-1 lg:border-r border-neutral-200 dark:border-neutral-800 lg:pr-6">
-              <div className="h-[200px] lg:h-full overflow-auto">
-                <div className="prose dark:prose-invert max-w-none">
-                  {selectedVersion?.content || 'No content to preview'}
+              <h3 className="text-lg font-medium mb-3 text-neutral-900 dark:text-neutral-100">Preview</h3>
+              <div className="h-[200px] lg:h-[calc(100%-3rem)] overflow-auto">
+                <div className="prose dark:prose-invert max-w-none [&_.ProseMirror]:!p-0 [&_.ProseMirror]:!pt-0">
+                  <EditorContent editor={previewEditor} />
                 </div>
               </div>
             </div>
@@ -122,7 +218,7 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore }: Vers
             {/* Right side - Versions list */}
             <div className="w-full lg:w-72">
               <h3 className="text-lg font-medium mb-3 text-neutral-900 dark:text-neutral-100">Versions</h3>
-              <div className="h-[250px] lg:h-[calc(100%-6rem)] overflow-auto pr-2 space-y-2">
+              <div className="h-[250px] lg:h-[calc(100%-3rem)] overflow-auto pr-2 space-y-2">
                 {versions.map(renderVersion)}
               </div>
             </div>

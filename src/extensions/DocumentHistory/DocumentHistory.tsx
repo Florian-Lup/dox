@@ -172,6 +172,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
         versions={formattedVersions}
         onRestore={handleRestoreVersion}
         currentVersion={currentVersion}
+        editor={editor}
       />
 
       <Toast.Provider>
