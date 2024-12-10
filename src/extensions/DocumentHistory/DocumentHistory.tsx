@@ -1,6 +1,7 @@
 import { memo, useState, useCallback } from 'react'
 import { Editor } from '@tiptap/react'
 import * as Popover from '@radix-ui/react-popover'
+import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '../../components/ui/Icon'
 import { Toolbar } from '../../components/ui/Toolbar'
 import { VersionModal } from './VersionModal'
@@ -17,6 +18,8 @@ interface StorageVersion {
 export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
   const [versionName, setVersionName] = useState('')
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
   const handleCreateVersion = useCallback(() => {
     if (!editor || !versionName.trim()) return
@@ -35,6 +38,8 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
     console.log('Version saved with data:', versionData)
 
     setVersionName('')
+    setIsPopoverOpen(false) // Close the popover
+    setShowToast(true) // Show success toast
   }, [editor, versionName])
 
   const handleShowHistory = useCallback(() => {
@@ -113,7 +118,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <Popover.Root>
+      <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <Popover.Trigger asChild>
           <Toolbar.Button tooltip="Document History">
             <Icon name="History" className="w-5 h-5" />
@@ -168,6 +173,21 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
         onRestore={handleRestoreVersion}
         currentVersion={currentVersion}
       />
+
+      <Toast.Provider>
+        <Toast.Root
+          className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg shadow-lg p-4 items-center fixed bottom-4 left-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-left-full"
+          open={showToast}
+          onOpenChange={setShowToast}
+          duration={3000}
+        >
+          <Toast.Title className="text-sm font-medium text-green-900 dark:text-green-100 flex items-center gap-2">
+            <Icon name="Check" className="w-4 h-4" />
+            Version created successfully
+          </Toast.Title>
+        </Toast.Root>
+        <Toast.Viewport />
+      </Toast.Provider>
     </>
   )
 })

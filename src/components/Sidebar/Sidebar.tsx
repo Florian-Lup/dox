@@ -22,7 +22,9 @@ export const Sidebar = memo(({ editor }: { editor: Editor }) => {
             alignOffset={-20}
             align="end"
           >
-            <TableOfContents editor={editor} className="hover:bg-neutral-100 dark:hover:bg-neutral-700" />
+            <div className="max-h-[400px] overflow-y-auto">
+              <TableOfContents editor={editor} className="hover:bg-neutral-100 dark:hover:bg-neutral-700" />
+            </div>
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
