@@ -1,4 +1,4 @@
-import { NodeViewProps, NodeViewWrapper } from '@tiptap/react'
+import { NodeViewWrapper } from '@tiptap/react'
 import { useCallback, useMemo, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -28,11 +28,13 @@ export const AiWriterView = () => {
     text: '',
     tone: undefined,
   })
+  const [isDisabled, setIsDisabled] = useState(false)
   const currentTone = tones.find(t => t.value === data.tone)
   const textareaId = useMemo(() => uuid(), [])
 
-  const generateText = useCallback(() => {
-    console.log('AI Writer functionality is currently disabled')
+  const handleClick = useCallback(() => {
+    // AI Writer functionality is currently disabled
+    setIsDisabled(true)
   }, [])
 
   const onTextAreaChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -103,7 +105,7 @@ export const AiWriterView = () => {
                 </Dropdown.Portal>
               </Dropdown.Root>
             </div>
-            <Button variant="primary" onClick={generateText} style={{ whiteSpace: 'nowrap' }} disabled>
+            <Button variant="primary" onClick={handleClick} style={{ whiteSpace: 'nowrap' }} disabled>
               <Icon name="Sparkles" />
               Generate text (Coming Soon)
             </Button>

@@ -94,18 +94,10 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor
 
   const handleVersionSelect = useCallback(
     (version: Version) => {
-      console.log('Version selected:', {
-        versionId: version.id,
-        versionName: version.name,
-      })
       setSelectedVersion(version)
 
       const provider = getProvider()
       if (provider) {
-        console.log('Requesting preview for selected version:', {
-          versionId: version.id,
-          provider: provider.constructor.name,
-        })
         provider.sendStateless(
           JSON.stringify({
             action: 'version.preview',

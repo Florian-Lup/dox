@@ -59,16 +59,10 @@ export const AiWriter = Node.create({
     return {
       setAiWriter:
         () =>
-        ({ chain }) => {
-          console.log('Setting AI Writer')
-          return chain()
-            .insertContent({
-              type: this.name,
-              attrs: {
-                id: uuid(),
-              },
-            })
-            .run()
+        ({ commands }) => {
+          return commands.insertContent({
+            type: this.name,
+          })
         },
     }
   },

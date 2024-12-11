@@ -12,7 +12,6 @@ export const GROUPS: Group[] = [
         description: 'AI features are currently disabled',
         shouldBeHidden: editor => editor.isActive('columns'),
         action: editor => {
-          console.log('Inserting AI Writer component')
           return editor.chain().focus().setAiWriter().run()
         },
       },
