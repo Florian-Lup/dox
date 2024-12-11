@@ -33,7 +33,6 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor
     content: selectedVersion?.content || '',
     immediatelyRender: false,
     onCreate: ({ editor: previewEditorInstance }) => {
-      console.log('Preview editor created')
       if (selectedVersion?.content) {
         previewEditorInstance.commands.setContent(selectedVersion.content)
       }
