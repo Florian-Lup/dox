@@ -11,7 +11,6 @@
     "format": "prettier --write --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx,json,css}\""
   },
   "dependencies": {
-    "@fontsource/inter": "^5.1.0",
     "@hocuspocus/provider": "^2.14.0",
     "@hocuspocus/transformer": "^2.14.0",
     "@radix-ui/react-dialog": "^1.1.2",

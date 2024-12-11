@@ -2,14 +2,23 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 import 'cal-sans'
+import { Inter } from 'next/font/google'
 
-import '@fontsource/inter/100.css'
-import '@fontsource/inter/200.css'
-import '@fontsource/inter/300.css'
-import '@fontsource/inter/400.css'
-import '@fontsource/inter/500.css'
-import '@fontsource/inter/600.css'
-import '@fontsource/inter/700.css'
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  preload: true,
+  adjustFontFallback: true,
+})
+
+// Log font loading status
+console.log('Inter font configuration:', {
+  className: inter.className,
+  variable: inter.variable,
+  weights: ['400', '500', '600', '700'],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://notion-dev-tan.vercel.app'),
@@ -31,8 +40,14 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  console.log('Rendering RootLayout with Inter font:', inter.variable)
+
   return (
-    <html className="h-full font-sans" lang="en">
+    <html className={`h-full font-sans ${inter.variable}`} lang="en">
+      <head>
+        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="flex flex-col h-full">
         <main className="h-full">{children}</main>
       </body>

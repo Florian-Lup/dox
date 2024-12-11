@@ -22,15 +22,41 @@ const nextConfig = {
 
     return config
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "upgrade-insecure-requests; font-src 'self' https: data:; style-src 'self' 'unsafe-inline' https:;",
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, HEAD, POST, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type',
+          },
+        ],
+      },
+    ]
+  },
   async redirects() {
     return [
       {
         source: '/bCccDwkKkN',
-        destination: '/', // Matched parameters can be used in the destination
+        destination: '/',
         permanent: true,
       },
     ]
   },
+  optimizeFonts: true,
 }
 
 module.exports = nextConfig
