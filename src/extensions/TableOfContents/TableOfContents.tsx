@@ -5,6 +5,9 @@ import { memo } from 'react'
 import { TableOfContentsStorage } from '@tiptap-pro/extension-table-of-contents'
 import { cn } from '@/lib/utils'
 import { useEditorState } from '@tiptap/react'
+import * as Popover from '@radix-ui/react-popover'
+import { Icon } from '@/components/ui/Icon'
+import { Toolbar } from '@/components/ui/Toolbar'
 
 export type TableOfContentsProps = {
   editor: CoreEditor
@@ -12,7 +15,7 @@ export type TableOfContentsProps = {
   className?: string
 }
 
-export const TableOfContents = memo(({ editor, onItemClick, className }: TableOfContentsProps) => {
+const TableOfContentsList = memo(({ editor, onItemClick, className }: TableOfContentsProps) => {
   const content = useEditorState({
     editor,
     selector: ctx => (ctx.editor.storage.tableOfContents as TableOfContentsStorage).content,
@@ -51,4 +54,31 @@ export const TableOfContents = memo(({ editor, onItemClick, className }: TableOf
   )
 })
 
-TableOfContents.displayName = 'TableOfContents'
+export const TableOfContentsButton = memo(({ editor }: { editor: CoreEditor }) => {
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Toolbar.Button tooltip="Table of contents">
+          <Icon name="BetweenHorizontalStart" className="w-5 h-5" />
+        </Toolbar.Button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          className="z-[150] w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
+          sideOffset={15}
+          alignOffset={-20}
+          align="end"
+        >
+          <div className="max-h-[400px] overflow-y-auto">
+            <TableOfContentsList editor={editor} className="hover:bg-neutral-100 dark:hover:bg-neutral-700" />
+          </div>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+})
+
+TableOfContentsList.displayName = 'TableOfContentsList'
+TableOfContentsButton.displayName = 'TableOfContentsButton'
+
+export const TableOfContents = TableOfContentsList
