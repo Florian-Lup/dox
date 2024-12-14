@@ -24,8 +24,9 @@ export const CommentList = ({ editor }: { editor: Editor }) => {
               <p className="text-sm text-neutral-500 dark:text-neutral-400">View and manage comments</p>
             </div>
             <div className="max-h-[400px] overflow-y-auto">
-              {/* Comments will be rendered here */}
-              <div className="text-sm text-neutral-500 dark:text-neutral-400 italic">No comments yet</div>
+              <div className="text-sm text-neutral-500 dark:text-neutral-400 italic">
+                Comments feature coming soon! 🚀
+              </div>
             </div>
           </div>
         </Popover.Content>

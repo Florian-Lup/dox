@@ -12,7 +12,6 @@ import { FontSizePicker } from './components/FontSizePicker'
 import { useTextmenuContentTypes } from './hooks/useTextmenuContentTypes'
 import { ContentTypePicker } from './components/ContentTypePicker'
 import { EditLinkPopover } from './components/EditLinkPopover'
-import { InsertComment } from '@/extensions/Comments/InsertComment'
 
 // We memorize the button so each button is not rerendered
 // on every editor state change
@@ -61,8 +60,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       updateDelay={100}
     >
       <Toolbar.Wrapper>
-        <InsertComment editor={editor} />
-        <Toolbar.Divider />
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker onChange={commands.onSetFont} value={states.currentFont || ''} />
         <MemoFontSizePicker onChange={commands.onSetFontSize} value={states.currentSize || ''} />
