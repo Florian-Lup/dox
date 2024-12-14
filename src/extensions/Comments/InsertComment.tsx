@@ -3,12 +3,13 @@ import { Icon } from '@/components/ui/Icon'
 import { Toolbar } from '@/components/ui/Toolbar'
 import { Surface } from '@/components/ui/Surface'
 import { Editor } from '@tiptap/react'
-import { useState, useCallback, ChangeEvent } from 'react'
+import { useState, useCallback, ChangeEvent, FormEvent } from 'react'
+import { Button } from '@/components/ui/Button'
 
 export const InsertComment = ({ editor }: { editor: Editor }) => {
   const [comment, setComment] = useState('')
 
-  const handleCommentChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleCommentChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value)
   }, [])
 
@@ -16,6 +17,14 @@ export const InsertComment = ({ editor }: { editor: Editor }) => {
     // TODO: Implement comment sending logic
     setComment('')
   }, [])
+
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      handleSendComment()
+    },
+    [handleSendComment],
+  )
 
   return (
     <Popover.Root>
@@ -26,21 +35,21 @@ export const InsertComment = ({ editor }: { editor: Editor }) => {
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content side="top" sideOffset={8} asChild>
-          <Surface className="p-3 flex flex-col gap-2">
-            <div className="flex flex-col gap-1">
-              <textarea
+          <Surface className="p-2">
+            <form onSubmit={handleSubmit} className="flex items-center gap-2">
+              <input
+                type="text"
                 value={comment}
                 onChange={handleCommentChange}
                 placeholder="Add a comment..."
-                className="w-[280px] h-24 px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500 resize-none"
+                spellCheck="false"
+                autoComplete="off"
+                className="flex-1 bg-neutral-100 dark:bg-neutral-900 outline-none min-w-[12rem] text-black text-sm dark:text-white p-2 rounded-lg"
               />
-              <button
-                onClick={handleSendComment}
-                className="self-end px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors"
-              >
+              <Button variant="primary" buttonSize="small" type="submit" disabled={!comment.trim()}>
                 Send
-              </button>
-            </div>
+              </Button>
+            </form>
           </Surface>
         </Popover.Content>
       </Popover.Portal>
