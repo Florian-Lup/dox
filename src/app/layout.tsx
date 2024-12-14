@@ -13,13 +13,6 @@ const inter = Inter({
   adjustFontFallback: true,
 })
 
-// Log font loading status
-console.log('Inter font configuration:', {
-  className: inter.className,
-  variable: inter.variable,
-  weights: ['400', '500', '600', '700'],
-})
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://notion-dev-tan.vercel.app'),
   title: 'Common Tongue',
@@ -40,8 +33,6 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  console.log('Rendering RootLayout with Inter font:', inter.variable)
-
   return (
     <html className={`h-full font-sans ${inter.variable}`} lang="en">
       <head>
