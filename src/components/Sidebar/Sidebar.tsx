@@ -4,6 +4,7 @@ import { TableOfContentsButton } from '@/extensions/TableOfContents'
 import { DocumentHistory } from '../../extensions/DocumentHistory'
 import { CommentList } from '@/extensions/Comments/CommentList'
 import { DocumentImportButton } from '@/extensions/DocumentImport'
+import { DocumentExportButton } from '@/extensions/DocumentExport'
 
 export const Sidebar = memo(({ editor }: { editor: Editor }) => {
   return (
@@ -12,6 +13,7 @@ export const Sidebar = memo(({ editor }: { editor: Editor }) => {
       <DocumentHistory editor={editor} />
       <CommentList editor={editor} />
       <DocumentImportButton editor={editor} />
+      <DocumentExportButton editor={editor} />
     </div>
   )
 })

@@ -8,6 +8,8 @@ import {
   CodeBlock,
   Color,
   Document,
+  DocumentImport,
+  DocumentExport,
   Dropcursor,
   Figcaption,
   FontFamily,
@@ -42,6 +44,8 @@ interface ExtensionKitProps {
 export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Document,
   Selection,
+  DocumentImport,
+  DocumentExport,
   Heading.configure({
     levels: [1, 2, 3, 4, 5, 6],
   }),

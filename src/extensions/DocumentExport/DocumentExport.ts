@@ -1,7 +1,7 @@
-import { Import } from '@tiptap-pro/extension-import'
+import { Export } from '@tiptap-pro/extension-export'
 
 // Initialize with empty token
-const importExtension = Import.configure({
+const exportExtension = Export.configure({
   appId: process.env.NEXT_PUBLIC_TIPTAP_CONVERT_APP_ID,
   token: '',
 })
@@ -11,13 +11,13 @@ fetch('/api/tiptap/convert-token')
   .then(response => response.json())
   .then(data => {
     if (data.error || !data.token) {
-      throw new Error(data.error || 'Failed to get import token')
+      throw new Error(data.error || 'Failed to get export token')
     }
     // Update the token in the extension's options
-    importExtension.options.token = data.token
+    exportExtension.options.token = data.token
   })
   .catch(error => {
     throw error
   })
 
-export const DocumentImport = importExtension
+export const DocumentExport = exportExtension

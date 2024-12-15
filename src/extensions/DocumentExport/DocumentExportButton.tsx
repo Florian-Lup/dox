@@ -16,50 +16,103 @@ const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
   return result
 }
 
-export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
+type ExportFormat = 'docx' | 'odt' | 'md'
+
+interface ExportOption {
+  label: string
+  format: ExportFormat
+  icon: 'FileText' | 'FileCode'
+}
+
+const exportOptions: ExportOption[] = [
+  { label: 'Word Document (.docx)', format: 'docx', icon: 'FileText' },
+  { label: 'OpenDocument (.odt)', format: 'odt', icon: 'FileText' },
+  { label: 'Markdown (.md)', format: 'md', icon: 'FileCode' },
+]
+
+interface ExportButtonProps {
+  format: ExportFormat
+  label: string
+  icon: 'FileText' | 'FileCode'
+  onExport: (format: ExportFormat) => void
+  disabled: boolean
+}
+
+function ExportButton({ format, label, icon, onExport, disabled }: ExportButtonProps) {
+  const handleClick = useCallback(() => {
+    onExport(format)
+  }, [format, onExport])
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={disabled}
+      className="flex items-center gap-2 px-3 py-2 text-sm text-left transition-colors rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <Icon name={icon} className="w-4 h-4" />
+      {label}
+    </button>
+  )
+}
+
+export const DocumentExportButton = ({ editor }: { editor: Editor }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [showErrorToast, setShowErrorToast] = useState(false)
+  const [currentFormat, setCurrentFormat] = useState<string>('')
 
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (!file) return
-
+  const handleExport = useCallback(
+    async (format: ExportFormat) => {
       setIsLoading(true)
       setError(null)
       setIsOpen(false)
+      setCurrentFormat(format.toUpperCase())
 
       try {
         await withMinLoadingTime(
           (async () => {
-            let importSuccess = true
+            let exportSuccess = true
+
+            const response = await fetch('/api/tiptap/convert-token')
+            const data = await response.json()
+
+            if (data.error || !data.token) {
+              throw new Error(data.error || 'Failed to get export token')
+            }
+
+            const exportExtension = editor.extensionManager.extensions.find(ext => ext.name === 'export')
+            if (!exportExtension) {
+              throw new Error('Export extension not found')
+            }
+            exportExtension.options.token = data.token
+
             await editor
               .chain()
               .focus()
-              .import({
-                file,
-                onImport(context) {
-                  const { setEditorContent, error: importError } = context
+              .export({
+                format,
+                onExport(context) {
+                  const { error: exportError, download } = context
 
-                  if (importError) {
-                    setError(importError.message)
-                    importSuccess = false
+                  if (exportError) {
+                    setError(exportError.message)
+                    exportSuccess = false
                     return
                   }
 
-                  setEditorContent()
+                  download()
                 },
               })
               .run()
-            return importSuccess
+
+            return exportSuccess
           })(),
         )
         setShowSuccessToast(true)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to import document')
+        setError(err instanceof Error ? err.message : 'Failed to export document')
         setShowErrorToast(true)
       } finally {
         setIsLoading(false)
@@ -72,8 +125,8 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
     <>
       <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild>
-          <Toolbar.Button tooltip="Import Document">
-            <Icon name="Upload" className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+          <Toolbar.Button tooltip="Export Document">
+            <Icon name="Download" className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
           </Toolbar.Button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -85,9 +138,9 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
           >
             <div className="space-y-3">
               <div>
-                <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Import Document</h3>
+                <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Export Document</h3>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  Upload a document to import its content (.docx, .odt, .rtf, .md)
+                  Choose a format to export your document
                 </p>
               </div>
               {error && (
@@ -95,21 +148,17 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
                   {error}
                 </div>
               )}
-              <div className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg border-neutral-200 dark:border-neutral-800">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".docx,.odt,.rtf,.md"
-                  disabled={isLoading}
-                  className="block w-full text-sm text-neutral-500 dark:text-neutral-400
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-neutral-100 file:text-neutral-700
-                    dark:file:bg-neutral-800 dark:file:text-neutral-300
-                    hover:file:bg-neutral-200 dark:hover:file:bg-neutral-700
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+              <div className="flex flex-col gap-2">
+                {exportOptions.map(option => (
+                  <ExportButton
+                    key={option.format}
+                    format={option.format}
+                    label={option.label}
+                    icon={option.icon}
+                    onExport={handleExport}
+                    disabled={isLoading}
+                  />
+                ))}
               </div>
             </div>
           </Popover.Content>
@@ -125,7 +174,7 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
         >
           <Toast.Title className="text-sm font-medium text-green-900 dark:text-green-100 flex items-center gap-2">
             <Icon name="Check" className="w-4 h-4" />
-            Document imported successfully
+            Document exported successfully as {currentFormat}
           </Toast.Title>
         </Toast.Root>
 
@@ -137,7 +186,7 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
         >
           <Toast.Title className="text-sm font-medium text-red-900 dark:text-red-100 flex items-center gap-2">
             <Icon name="X" className="w-4 h-4" />
-            Failed to import document
+            Failed to export document
           </Toast.Title>
         </Toast.Root>
         <Toast.Viewport className="fixed bottom-0 left-0 z-[9999] m-4" />

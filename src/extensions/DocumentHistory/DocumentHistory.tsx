@@ -153,7 +153,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
       <Toast.Provider>
         <Toast.Root
-          className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg shadow-lg p-4 items-center fixed bottom-4 left-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-left-full"
+          className="bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg shadow-lg p-4 items-center fixed bottom-4 left-4 z-[9999] data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-left-full"
           open={showToast}
           onOpenChange={setShowToast}
           duration={3000}
@@ -163,7 +163,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
             Version created successfully
           </Toast.Title>
         </Toast.Root>
-        <Toast.Viewport />
+        <Toast.Viewport className="fixed bottom-0 left-0 z-[9999] m-4" />
       </Toast.Provider>
     </>
   )
