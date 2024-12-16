@@ -51,15 +51,15 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
             },
           ],
         },
-        maxWidth: '100%',
+        maxWidth: '100vw',
       }}
-      className="sm:w-auto w-[280px] sm:overflow-visible overflow-x-auto sm:scrollbar-default scrollbar-none"
+      className="max-w-[95vw] sm:max-w-none w-auto"
       editor={editor}
       pluginKey="textMenu"
       shouldShow={states.shouldShow}
       updateDelay={100}
     >
-      <Toolbar.Wrapper>
+      <Toolbar.Wrapper className="flex flex-wrap gap-0.5">
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker onChange={commands.onSetFont} value={states.currentFont || ''} />
         <MemoFontSizePicker onChange={commands.onSetFontSize} value={states.currentSize || ''} />
@@ -137,40 +137,42 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
             </MemoButton>
           </Popover.Trigger>
           <Popover.Content side="top" asChild>
-            <Toolbar.Wrapper>
-              <MemoButton
-                tooltip="Align left"
-                tooltipShortcut={['Shift', 'Mod', 'L']}
-                onClick={commands.onAlignLeft}
-                active={states.isAlignLeft}
-              >
-                <Icon name="AlignLeft" />
-              </MemoButton>
-              <MemoButton
-                tooltip="Align center"
-                tooltipShortcut={['Shift', 'Mod', 'E']}
-                onClick={commands.onAlignCenter}
-                active={states.isAlignCenter}
-              >
-                <Icon name="AlignCenter" />
-              </MemoButton>
-              <MemoButton
-                tooltip="Align right"
-                tooltipShortcut={['Shift', 'Mod', 'R']}
-                onClick={commands.onAlignRight}
-                active={states.isAlignRight}
-              >
-                <Icon name="AlignRight" />
-              </MemoButton>
-              <MemoButton
-                tooltip="Justify"
-                tooltipShortcut={['Shift', 'Mod', 'J']}
-                onClick={commands.onAlignJustify}
-                active={states.isAlignJustify}
-              >
-                <Icon name="AlignJustify" />
-              </MemoButton>
-            </Toolbar.Wrapper>
+            <Surface className="min-w-[15rem] p-2">
+              <Toolbar.Wrapper>
+                <MemoButton
+                  tooltip="Align left"
+                  tooltipShortcut={['Shift', 'Mod', 'L']}
+                  onClick={commands.onAlignLeft}
+                  active={states.isAlignLeft}
+                >
+                  <Icon name="AlignLeft" />
+                </MemoButton>
+                <MemoButton
+                  tooltip="Align center"
+                  tooltipShortcut={['Shift', 'Mod', 'E']}
+                  onClick={commands.onAlignCenter}
+                  active={states.isAlignCenter}
+                >
+                  <Icon name="AlignCenter" />
+                </MemoButton>
+                <MemoButton
+                  tooltip="Align right"
+                  tooltipShortcut={['Shift', 'Mod', 'R']}
+                  onClick={commands.onAlignRight}
+                  active={states.isAlignRight}
+                >
+                  <Icon name="AlignRight" />
+                </MemoButton>
+                <MemoButton
+                  tooltip="Justify"
+                  tooltipShortcut={['Shift', 'Mod', 'J']}
+                  onClick={commands.onAlignJustify}
+                  active={states.isAlignJustify}
+                >
+                  <Icon name="AlignJustify" />
+                </MemoButton>
+              </Toolbar.Wrapper>
+            </Surface>
           </Popover.Content>
         </Popover.Root>
       </Toolbar.Wrapper>
