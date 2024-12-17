@@ -21,7 +21,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
 
   return (
     <div className="flex items-center gap-4">
-      <div className="hidden sm:flex flex-col justify-center text-right border-r border-neutral-200 dark:border-neutral-800 pr-4">
+      <div className="hidden sm:flex flex-col justify-center text-right">
         <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 flex items-center">
           <span>
             {words} {words === 1 ? 'word' : 'words'}
