@@ -5,6 +5,8 @@ import { WebSocketStatus } from '@hocuspocus/provider'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { Sidebar } from '@/components/Sidebar'
+import { AIAssistantButton } from '@/components/ui/AIAssistantButton'
+import { useCallback } from 'react'
 
 export type EditorHeaderProps = {
   editor: Editor
@@ -25,14 +27,23 @@ export const EditorHeader = ({ editor, collabState, users }: EditorHeaderProps) 
     },
   })
 
+  const handleStartWriting = useCallback(() => {
+    editor.commands.focus()
+  }, [editor])
+
   return (
-    <div className="flex flex-row items-center justify-between flex-none px-4 sm:px-6 py-2 text-black bg-white border-b border-neutral-200 dark:bg-black dark:text-white dark:border-neutral-800 z-[9999] relative">
+    <div className="flex flex-row items-center justify-between flex-none px-2 sm:px-6 py-2 text-black bg-white border-b border-neutral-200 dark:bg-black dark:text-white dark:border-neutral-800 z-[9999] relative">
       <div className="flex flex-row gap-x-1.5 items-center">
         <div className="flex items-center gap-x-1.5">
           <Sidebar editor={editor} />
         </div>
       </div>
-      <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />
+      <div className="flex-shrink-0 mx-2">
+        <AIAssistantButton onClick={handleStartWriting} />
+      </div>
+      <div className="flex justify-end items-center">
+        <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />
+      </div>
     </div>
   )
 }
