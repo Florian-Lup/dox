@@ -12,9 +12,10 @@ export type EditorHeaderProps = {
   editor: Editor
   collabState: WebSocketStatus
   users: EditorUser[]
+  onDrawerOpenChange: (isOpen: boolean) => void
 }
 
-export const EditorHeader = ({ editor, collabState, users }: EditorHeaderProps) => {
+export const EditorHeader = ({ editor, collabState, users, onDrawerOpenChange }: EditorHeaderProps) => {
   const { characters, words, limit } = useEditorState({
     editor,
     selector: ctx => {
@@ -27,9 +28,9 @@ export const EditorHeader = ({ editor, collabState, users }: EditorHeaderProps) 
     },
   })
 
-  const handleStartWriting = useCallback(() => {
-    editor.commands.focus()
-  }, [editor])
+  const handleAIAssistantClick = useCallback(() => {
+    onDrawerOpenChange(true)
+  }, [onDrawerOpenChange])
 
   return (
     <div className="flex flex-row items-center justify-between flex-none px-2 sm:px-6 py-2 text-black bg-white border-b border-neutral-200 dark:bg-black dark:text-white dark:border-neutral-800 z-[9999] relative">
@@ -39,7 +40,7 @@ export const EditorHeader = ({ editor, collabState, users }: EditorHeaderProps) 
         </div>
       </div>
       <div className="flex-shrink-0 mx-2">
-        <AIAssistantButton onClick={handleStartWriting} />
+        <AIAssistantButton onClick={handleAIAssistantClick} />
       </div>
       <div className="flex justify-end items-center">
         <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />
