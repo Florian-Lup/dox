@@ -13,7 +13,7 @@ export const ComposerButton = ({ onClick, className }: ComposerButtonProps) => {
     <Tooltip title="AI Assistant">
       <Button
         onClick={onClick}
-        className={`relative group overflow-hidden bg-gradient-to-br from-teal-400 to-emerald-600 hover:from-teal-500 hover:to-emerald-700 text-white shadow-md hover:shadow-lg transition-all duration-300 scale-100 hover:scale-105 flex-shrink-0 border-0 sm:h-8 sm:w-8 ${className}`}
+        className={`relative group overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-md hover:shadow-lg transition-all duration-300 scale-100 hover:scale-105 flex-shrink-0 border-0 sm:h-8 sm:w-8 ${className}`}
         variant="primary"
         buttonSize="iconSmall"
       >
