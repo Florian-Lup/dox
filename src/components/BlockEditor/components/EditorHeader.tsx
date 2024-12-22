@@ -5,7 +5,7 @@ import { WebSocketStatus } from '@hocuspocus/provider'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { Sidebar } from '@/components/Sidebar'
-import { AIAssistantButton } from '@/components/ui/AIAssistantButton'
+import { ComposerButton } from '@/components/aiComposer/ComposerButton'
 import { useCallback } from 'react'
 
 export type EditorHeaderProps = {
@@ -40,7 +40,7 @@ export const EditorHeader = ({ editor, collabState, users, onDrawerOpenChange }:
         </div>
       </div>
       <div className="flex-shrink-0 mx-2">
-        <AIAssistantButton onClick={handleAIAssistantClick} />
+        <ComposerButton onClick={handleAIAssistantClick} />
       </div>
       <div className="flex justify-end items-center">
         <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />

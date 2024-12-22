@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion'
 import { Pen } from 'lucide-react'
-import { Button } from './Button'
-import Tooltip from './Tooltip'
+import { Button } from '../ui/Button'
+import Tooltip from '../ui/Tooltip'
 
-interface AIAssistantButtonProps {
+interface ComposerButtonProps {
   onClick: () => void
   className?: string
 }
 
-export const AIAssistantButton = ({ onClick, className }: AIAssistantButtonProps) => {
+export const ComposerButton = ({ onClick, className }: ComposerButtonProps) => {
   return (
     <Tooltip title="AI Assistant">
       <Button

@@ -10,7 +10,7 @@ import '@/styles/index.css'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { AIAssistantPanel } from '@/components/ui/AIAssistantPanel'
+import { ComposerPanel } from '@/components/aiComposer/ComposerPanel'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
@@ -52,7 +52,7 @@ export const BlockEditor = ({
           </div>
         </div>
       </div>
-      <AIAssistantPanel isOpen={isDrawerOpen} onClose={handleDrawerClose} />
+      <ComposerPanel isOpen={isDrawerOpen} onClose={handleDrawerClose} />
     </>
   )
 }
