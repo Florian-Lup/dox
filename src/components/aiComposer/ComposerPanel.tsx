@@ -12,10 +12,9 @@ import {
   Scale,
   Wrench,
   ChevronDown,
-  Send,
 } from 'lucide-react'
 import { Button } from '../ui/Button'
-import { useState, useCallback, useRef, useEffect, useMemo, KeyboardEvent, ChangeEvent, memo } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
 interface ComposerPanelProps {
   isOpen: boolean
@@ -82,54 +81,9 @@ const QUICK_ACTIONS = [
   },
 ]
 
-interface InputAreaProps {
-  value: string
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
-  onSubmit: (e?: React.FormEvent) => void
-  onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void
-}
-
-const InputArea = memo(function InputArea({ value, onChange, onSubmit, onKeyDown }: InputAreaProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(() => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-
-    textarea.style.height = '40px'
-    const scrollHeight = textarea.scrollHeight
-    textarea.style.height = scrollHeight > 200 ? '200px' : `${scrollHeight}px`
-  }, [value])
-
-  return (
-    <div className="flex gap-2">
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        placeholder="Type your message..."
-        spellCheck={false}
-        autoComplete="off"
-        className="flex-1 min-h-[40px] max-h-[200px] p-2 text-sm rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white resize-none overflow-y-auto"
-        rows={1}
-      />
-      <Button
-        onClick={onSubmit}
-        variant="ghost"
-        buttonSize="iconSmall"
-        className="self-end h-10 w-10 flex items-center justify-center"
-      >
-        <Send className="w-4 h-4" />
-      </Button>
-    </div>
-  )
-})
-
 export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
   const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
-  const [inputValue, setInputValue] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -150,30 +104,6 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
   const handleModelSelect = useCallback((model: (typeof LLM_MODELS)[0]) => {
     setSelectedModel(model)
     setIsModelDropdownOpen(false)
-  }, [])
-
-  const handleSubmit = useCallback(
-    (e?: React.FormEvent) => {
-      e?.preventDefault()
-      if (!inputValue.trim()) return
-      // Handle submission here
-      setInputValue('')
-    },
-    [inputValue],
-  )
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault()
-        handleSubmit()
-      }
-    },
-    [handleSubmit],
-  )
-
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value)
   }, [])
 
   const QuickActions = () => (
@@ -213,7 +143,7 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
           onClick={handleModelButtonClick}
           className="flex items-center gap-1 text-xs font-medium group"
         >
-          <span className="text-neutral-500">LLM : </span>
+          <span className="text-neutral-500">LLM @ </span>
           <span className="text-neutral-900 dark:text-white">{selectedModel.name}</span>
           <motion.div animate={{ rotate: isModelDropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <ChevronDown className="w-3 h-3 text-neutral-400 group-hover:text-neutral-500 dark:group-hover:text-neutral-300" />
@@ -276,7 +206,7 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
 
               <HeaderContent />
 
-              <div className="flex-1 overflow-auto p-4 pb-[72px]">
+              <div className="flex-1 overflow-auto p-4">
                 <QuickActions />
               </div>
             </motion.div>
@@ -292,22 +222,10 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
           >
             <HeaderContent />
 
-            <div className="flex-1 overflow-auto p-4 pb-[72px]">
+            <div className="flex-1 overflow-auto p-4">
               <QuickActions />
             </div>
           </motion.div>
-
-          {/* Shared Input Area */}
-          <div className="fixed bottom-0 sm:right-6 sm:bottom-6 sm:w-[400px] inset-x-0 sm:inset-x-auto bg-white dark:bg-neutral-900 border-t sm:border-none border-neutral-200 dark:border-neutral-800 z-50">
-            <div className="p-4">
-              <InputArea
-                value={inputValue}
-                onChange={handleInputChange}
-                onSubmit={handleSubmit}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-          </div>
         </>
       )}
     </AnimatePresence>
