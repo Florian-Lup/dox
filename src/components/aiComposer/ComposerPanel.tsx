@@ -12,6 +12,7 @@ import {
   Scale,
   Wrench,
   ChevronDown,
+  Send,
 } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
@@ -84,6 +85,7 @@ const QUICK_ACTIONS = [
 export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
   const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false)
+  const [inputValue, setInputValue] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -104,6 +106,30 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
   const handleModelSelect = useCallback((model: (typeof LLM_MODELS)[0]) => {
     setSelectedModel(model)
     setIsModelDropdownOpen(false)
+  }, [])
+
+  const handleSubmit = useCallback(() => {
+    if (!inputValue.trim()) return
+    // TODO: Handle submission
+    console.log('Submitting:', inputValue)
+    setInputValue('')
+  }, [inputValue])
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) {
+          return // Allow new line with Shift+Enter
+        }
+        e.preventDefault()
+        handleSubmit()
+      }
+    },
+    [handleSubmit],
+  )
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value)
   }, [])
 
   const QuickActions = () => (
@@ -143,7 +169,7 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
           onClick={handleModelButtonClick}
           className="flex items-center gap-1 text-xs font-medium group"
         >
-          <span className="text-neutral-500">LLM @ </span>
+          <span className="text-neutral-500">LLM : </span>
           <span className="text-neutral-900 dark:text-white">{selectedModel.name}</span>
           <motion.div animate={{ rotate: isModelDropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <ChevronDown className="w-3 h-3 text-neutral-400 group-hover:text-neutral-500 dark:group-hover:text-neutral-300" />
@@ -190,43 +216,58 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Mobile popup */}
-          <div className="fixed inset-x-0 bottom-0 z-40 sm:hidden h-[80vh]">
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.2 }}
-              className="flex flex-col h-full bg-white dark:bg-neutral-900 shadow-xl rounded-t-2xl"
-            >
-              <div className="flex justify-center p-2">
-                <div className="w-10 h-1 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ duration: 0.2 }}
+          className="fixed sm:right-6 sm:top-[61px] sm:bottom-6 sm:w-[400px] 
+            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[61px]
+            bg-white dark:bg-neutral-900 shadow-xl z-[9999] 
+            border border-neutral-200 dark:border-neutral-800 rounded-lg 
+            flex flex-col"
+        >
+          <HeaderContent />
+
+          <div className="flex-1 overflow-auto p-2 sm:p-4">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="text-sm text-neutral-500 dark:text-neutral-400">Quick Actions</div>
+              <div className="flex flex-col gap-2">
+                {QUICK_ACTIONS.map(({ icon, label, description }) => (
+                  <button
+                    key={label}
+                    className="flex items-center gap-2 sm:gap-3 w-full text-left px-3 sm:px-4 py-2 sm:py-3 
+                      rounded-lg border border-neutral-200 dark:border-neutral-700 
+                      hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  >
+                    <span className="text-neutral-500 flex-shrink-0">{icon}</span>
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{label}</div>
+                      <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{description}</div>
+                    </div>
+                  </button>
+                ))}
               </div>
-
-              <HeaderContent />
-
-              <div className="flex-1 overflow-auto p-4">
-                <QuickActions />
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Desktop floating panel */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed right-6 top-[61px] bottom-6 w-[400px] bg-white dark:bg-neutral-900 shadow-xl z-40 border border-neutral-200 dark:border-neutral-800 rounded-lg hidden sm:flex flex-col"
-          >
-            <HeaderContent />
-
-            <div className="flex-1 overflow-auto p-4">
-              <QuickActions />
             </div>
-          </motion.div>
-        </>
+          </div>
+          <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
+            <div className="relative">
+              <textarea
+                value={inputValue}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                spellCheck={false}
+                autoComplete="off"
+                className="w-full h-12 sm:h-16 p-2 sm:p-3 text-sm rounded-lg 
+                  border border-neutral-200 dark:border-neutral-700 
+                  bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white 
+                  placeholder-neutral-500 dark:placeholder-neutral-400 resize-none 
+                  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ask anything..."
+              />
+            </div>
+          </div>
+        </motion.div>
       )}
     </AnimatePresence>
   )

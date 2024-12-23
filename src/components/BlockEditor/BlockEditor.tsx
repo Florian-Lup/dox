@@ -39,7 +39,7 @@ export const BlockEditor = ({
         <div className="relative flex flex-col flex-1 h-full overflow-hidden">
           <EditorHeader editor={editor} collabState={collabState} users={users} onDrawerOpenChange={setIsDrawerOpen} />
           <div className="flex-1 min-h-0 relative">
-            <div className="absolute inset-0 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-lg [&::-webkit-scrollbar-thumb]:bg-neutral-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-400 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-700 dark:hover:[&::-webkit-scrollbar-thumb]:bg-neutral-600">
+            <div className="absolute inset-0 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-lg [&::-webkit-scrollbar-thumb]:bg-neutral-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-400 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-700 dark:hover:[&::-webkit-scrollbar-thumb]:bg-neutral-600">
               <div
                 className={`min-h-full transition-all duration-300 ease-in-out ${isDrawerOpen ? 'sm:mr-[400px]' : ''}`}
               >
