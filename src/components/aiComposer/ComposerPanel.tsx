@@ -15,10 +15,14 @@ import {
 import { Button } from '../ui/Button'
 import { useState, useCallback } from 'react'
 import { ModelSelector, LLM_MODELS } from './ModelSelector'
+import { ScopeSelector } from './ScopeSelector'
+import { useScope } from '@/hooks/useScope'
+import { Editor } from '@tiptap/react'
 
 interface ComposerPanelProps {
   isOpen: boolean
   onClose: () => void
+  editor: Editor
 }
 
 const QUICK_ACTIONS = [
@@ -74,9 +78,10 @@ const QUICK_ACTIONS = [
   },
 ]
 
-export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
+export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) => {
   const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
   const [inputValue, setInputValue] = useState('')
+  const { scope, resetScope } = useScope(editor)
 
   const handleSubmit = useCallback(() => {
     if (!inputValue.trim()) return
@@ -102,17 +107,10 @@ export const ComposerPanel = ({ isOpen, onClose }: ComposerPanelProps) => {
     setInputValue(e.target.value)
   }, [])
 
-  const ScopeText = () => (
-    <div className="text-xs font-medium">
-      <span className="text-neutral-500">Scope @ </span>
-      <span className="text-neutral-900 dark:text-white">Full Document</span>
-    </div>
-  )
-
   const HeaderContent = () => (
     <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
       <div className="flex items-center gap-4">
-        <ScopeText />
+        <ScopeSelector scope={scope} onReset={resetScope} />
         <ModelSelector selectedModel={selectedModel} onModelSelect={setSelectedModel} />
       </div>
       <Button variant="ghost" buttonSize="iconSmall" onClick={onClose}>

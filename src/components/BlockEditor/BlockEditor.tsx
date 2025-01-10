@@ -52,7 +52,7 @@ export const BlockEditor = ({
           </div>
         </div>
       </div>
-      <ComposerPanel isOpen={isDrawerOpen} onClose={handleDrawerClose} />
+      <ComposerPanel isOpen={isDrawerOpen} onClose={handleDrawerClose} editor={editor} />
     </>
   )
 }

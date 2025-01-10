@@ -48,7 +48,7 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
   const createClickHandler = (model: (typeof LLM_MODELS)[0]) => () => handleModelSelectClick(model)
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative inline-block" ref={dropdownRef}>
       <button
         type="button"
         onClick={handleModelButtonClick}
@@ -62,7 +62,7 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
       </button>
 
       {isModelDropdownOpen && (
-        <div className="absolute top-full mt-2 right-0 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden z-50 p-1">
+        <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden z-50 p-1">
           {LLM_MODELS.map(model => (
             <button
               key={model.id}
