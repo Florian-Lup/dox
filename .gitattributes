@@ -1,0 +1,8 @@
+* text=auto eol=crlf
+*.{js,jsx,ts,tsx} text eol=crlf
+*.{css,scss,less} text eol=crlf
+*.{json,yml,yaml} text eol=crlf
+*.{html,htm} text eol=crlf
+*.{md,mdx} text eol=crlf
+*.txt text eol=crlf
+*.svg text eol=crlf 
