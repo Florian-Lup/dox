@@ -12,65 +12,78 @@ import {
   Type,
   Languages,
 } from 'lucide-react'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { Spinner } from '../ui/Spinner'
 
 const QUICK_ACTIONS = [
   {
+    id: 'grammar',
     icon: <Type className="w-4 h-4" />,
     label: 'Fix Grammar',
     description: 'Correct grammar and improve writing',
   },
   {
+    id: 'translate',
     icon: <Languages className="w-4 h-4" />,
     label: 'Translate',
     description: 'Translate text to another language',
   },
   {
+    id: 'explain',
     icon: <Code2 className="w-4 h-4" />,
     label: 'Explain selected code',
     description: 'Get a detailed explanation of the code',
   },
   {
+    id: 'improve',
     icon: <Wand2 className="w-4 h-4" />,
     label: 'Improve code quality',
     description: 'Enhance readability and performance',
   },
   {
+    id: 'bugs',
     icon: <Bug className="w-4 h-4" />,
     label: 'Find and fix bugs',
     description: 'Identify and resolve issues',
   },
   {
+    id: 'docs',
     icon: <MessageSquare className="w-4 h-4" />,
     label: 'Add documentation',
     description: 'Generate helpful comments and docs',
   },
   {
+    id: 'optimize',
     icon: <Scale className="w-4 h-4" />,
     label: 'Optimize performance',
     description: 'Improve code efficiency and speed',
   },
   {
+    id: 'git',
     icon: <GitBranch className="w-4 h-4" />,
     label: 'Suggest git message',
     description: 'Generate a commit message',
   },
   {
+    id: 'types',
     icon: <Sparkles className="w-4 h-4" />,
     label: 'Add types',
     description: 'Generate TypeScript types and interfaces',
   },
   {
+    id: 'tests',
     icon: <Wrench className="w-4 h-4" />,
     label: 'Add tests',
     description: 'Generate unit tests for the code',
   },
   {
+    id: 'references',
     icon: <FileSearch className="w-4 h-4" />,
     label: 'Find references',
     description: 'Search through the codebase',
   },
   {
+    id: 'custom',
     icon: <BrainCircuit className="w-4 h-4" />,
     label: 'Custom instruction',
     description: 'Give specific instructions',
@@ -79,9 +92,10 @@ const QUICK_ACTIONS = [
 
 interface QuickActionsProps {
   onActionSelect?: (action: (typeof QUICK_ACTIONS)[number]) => void
+  processingAction?: string | null
 }
 
-export const QuickActions = ({ onActionSelect }: QuickActionsProps) => {
+export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsProps) => {
   const handleActionClick = useCallback(
     (action: (typeof QUICK_ACTIONS)[number]) => () => {
       onActionSelect?.(action)
@@ -101,7 +115,9 @@ export const QuickActions = ({ onActionSelect }: QuickActionsProps) => {
               rounded-lg border border-neutral-200 dark:border-neutral-700 
               hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
           >
-            <span className="text-neutral-500 flex-shrink-0">{action.icon}</span>
+            <span className="text-neutral-500 flex-shrink-0">
+              {processingAction === action.id ? <Spinner className="w-4 h-4" /> : action.icon}
+            </span>
             <div className="min-w-0">
               <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{action.label}</div>
               <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{action.description}</div>

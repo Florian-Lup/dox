@@ -19,7 +19,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
   const [inputValue, setInputValue] = useState('')
   const { scope, resetScope } = useScope(editor)
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingAction, setProcessingAction] = useState<string | null>(null)
 
   const handleSubmit = useCallback(() => {
     if (!inputValue.trim()) return
@@ -48,14 +48,14 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   const handleActionSelect = useCallback(
     async (action: any) => {
       if (action.label === 'Fix Grammar') {
-        setIsProcessing(true)
+        setProcessingAction('grammar')
         try {
           await handleGrammarFix(editor, scope, selectedModel.id)
           resetScope()
         } catch (error) {
           console.error('Error fixing grammar:', error)
         } finally {
-          setIsProcessing(false)
+          setProcessingAction(null)
         }
       }
     },
@@ -91,7 +91,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           <HeaderContent />
 
           <div className="flex-1 overflow-auto p-2 sm:p-4">
-            <QuickActions onActionSelect={handleActionSelect} />
+            <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
           </div>
           <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
             <div className="relative">

@@ -18,6 +18,15 @@ export const handleGrammarFix = async (
     const inputText = getTextFromScope(editor, scope)
     const fullContent = editor.state.doc.textContent
 
+    // Apply strike-through to the target text
+    if (scope.type === 'selection' && scope.position) {
+      editor.commands.setTextSelection(scope.position)
+      editor.commands.setMark('strike')
+    } else {
+      editor.commands.selectAll()
+      editor.commands.setMark('strike')
+    }
+
     const response = await fetch('/api/ai/grammar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
