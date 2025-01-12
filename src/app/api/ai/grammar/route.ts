@@ -5,16 +5,21 @@ import { StringOutputParser } from '@langchain/core/output_parsers'
 import { RunnableSequence } from '@langchain/core/runnables'
 
 const grammarFixPrompt = PromptTemplate.fromTemplate(`
-Fix any grammar issues in the following text while preserving its meaning and style.
-If there are no grammar issues, return the original text unchanged.
+Fix any grammar issues in the TARGET TEXT while preserving its meaning and style.
+If there are no grammar issues, return the target text unchanged.
+Use the full document context to better understand the meaning and flow, but only return the fixed target text.
 
-Text: {text}
+Full document:
+{fullContent}
 
-Fixed text:`)
+TARGET TEXT TO FIX (located within the document):
+{text}
+
+Fixed target text:`)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName } = await req.json()
+    const { text, modelName, fullContent = '' } = await req.json()
 
     if (!process.env.OPENAI_API_KEY) {
       console.error('❌ API key not found')
@@ -30,7 +35,8 @@ export async function POST(req: Request) {
 
     const chain = RunnableSequence.from([
       {
-        text: (input: { text: string }) => input.text,
+        text: (input: { text: string; fullContent: string }) => input.text,
+        fullContent: (input: { text: string; fullContent: string }) => input.fullContent,
       },
       grammarFixPrompt,
       model,
@@ -44,7 +50,7 @@ export async function POST(req: Request) {
     // Process the stream
     ;(async () => {
       try {
-        for await (const chunk of await chain.stream({ text })) {
+        for await (const chunk of await chain.stream({ text, fullContent })) {
           await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk })}\n\n`))
         }
       } catch (error) {

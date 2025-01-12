@@ -5,6 +5,7 @@ import { getTextFromScope, updateEditorContent } from './utils'
 export interface GrammarFixParams {
   text: string
   modelName: string
+  fullContent: string
 }
 
 export const handleGrammarFix = async (
@@ -15,11 +16,12 @@ export const handleGrammarFix = async (
 ) => {
   try {
     const inputText = getTextFromScope(editor, scope)
+    const fullContent = editor.state.doc.textContent
 
     const response = await fetch('/api/ai/grammar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: inputText, modelName }),
+      body: JSON.stringify({ text: inputText, modelName, fullContent }),
     })
 
     if (!response.ok) {
