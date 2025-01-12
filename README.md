@@ -1,4 +1,4 @@
-# Next BlockEditor App
+# Dox AI BlockEditor App
 
 ## Usage Guidelines
 
@@ -9,7 +9,7 @@ Key features of the template include:
 
 - A Next.js setup with TypeScript
 - A basic Tailwind setup for styling
-- Pre-configured links to Common Tongue Cloud for collaboration and data persistence.
+- Pre-configured links to Dox AI Cloud for collaboration and data persistence.
 - A Block Editor with a basic set of nodes and marks but also more advanced features like
   - Drag & Drop via a DragHandle
   - A fleshed out menu bar for text editing and formatting
@@ -17,16 +17,14 @@ Key features of the template include:
   - mocked image uploading that can be hooked up to your backend
 
 You can either start a fresh project from this editor or copy over the editor or parts you need to your own projects.
-Make sure to check out the [Common Tongue documentation](https://commontongue.dev) for more information on how to use
-Common Tongue.
+Make sure to check out the [Dox AI documentation](https://commontongue.dev) for more information on how to use Dox AI.
 
-> [!Important] Do note that these templates are free to access only for evaluation purposes. If you wish to use Common
-> Tongue's paid features, you will need to comply with the
-> [Common Tongue Pro License](https://commontongue.dev/pro-license). To summarize, you can use the Common Tongue Pro
-> extensions for free in development or for personal reasons, but you will need to purchase a license to use them in
-> production or commercially. All code in this repository is licensed under the
-> [Common Tongue Pro License](https://commontongue.dev/pro-license) and may not be be distributed or used in production
-> without a valid license.
+> [!Important] Do note that these templates are free to access only for evaluation purposes. If you wish to use Dox AI's
+> paid features, you will need to comply with the [Dox AI Pro License](https://commontongue.dev/pro-license). To
+> summarize, you can use the Dox AI Pro extensions for free in development or for personal reasons, but you will need to
+> purchase a license to use them in production or commercially. All code in this repository is licensed under the
+> [Dox AI Pro License](https://commontongue.dev/pro-license) and may not be distributed or used in production without a
+> valid license.
 
 ## Folder structure
 
