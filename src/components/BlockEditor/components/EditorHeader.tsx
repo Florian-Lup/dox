@@ -30,7 +30,7 @@ export const EditorHeader = ({ editor, collabState, users, onDrawerOpenChange }:
       </div>
 
       {/* Mobile AI button */}
-      <div className="flex-1 flex sm:hidden items-center pl-1">
+      <div className="flex-1 flex sm:hidden items-center pl-2">
         <ComposerButton onClick={handleAIAssistantClick} />
       </div>
 

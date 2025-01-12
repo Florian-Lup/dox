@@ -51,6 +51,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
         setIsProcessing(true)
         try {
           await handleGrammarFix(editor, scope, selectedModel.id)
+          resetScope()
         } catch (error) {
           console.error('Error fixing grammar:', error)
         } finally {
@@ -58,7 +59,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
         }
       }
     },
-    [editor, scope, selectedModel.id],
+    [editor, scope, selectedModel.id, resetScope],
   )
 
   const HeaderContent = () => (

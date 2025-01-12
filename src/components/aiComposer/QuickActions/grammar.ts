@@ -16,7 +16,7 @@ export const handleGrammarFix = async (
   try {
     const inputText = getTextFromScope(editor, scope)
 
-    const response = await fetch('/api/grammar', {
+    const response = await fetch('/api/ai/grammar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: inputText, modelName }),
