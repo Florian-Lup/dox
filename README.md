@@ -17,14 +17,14 @@ Key features of the template include:
   - mocked image uploading that can be hooked up to your backend
 
 You can either start a fresh project from this editor or copy over the editor or parts you need to your own projects.
-Make sure to check out the [Dox AI documentation](https://commontongue.dev) for more information on how to use Dox AI.
+Make sure to check out the [Dox AI documentation](https://doxai.dev) for more information on how to use Dox AI.
 
 > [!Important] Do note that these templates are free to access only for evaluation purposes. If you wish to use Dox AI's
-> paid features, you will need to comply with the [Dox AI Pro License](https://commontongue.dev/pro-license). To
-> summarize, you can use the Dox AI Pro extensions for free in development or for personal reasons, but you will need to
-> purchase a license to use them in production or commercially. All code in this repository is licensed under the
-> [Dox AI Pro License](https://commontongue.dev/pro-license) and may not be distributed or used in production without a
-> valid license.
+> paid features, you will need to comply with the [Dox AI Pro License](https://doxai.dev/pro-license). To summarize, you
+> can use the Dox AI Pro extensions for free in development or for personal reasons, but you will need to purchase a
+> license to use them in production or commercially. All code in this repository is licensed under the
+> [Dox AI Pro License](https://doxai.dev/pro-license) and may not be distributed or used in production without a valid
+> license.
 
 ## Folder structure
 
@@ -38,7 +38,7 @@ The template is structured as a Next.js app with a few additional folders and fi
   - **TableOfContents** the table of contents component used for navigation
   - **ui** general reusable UI components used across the application
 - **context** A place to put React contexts that are used in the app
-- **extensions** Includes all Common Tongue extensions used in the app including their NodeViews and logic parts
+- **extensions** Includes all Dox AI extensions used in the app including their NodeViews and logic parts
 - **hooks** Including general hooks used for app and editor setup
 - **lib** Includes helper functions
 - **styles** Includes global CSS styles with Tailwind to setup richtext styling

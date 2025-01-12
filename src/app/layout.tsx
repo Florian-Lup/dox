@@ -15,20 +15,20 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://notion-dev-tan.vercel.app'),
-  title: 'Common Tongue',
+  title: 'Dox AI',
   description:
-    'Common Tongue is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+    'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   robots: 'noindex, nofollow',
   icons: [{ url: '/favicon.png' }],
   twitter: {
     card: 'summary',
-    site: '@commontongue',
-    creator: '@commontongue',
+    site: '@doxai',
+    creator: '@doxai',
   },
   openGraph: {
-    title: 'Common Tongue',
+    title: 'Dox AI',
     description:
-      'Common Tongue is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+      'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   },
 }
 
