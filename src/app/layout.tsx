@@ -19,7 +19,11 @@ export const metadata: Metadata = {
   description:
     'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   robots: 'noindex, nofollow',
-  icons: [{ url: '/favicon.png' }],
+  icons: [
+    { rel: 'icon', url: '/favicon.svg', type: 'image/svg+xml' },
+    { rel: 'icon', url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+    { rel: 'apple-touch-icon', url: '/favicon.png' },
+  ],
   twitter: {
     card: 'summary',
     site: '@doxai',

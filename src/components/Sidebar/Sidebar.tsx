@@ -8,7 +8,7 @@ import { DocumentExportButton } from '@/extensions/DocumentExport'
 
 export const Sidebar = memo(({ editor }: { editor: Editor }) => {
   return (
-    <div className="flex gap-0.5">
+    <div className="flex items-center gap-x-0.5 sm:gap-x-1.5">
       <TableOfContentsButton editor={editor} />
       <DocumentHistory editor={editor} />
       <CommentList editor={editor} />

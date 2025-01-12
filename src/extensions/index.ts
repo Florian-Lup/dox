@@ -22,6 +22,7 @@ export { UniqueID } from '@tiptap-pro/extension-unique-id'
 
 export { Selection } from './Selection'
 export { AiWriter } from './AiWriter'
+export { CharacterCounter } from './CharacterCounter'
 export { DocumentImport } from './DocumentImport'
 export { DocumentExport } from './DocumentExport'
 export { HorizontalRule } from './HorizontalRule'

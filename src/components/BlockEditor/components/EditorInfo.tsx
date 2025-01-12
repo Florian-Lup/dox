@@ -20,7 +20,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
   const strokeDashoffset = circumference - (percentage / 100) * circumference
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2 sm:gap-4">
       <div className="hidden sm:flex flex-col justify-center text-right">
         <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 flex items-center">
           <span>
@@ -32,7 +32,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
           </span>
         </div>
       </div>
-      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-4">
+      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-2 sm:pr-4">
         <Tooltip title={`${characters}/${limit} characters (${percentage.toFixed(1)}%)`}>
           <svg width="20" height="20" className="transform -rotate-90">
             <circle
@@ -80,8 +80,8 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
       {collabState === 'connected' && (
         <div className="flex flex-row items-center">
           <div className="relative flex flex-row items-center">
-            {users.slice(0, 3).map((user: EditorUser) => (
-              <div key={user.clientId} className="-ml-2 sm:-ml-3 first:ml-0">
+            {users.slice(0, 2).map((user: EditorUser) => (
+              <div key={user.clientId} className="-ml-1.5 sm:-ml-3 first:ml-0">
                 <Tooltip title={user.name}>
                   <img
                     className="w-6 h-6 sm:w-8 sm:h-8 border border-white rounded-full dark:border-black"
@@ -93,10 +93,10 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
                 </Tooltip>
               </div>
             ))}
-            {users.length > 3 && (
-              <div className="-ml-2 sm:-ml-3">
+            {users.length > 2 && (
+              <div className="-ml-1.5 sm:-ml-3">
                 <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 font-bold text-[10px] sm:text-xs leading-none border border-white dark:border-black bg-[#FFA2A2] rounded-full">
-                  +{users.length - 3}
+                  +{users.length - 2}
                 </div>
               </div>
             )}
