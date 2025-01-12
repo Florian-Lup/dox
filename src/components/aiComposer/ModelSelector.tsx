@@ -4,9 +4,9 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 
 export const LLM_MODELS = [
   { id: 'gpt-4o', name: 'gpt-4o', description: 'Most capable for complex tasks' },
-  { id: 'gpt-4o-mini', name: 'gpt-4o-mini', description: 'Fast and cost-effective' },
-  { id: 'o1', name: 'o1', description: 'Coming Soon' },
-  { id: 'o1-mini', name: 'o1-mini', description: 'Coming Soon' },
+  { id: 'gpt-4o-mini', name: 'gpt-4o-mini', description: 'Fast and cost-effective model' },
+  { id: 'gemini-1.5-pro', name: 'gemini-1.5-pro', description: 'Advanced reasoning and long context' },
+  { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash', description: 'Quick responses with high efficiency' },
 ]
 
 interface ModelSelectorProps {
