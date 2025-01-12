@@ -3,8 +3,8 @@ import { ChevronDown } from 'lucide-react'
 import { useState, useCallback, useRef, useEffect } from 'react'
 
 export const LLM_MODELS = [
-  { id: 'GPT-4o', name: 'GPT-4o', description: 'Most capable for complex tasks' },
-  { id: 'GPT-4o Mini', name: 'GPT-4o Mini', description: 'Fast and cost-effective' },
+  { id: 'gpt-4o', name: 'gpt-4o', description: 'Most capable for complex tasks' },
+  { id: 'gpt-4o-mini', name: 'gpt-4o-mini', description: 'Fast and cost-effective' },
   { id: 'o1', name: 'o1', description: 'A powerful reasoning model' },
   { id: 'o1-mini', name: 'o1-mini', description: 'Lightweight and efficient' },
 ]

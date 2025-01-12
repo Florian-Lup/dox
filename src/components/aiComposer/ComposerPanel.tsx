@@ -7,6 +7,7 @@ import { ScopeSelector } from './ScopeSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
 import { QuickActions } from './QuickActions'
+import { handleGrammarFix } from './QuickActions/grammar'
 
 interface ComposerPanelProps {
   isOpen: boolean
@@ -18,6 +19,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
   const [inputValue, setInputValue] = useState('')
   const { scope, resetScope } = useScope(editor)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const handleSubmit = useCallback(() => {
     if (!inputValue.trim()) return
@@ -43,10 +45,21 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
     setInputValue(e.target.value)
   }, [])
 
-  const handleActionSelect = useCallback((action: any) => {
-    // TODO: Handle quick action selection
-    console.log('Selected action:', action)
-  }, [])
+  const handleActionSelect = useCallback(
+    async (action: any) => {
+      if (action.label === 'Fix Grammar') {
+        setIsProcessing(true)
+        try {
+          await handleGrammarFix(editor, scope, selectedModel.id)
+        } catch (error) {
+          console.error('Error fixing grammar:', error)
+        } finally {
+          setIsProcessing(false)
+        }
+      }
+    },
+    [editor, scope, selectedModel.id],
+  )
 
   const HeaderContent = () => (
     <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
