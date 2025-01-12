@@ -67,7 +67,11 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
             <button
               key={model.id}
               onClick={createClickHandler(model)}
-              className="flex flex-col w-full px-3 py-2 text-left rounded-md hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors"
+              className={`flex flex-col w-full px-3 py-2 text-left rounded-md transition-colors ${
+                selectedModel.id === model.id
+                  ? 'bg-neutral-100 dark:bg-neutral-700'
+                  : 'hover:bg-neutral-50 dark:hover:bg-neutral-700/50'
+              }`}
             >
               <span className="text-sm font-medium text-neutral-900 dark:text-white">{model.name}</span>
               <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>

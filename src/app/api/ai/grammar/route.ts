@@ -66,38 +66,22 @@ export async function POST(req: Request) {
     const stream = new TransformStream()
     const writer = stream.writable.getWriter()
 
-    // Process the stream
+    // Process the complete output and then stream it
     ;(async () => {
       try {
-        let buffer = ''
-
-        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
+        // Collect the streamed output from LLM
+        let completeOutput = ''
         for await (const chunk of await chain.stream({ text, fullContent })) {
-          if (isGemini) {
-            // For Gemini, process word by word with small delays
-            buffer += chunk
-            const words = buffer.split(/(\s+)/) // Split by whitespace but keep the separators
-
-            while (words.length > 1) {
-              // Keep last word in buffer in case it's incomplete
-              const word = words.shift()! // Get and remove first word
-              if (word) {
-                await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: word })}\n\n`))
-                await sleep(10) // Small delay between words for more natural flow
-              }
-            }
-
-            buffer = words.join('') // Keep any remaining partial word
-          } else {
-            // For OpenAI, stream as is
-            await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk })}\n\n`))
-          }
+          completeOutput += chunk
         }
 
-        // Send any remaining buffered text
-        if (buffer.length > 0) {
-          await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: buffer })}\n\n`))
+        // Now stream the complete output to frontend
+        const words = completeOutput.split(/(\s+)/)
+        for (const word of words) {
+          if (word) {
+            await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: word })}\n\n`))
+            await new Promise(resolve => setTimeout(resolve, 10)) // Small delay between words
+          }
         }
       } catch (error) {
         console.error('Stream error:', error)
