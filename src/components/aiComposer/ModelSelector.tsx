@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { Surface } from '@/components/ui/Surface'
+import { DropdownButton } from '@/components/ui/Dropdown'
 
 export const LLM_MODELS = [
   { id: 'gpt-4o', name: 'gpt-4o', description: 'Most capable for complex tasks' },
@@ -41,11 +43,12 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
     [onModelSelect],
   )
 
-  const handleModelSelectClick = (model: (typeof LLM_MODELS)[0]) => {
-    handleModelSelect(model)
-  }
-
-  const createClickHandler = (model: (typeof LLM_MODELS)[0]) => () => handleModelSelectClick(model)
+  const createModelClickHandler = useCallback(
+    (model: (typeof LLM_MODELS)[0]) => () => {
+      handleModelSelect(model)
+    },
+    [handleModelSelect],
+  )
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
@@ -62,21 +65,21 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
       </button>
 
       {isModelDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden z-50 p-1">
-          {LLM_MODELS.map(model => (
-            <button
-              key={model.id}
-              onClick={createClickHandler(model)}
-              className={`flex flex-col w-full px-3 py-2 text-left rounded-md transition-colors ${
-                selectedModel.id === model.id
-                  ? 'bg-neutral-100 dark:bg-neutral-700'
-                  : 'hover:bg-neutral-50 dark:hover:bg-neutral-700/50'
-              }`}
-            >
-              <span className="text-sm font-medium text-neutral-900 dark:text-white">{model.name}</span>
-              <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>
-            </button>
-          ))}
+        <div className="absolute right-0 top-full mt-2 w-64 z-50 p-1">
+          <Surface className="p-2 flex flex-col gap-0.5">
+            {LLM_MODELS.map(model => (
+              <DropdownButton
+                key={model.id}
+                onClick={createModelClickHandler(model)}
+                isActive={selectedModel.id === model.id}
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{model.name}</span>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>
+                </div>
+              </DropdownButton>
+            ))}
+          </Surface>
         </div>
       )}
     </div>

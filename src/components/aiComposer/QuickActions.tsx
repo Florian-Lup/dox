@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Spinner } from '../ui/Spinner'
+import { LanguagePicker } from './QuickActions/core/LanguagePicker'
 
 const QUICK_ACTIONS = [
   {
@@ -103,43 +104,59 @@ const QUICK_ACTIONS = [
 ] as const
 
 interface QuickActionsProps {
-  onActionSelect?: (action: (typeof QUICK_ACTIONS)[number]) => void
+  onActionSelect?: (action: (typeof QUICK_ACTIONS)[number], data?: any) => void
   processingAction?: string | null
 }
 
 export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsProps) => {
   const handleActionClick = useCallback(
-    (action: (typeof QUICK_ACTIONS)[number]) => () => {
-      onActionSelect?.(action)
+    (action: (typeof QUICK_ACTIONS)[number], data?: any) => () => {
+      onActionSelect?.(action, data)
     },
     [onActionSelect],
+  )
+
+  const handleLanguageSelect = useCallback(
+    (action: (typeof QUICK_ACTIONS)[number]) => (language: any) => {
+      onActionSelect?.(action, { targetLanguage: language })
+    },
+    [onActionSelect],
+  )
+
+  const renderActionButton = useCallback(
+    (action: (typeof QUICK_ACTIONS)[number]) => {
+      const isProcessing = processingAction === action.id
+      const button = (
+        <button
+          key={action.label}
+          onClick={handleActionClick(action)}
+          className="flex items-center gap-2 sm:gap-3 w-full text-left px-3 sm:px-4 py-2 sm:py-3 
+            rounded-lg border border-neutral-200 dark:border-neutral-700 
+            hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+        >
+          <span className={`flex-shrink-0 ${isProcessing ? action.color : ''}`}>
+            {isProcessing ? <Spinner className="w-4 h-4" /> : action.icon}
+          </span>
+          <div className="min-w-0">
+            <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{action.label}</div>
+            <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{action.description}</div>
+          </div>
+        </button>
+      )
+
+      if (action.id === 'translate') {
+        return <LanguagePicker key={action.label} trigger={button} onLanguageSelect={handleLanguageSelect(action)} />
+      }
+
+      return button
+    },
+    [handleActionClick, handleLanguageSelect, processingAction],
   )
 
   return (
     <div className="space-y-3 sm:space-y-4">
       <div className="text-sm text-neutral-500 dark:text-neutral-400">Quick Actions</div>
-      <div className="flex flex-col gap-2">
-        {QUICK_ACTIONS.map(action => {
-          const isProcessing = processingAction === action.id
-          return (
-            <button
-              key={action.label}
-              onClick={handleActionClick(action)}
-              className="flex items-center gap-2 sm:gap-3 w-full text-left px-3 sm:px-4 py-2 sm:py-3 
-                rounded-lg border border-neutral-200 dark:border-neutral-700 
-                hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-            >
-              <span className={`flex-shrink-0 ${isProcessing ? action.color : ''}`}>
-                {isProcessing ? <Spinner className="w-4 h-4" /> : action.icon}
-              </span>
-              <div className="min-w-0">
-                <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{action.label}</div>
-                <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{action.description}</div>
-              </div>
-            </button>
-          )
-        })}
-      </div>
+      <div className="flex flex-col gap-2">{QUICK_ACTIONS.map(renderActionButton)}</div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ export interface BaseActionParams {
   text: string
   modelName: string
   fullContent?: string
+  [key: string]: any
 }
 
 export const createQuickActionHandler = async (
@@ -14,6 +15,7 @@ export const createQuickActionHandler = async (
   scope: Scope,
   modelName: string,
   onProgress?: (text: string) => void,
+  additionalData?: Record<string, any>,
 ) => {
   try {
     const inputText = getTextFromScope(editor, scope)
@@ -31,10 +33,30 @@ export const createQuickActionHandler = async (
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: inputText, modelName, fullContent }),
+      body: JSON.stringify({
+        text: inputText,
+        modelName,
+        fullContent,
+        ...additionalData,
+      }),
     })
 
     if (!response.ok) {
+      // Remove strike-through on error
+      if (scope.type === 'selection' && scope.position) {
+        editor.commands.setTextSelection(scope.position)
+        editor.commands.unsetMark('strike')
+      } else {
+        editor.commands.selectAll()
+        editor.commands.unsetMark('strike')
+      }
+
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Request failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+      })
       throw new Error(`Failed to process with ${endpoint}`)
     }
 
@@ -87,6 +109,14 @@ export const createQuickActionHandler = async (
       reader.releaseLock()
     }
   } catch (error) {
+    // Remove strike-through on any error
+    if (scope.type === 'selection' && scope.position) {
+      editor.commands.setTextSelection(scope.position)
+      editor.commands.unsetMark('strike')
+    } else {
+      editor.commands.selectAll()
+      editor.commands.unsetMark('strike')
+    }
     console.error('Error during quick action:', error)
     throw error
   }

@@ -8,6 +8,7 @@ import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
 import { QuickActions } from './QuickActions'
 import { handleGrammarFix } from './QuickActions/grammar'
+import { handleTranslate } from './QuickActions/translate'
 
 interface ComposerPanelProps {
   isOpen: boolean
@@ -46,14 +47,24 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   }, [])
 
   const handleActionSelect = useCallback(
-    async (action: any) => {
-      if (action.label === 'Fix Grammar') {
+    async (action: any, data?: any) => {
+      if (action.id === 'grammar') {
         setProcessingAction('grammar')
         try {
           await handleGrammarFix(editor, scope, selectedModel.id)
           resetScope()
         } catch (error) {
           console.error('Error fixing grammar:', error)
+        } finally {
+          setProcessingAction(null)
+        }
+      } else if (action.id === 'translate' && data?.targetLanguage) {
+        setProcessingAction('translate')
+        try {
+          await handleTranslate(editor, scope, selectedModel.id, data.targetLanguage)
+          resetScope()
+        } catch (error) {
+          console.error('Error translating:', error)
         } finally {
           setProcessingAction(null)
         }
