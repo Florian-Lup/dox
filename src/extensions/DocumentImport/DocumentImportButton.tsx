@@ -1,9 +1,8 @@
 import { Editor } from '@tiptap/react'
-import * as Popover from '@radix-ui/react-popover'
 import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '@/components/ui/Icon'
-import { Toolbar } from '@/components/ui/Toolbar'
 import { useCallback, useState } from 'react'
+import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
 
 // Helper function to ensure minimum loading time
 const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
@@ -70,51 +69,37 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Popover.Trigger asChild>
-          <Toolbar.Button tooltip="Import Document">
-            <Icon name="Upload" className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
-          </Toolbar.Button>
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            className="z-[150] w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
-            sideOffset={15}
-            alignOffset={-20}
-            align="end"
-          >
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Import Document</h3>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  Upload a document to import its content (.docx, .odt, .rtf, .md)
-                </p>
-              </div>
-              {error && (
-                <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">
-                  {error}
-                </div>
-              )}
-              <div className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg border-neutral-200 dark:border-neutral-800">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".docx,.odt,.rtf,.md"
-                  disabled={isLoading}
-                  className="block w-full text-sm text-neutral-500 dark:text-neutral-400
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-neutral-100 file:text-neutral-700
-                    dark:file:bg-neutral-800 dark:file:text-neutral-300
-                    hover:file:bg-neutral-200 dark:hover:file:bg-neutral-700
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                />
-              </div>
-            </div>
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+      <SidebarButton
+        tooltip="Import Document"
+        icon="Upload"
+        title="Import Document"
+        description="Upload a document to import its content (.docx, .odt, .rtf, .md)"
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        isLoading={isLoading}
+      >
+        {error && (
+          <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">
+            {error}
+          </div>
+        )}
+        <div className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg border-neutral-200 dark:border-neutral-800">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept=".docx,.odt,.rtf,.md"
+            disabled={isLoading}
+            className="block w-full text-sm text-neutral-500 dark:text-neutral-400
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-neutral-100 file:text-neutral-700
+              dark:file:bg-neutral-800 dark:file:text-neutral-300
+              hover:file:bg-neutral-200 dark:hover:file:bg-neutral-700
+              disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        </div>
+      </SidebarButton>
 
       <Toast.Provider>
         <Toast.Root

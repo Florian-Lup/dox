@@ -63,12 +63,12 @@ export const VersionModal = memo(({ isOpen, onClose, versions, onRestore, editor
         provider.sendStateless(
           JSON.stringify({
             action: 'version.preview',
-            version: Number(latestVersion.id),
+            version: Number(versions[0].id),
           }),
         )
       } else {
-        if (previewEditor && latestVersion.content) {
-          previewEditor.commands.setContent(latestVersion.content)
+        if (previewEditor && versions[0].content) {
+          previewEditor.commands.setContent(versions[0].content)
         }
       }
     }

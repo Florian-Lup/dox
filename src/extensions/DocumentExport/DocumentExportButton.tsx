@@ -1,9 +1,8 @@
 import { Editor } from '@tiptap/react'
-import * as Popover from '@radix-ui/react-popover'
 import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '@/components/ui/Icon'
-import { Toolbar } from '@/components/ui/Toolbar'
 import { useCallback, useState } from 'react'
+import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
 
 // Helper function to ensure minimum loading time
 const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
@@ -123,47 +122,33 @@ export const DocumentExportButton = ({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Popover.Trigger asChild>
-          <Toolbar.Button tooltip="Export Document">
-            <Icon name="Download" className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
-          </Toolbar.Button>
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            className="z-[150] w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
-            sideOffset={15}
-            alignOffset={-20}
-            align="end"
-          >
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Export Document</h3>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  Choose a format to export your document
-                </p>
-              </div>
-              {error && (
-                <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">
-                  {error}
-                </div>
-              )}
-              <div className="flex flex-col gap-2">
-                {exportOptions.map(option => (
-                  <ExportButton
-                    key={option.format}
-                    format={option.format}
-                    label={option.label}
-                    icon={option.icon}
-                    onExport={handleExport}
-                    disabled={isLoading}
-                  />
-                ))}
-              </div>
-            </div>
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+      <SidebarButton
+        tooltip="Export Document"
+        icon="Download"
+        title="Export Document"
+        description="Choose a format to export your document"
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        isLoading={isLoading}
+      >
+        {error && (
+          <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">
+            {error}
+          </div>
+        )}
+        <div className="flex flex-col gap-2">
+          {exportOptions.map(option => (
+            <ExportButton
+              key={option.format}
+              format={option.format}
+              label={option.label}
+              icon={option.icon}
+              onExport={handleExport}
+              disabled={isLoading}
+            />
+          ))}
+        </div>
+      </SidebarButton>
 
       <Toast.Provider>
         <Toast.Root

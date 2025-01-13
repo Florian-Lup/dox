@@ -1,12 +1,16 @@
 import { memo, useState, useCallback } from 'react'
 import { Editor } from '@tiptap/react'
-import * as Popover from '@radix-ui/react-popover'
 import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '../../components/ui/Icon'
-import { Toolbar } from '../../components/ui/Toolbar'
 import { VersionModal } from './VersionModal'
 import { renderDate } from './utils'
 import type { Version } from './VersionModal'
+import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
+
+// Generate a short unique ID (6 characters)
+const generateShortId = () => {
+  return Math.random().toString(36).substring(2, 8)
+}
 
 interface StorageVersion {
   version: number
@@ -58,7 +62,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
       // Create restore version metadata
       const restoreMetadata = {
-        name: `Restored: ${version.name}`,
+        name: generateShortId(),
         date: Date.now(),
         content: version.content,
       }
@@ -94,53 +98,39 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-        <Popover.Trigger asChild>
-          <Toolbar.Button tooltip="Document History">
-            <Icon name="History" className="w-5 h-5" />
-          </Toolbar.Button>
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            className="z-[150] w-80 p-4 ml-2 bg-white rounded-lg shadow-lg dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 animate-in fade-in-0 zoom-in-95"
-            sideOffset={15}
-            alignOffset={-20}
-            align="end"
-          >
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Document History</h3>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">Create and manage versions</p>
-              </div>
-
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  value={versionName}
-                  onChange={handleVersionNameChange}
-                  placeholder="Version name"
-                  className="w-full px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleCreateVersion}
-                    disabled={!versionName.trim()}
-                    className="flex-1 px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Create
-                  </button>
-                  <button
-                    onClick={handleShowHistory}
-                    className="flex-1 px-3 py-1.5 text-sm rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                  >
-                    View History
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+      <SidebarButton
+        tooltip="Document History"
+        icon="History"
+        title="Document History"
+        description="Create and manage versions"
+        isOpen={isPopoverOpen}
+        onOpenChange={setIsPopoverOpen}
+      >
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={versionName}
+            onChange={handleVersionNameChange}
+            placeholder="Version name"
+            className="w-full px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleCreateVersion}
+              disabled={!versionName.trim()}
+              className="flex-1 px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Create
+            </button>
+            <button
+              onClick={handleShowHistory}
+              className="flex-1 px-3 py-1.5 text-sm rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            >
+              View History
+            </button>
+          </div>
+        </div>
+      </SidebarButton>
 
       <VersionModal
         isOpen={isHistoryModalOpen}
