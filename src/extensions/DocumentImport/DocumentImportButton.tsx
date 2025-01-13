@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/react'
 import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '@/components/ui/Icon'
 import { useCallback, useState } from 'react'
-import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
+import { SidebarButton } from '@/components/Sidebar/SidebarButton'
 
 // Helper function to ensure minimum loading time
 const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {

@@ -5,7 +5,7 @@ import { memo } from 'react'
 import { TableOfContentsStorage } from '@tiptap-pro/extension-table-of-contents'
 import { cn } from '@/lib/utils'
 import { useEditorState } from '@tiptap/react'
-import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
+import { SidebarButton } from '@/components/Sidebar/SidebarButton'
 
 export type TableOfContentsProps = {
   editor: CoreEditor

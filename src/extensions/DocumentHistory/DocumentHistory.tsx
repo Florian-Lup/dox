@@ -5,7 +5,7 @@ import { Icon } from '../../components/ui/Icon'
 import { VersionModal } from './VersionModal'
 import { renderDate } from './utils'
 import type { Version } from './VersionModal'
-import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
+import { SidebarButton } from '@/components/Sidebar/SidebarButton'
 
 // Generate a short unique ID (6 characters)
 const generateShortId = () => {

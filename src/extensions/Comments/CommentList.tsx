@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/react'
-import { SidebarButton } from '@/components/BlockEditor/components/SidebarButton'
+import { SidebarButton } from '@/components/Sidebar/SidebarButton'
 
 export const CommentList = ({ editor }: { editor: Editor }) => {
   return (
