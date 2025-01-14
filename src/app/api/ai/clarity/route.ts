@@ -6,11 +6,12 @@ import { initializeAIModel, createStreamingResponse } from '../utils'
 
 const clarityImprovePrompt = PromptTemplate.fromTemplate(`
 Improve the clarity and readability of the TARGET TEXT while preserving its core meaning.
-Make the text more concise, direct, and easier to understand by:
+Focus on:
 - Simplifying complex sentences
+- Improving sentence flow and transitions
+- Using clearer word choices
+- Organizing ideas more logically
 - Removing redundancy and wordiness
-- Improving logical flow and structure
-- Using clearer and more precise language
 - Maintaining the original tone and style
 
 Use the full document context to better understand the meaning and flow.
