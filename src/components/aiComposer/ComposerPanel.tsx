@@ -10,6 +10,7 @@ import { QuickActions } from './QuickActions'
 import { AdvancedTools } from './AdvancedTools'
 import { handleGrammarFix } from './QuickActions/grammar'
 import { handleTranslate } from './QuickActions/translate'
+import { handleClarityImprovement } from './QuickActions/ImproveClarity'
 
 type TabType = 'quick' | 'advanced'
 
@@ -69,6 +70,16 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           resetScope()
         } catch (error) {
           console.error('Error translating:', error)
+        } finally {
+          setProcessingAction(null)
+        }
+      } else if (action.id === 'readability') {
+        setProcessingAction('readability')
+        try {
+          await handleClarityImprovement(editor, scope, selectedModel.id)
+          resetScope()
+        } catch (error) {
+          console.error('Error improving clarity:', error)
         } finally {
           setProcessingAction(null)
         }

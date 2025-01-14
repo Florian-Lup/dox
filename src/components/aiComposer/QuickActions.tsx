@@ -43,7 +43,7 @@ const QUICK_ACTIONS = [
     id: 'readability',
     icon: <BookOpen className="w-4 h-4 text-purple-500" />,
     color: 'text-purple-500',
-    label: 'Improve Readability',
+    label: 'Improve Clarity',
     description: 'Enhance sentence flow and refine word choice',
   },
   {
