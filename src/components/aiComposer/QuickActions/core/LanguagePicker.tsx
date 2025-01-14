@@ -1,6 +1,4 @@
 import * as Popover from '@radix-ui/react-popover'
-import { Surface } from '@/components/ui/Surface'
-import { DropdownButton, DropdownCategoryTitle } from '@/components/ui/Dropdown'
 import { Icon } from '@/components/ui/Icon'
 import { useCallback, useState } from 'react'
 
@@ -111,22 +109,31 @@ export const LanguagePicker = ({ onLanguageSelect, trigger }: LanguagePickerProp
           side="bottom"
           align="start"
           sideOffset={4}
-          className="z-[9999] w-full min-w-[240px] "
+          className="z-[9999] w-full min-w-[240px]"
           avoidCollisions
         >
-          <Surface className="p-2 flex flex-col gap-0.5 max-h-[300px] overflow-auto">
-            {LANGUAGES.map(region => (
-              <div key={region.region}>
-                <DropdownCategoryTitle>{region.region}</DropdownCategoryTitle>
-                {region.languages.map(language => (
-                  <DropdownButton key={language.code} onClick={handleLanguageSelect(language)}>
-                    <Icon name="Languages" className="w-4 h-4 mr-2" />
-                    {language.name}
-                  </DropdownButton>
-                ))}
-              </div>
-            ))}
-          </Surface>
+          <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-lg overflow-hidden">
+            <div className="max-h-[300px] overflow-auto p-1">
+              {LANGUAGES.map(region => (
+                <div key={region.region}>
+                  <div className="px-3 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                    {region.region}
+                  </div>
+                  {region.languages.map(language => (
+                    <button
+                      key={language.code}
+                      onClick={handleLanguageSelect(language)}
+                      className="flex items-center w-full text-left px-3 py-1.5 text-sm text-neutral-900 dark:text-white
+                        rounded-md transition-colors hover:bg-white dark:hover:bg-neutral-700"
+                    >
+                      <Icon name="Languages" className="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" />
+                      {language.name}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

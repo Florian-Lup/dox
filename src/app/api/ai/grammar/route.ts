@@ -5,7 +5,7 @@ import { RunnableSequence } from '@langchain/core/runnables'
 import { initializeAIModel, createStreamingResponse } from '../utils'
 
 const grammarFixPrompt = PromptTemplate.fromTemplate(`
-Fix any grammar issues in the TARGET TEXT while preserving its meaning and style.
+Fix any grammar, punctuation, spelling, and syntax issues in the TARGET TEXT while preserving its meaning and style.
 If there are no grammar issues, return the target text unchanged.
 Use the full document context to better understand the meaning and flow.
 

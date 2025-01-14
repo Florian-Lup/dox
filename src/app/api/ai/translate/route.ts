@@ -7,6 +7,7 @@ import { initializeAIModel, createStreamingResponse } from '../utils'
 const translatePrompt = PromptTemplate.fromTemplate(`
 Translate the TARGET TEXT into {languageName} ({languageCode}).
 Maintain the original meaning, tone, and style as much as possible while ensuring the translation is natural and fluent.
+Pay special attention to idioms and expressions - translate them into culturally appropriate equivalents in the target language rather than doing a literal translation.
 Use the full document context to better understand the meaning and context.
 
 IMPORTANT: Return ONLY the translated text without any explanations, comments, or analysis.

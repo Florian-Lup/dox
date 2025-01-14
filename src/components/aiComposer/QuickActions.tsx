@@ -11,6 +11,14 @@ import {
   Wrench,
   Type,
   Languages,
+  BookOpen,
+  Users,
+  Palette,
+  MessageCircle,
+  Target,
+  Maximize2,
+  Minimize2,
+  RefreshCw,
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Spinner } from '../ui/Spinner'
@@ -22,7 +30,7 @@ const QUICK_ACTIONS = [
     icon: <Type className="w-4 h-4 text-blue-500" />,
     color: 'text-blue-500',
     label: 'Fix Grammar',
-    description: 'Correct grammar and improve writing',
+    description: 'Correct grammar, punctuation and spelling',
   },
   {
     id: 'translate',
@@ -32,25 +40,60 @@ const QUICK_ACTIONS = [
     description: 'Translate text to another language',
   },
   {
-    id: 'explain',
-    icon: <Code2 className="w-4 h-4 text-purple-500" />,
+    id: 'readability',
+    icon: <BookOpen className="w-4 h-4 text-purple-500" />,
     color: 'text-purple-500',
-    label: 'Explain selected code',
-    description: 'Get a detailed explanation of the code',
+    label: 'Improve Readability',
+    description: 'Enhance sentence flow and refine word choice',
   },
   {
-    id: 'improve',
-    icon: <Wand2 className="w-4 h-4 text-indigo-500" />,
+    id: 'audience',
+    icon: <Users className="w-4 h-4 text-indigo-500" />,
     color: 'text-indigo-500',
-    label: 'Improve code quality',
-    description: 'Enhance readability and performance',
+    label: 'Target Audience',
+    description: 'Adapt text for a specific audience or expertise level',
   },
   {
-    id: 'bugs',
-    icon: <Bug className="w-4 h-4 text-red-500" />,
+    id: 'style',
+    icon: <Palette className="w-4 h-4 text-pink-500" />,
+    color: 'text-pink-500',
+    label: 'Change Style',
+    description: 'Modify writing style (academic, casual, professional)',
+  },
+  {
+    id: 'tone',
+    icon: <MessageCircle className="w-4 h-4 text-yellow-500" />,
+    color: 'text-yellow-500',
+    label: 'Change Tone',
+    description: 'Adjust emotional tone (friendly, formal, enthusiastic)',
+  },
+  {
+    id: 'intent',
+    icon: <Target className="w-4 h-4 text-red-500" />,
     color: 'text-red-500',
-    label: 'Find and fix bugs',
-    description: 'Identify and resolve issues',
+    label: 'Intent',
+    description: 'Optimize text for specific purpose (persuade, inform, engage)',
+  },
+  {
+    id: 'expand',
+    icon: <Maximize2 className="w-4 h-4 text-cyan-500" />,
+    color: 'text-cyan-500',
+    label: 'Make Longer',
+    description: 'Expand text with additional details and examples',
+  },
+  {
+    id: 'shorten',
+    icon: <Minimize2 className="w-4 h-4 text-amber-500" />,
+    color: 'text-amber-500',
+    label: 'Shorten It',
+    description: 'Condense text while preserving key information',
+  },
+  {
+    id: 'paraphrase',
+    icon: <RefreshCw className="w-4 h-4 text-lime-500" />,
+    color: 'text-lime-500',
+    label: 'Paraphrase',
+    description: 'Rewrite text while maintaining original meaning',
   },
   {
     id: 'docs',
@@ -60,39 +103,11 @@ const QUICK_ACTIONS = [
     description: 'Generate helpful comments and docs',
   },
   {
-    id: 'optimize',
-    icon: <Scale className="w-4 h-4 text-amber-500" />,
-    color: 'text-amber-500',
-    label: 'Optimize performance',
-    description: 'Improve code efficiency and speed',
-  },
-  {
     id: 'git',
     icon: <GitBranch className="w-4 h-4 text-orange-500" />,
     color: 'text-orange-500',
     label: 'Suggest git message',
     description: 'Generate a commit message',
-  },
-  {
-    id: 'types',
-    icon: <Sparkles className="w-4 h-4 text-pink-500" />,
-    color: 'text-pink-500',
-    label: 'Add types',
-    description: 'Generate TypeScript types and interfaces',
-  },
-  {
-    id: 'tests',
-    icon: <Wrench className="w-4 h-4 text-cyan-500" />,
-    color: 'text-cyan-500',
-    label: 'Add tests',
-    description: 'Generate unit tests for the code',
-  },
-  {
-    id: 'references',
-    icon: <FileSearch className="w-4 h-4 text-violet-500" />,
-    color: 'text-violet-500',
-    label: 'Find references',
-    description: 'Search through the codebase',
   },
   {
     id: 'custom',
@@ -103,28 +118,30 @@ const QUICK_ACTIONS = [
   },
 ] as const
 
+type QuickActionType = (typeof QUICK_ACTIONS)[number]
+
 interface QuickActionsProps {
-  onActionSelect?: (action: (typeof QUICK_ACTIONS)[number], data?: any) => void
+  onActionSelect?: (action: QuickActionType, data?: any) => void
   processingAction?: string | null
 }
 
 export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsProps) => {
   const handleActionClick = useCallback(
-    (action: (typeof QUICK_ACTIONS)[number], data?: any) => () => {
+    (action: QuickActionType, data?: any) => () => {
       onActionSelect?.(action, data)
     },
     [onActionSelect],
   )
 
   const handleLanguageSelect = useCallback(
-    (action: (typeof QUICK_ACTIONS)[number]) => (language: any) => {
+    (action: QuickActionType) => (language: any) => {
       onActionSelect?.(action, { targetLanguage: language })
     },
     [onActionSelect],
   )
 
   const renderActionButton = useCallback(
-    (action: (typeof QUICK_ACTIONS)[number]) => {
+    (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
       const button = (
         <button

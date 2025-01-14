@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { Surface } from '@/components/ui/Surface'
-import { DropdownButton } from '@/components/ui/Dropdown'
 
 export const LLM_MODELS = [
   { id: 'gpt-4o', name: 'gpt-4o', description: 'Most capable for complex tasks' },
@@ -65,21 +63,44 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
       </button>
 
       {isModelDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 z-50 p-1">
-          <Surface className="p-2 flex flex-col gap-0.5">
-            {LLM_MODELS.map(model => (
-              <DropdownButton
-                key={model.id}
-                onClick={createModelClickHandler(model)}
-                isActive={selectedModel.id === model.id}
-              >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">{model.name}</span>
-                  <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>
-                </div>
-              </DropdownButton>
-            ))}
-          </Surface>
+        <div className="absolute right-0 top-full mt-2 w-64 z-50">
+          <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-lg overflow-hidden">
+            <div className="p-2 flex flex-col gap-1">
+              {LLM_MODELS.map(model => (
+                <button
+                  key={model.id}
+                  onClick={createModelClickHandler(model)}
+                  className={`w-full text-left px-3 py-2.5 rounded-md transition-colors
+                    ${
+                      selectedModel.id === model.id
+                        ? 'bg-blue-50 dark:bg-blue-900/40'
+                        : 'hover:bg-white dark:hover:bg-neutral-700'
+                    }`}
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span
+                      className={`text-sm font-medium ${
+                        selectedModel.id === model.id
+                          ? 'text-blue-700 dark:text-blue-300'
+                          : 'text-neutral-900 dark:text-white'
+                      }`}
+                    >
+                      {model.name}
+                    </span>
+                    <span
+                      className={`text-xs ${
+                        selectedModel.id === model.id
+                          ? 'text-blue-600/70 dark:text-blue-300/70'
+                          : 'text-neutral-500 dark:text-neutral-400'
+                      }`}
+                    >
+                      {model.description}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

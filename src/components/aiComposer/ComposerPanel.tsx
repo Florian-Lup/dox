@@ -7,8 +7,11 @@ import { ScopeSelector } from './ScopeSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
 import { QuickActions } from './QuickActions'
+import { AdvancedTools } from './AdvancedTools'
 import { handleGrammarFix } from './QuickActions/grammar'
 import { handleTranslate } from './QuickActions/translate'
+
+type TabType = 'quick' | 'advanced'
 
 interface ComposerPanelProps {
   isOpen: boolean
@@ -21,6 +24,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   const [inputValue, setInputValue] = useState('')
   const { scope, resetScope } = useScope(editor)
   const [processingAction, setProcessingAction] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<TabType>('quick')
 
   const handleSubmit = useCallback(() => {
     if (!inputValue.trim()) return
@@ -73,6 +77,26 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
     [editor, scope, selectedModel.id, resetScope],
   )
 
+  const handleToolSelect = useCallback(async (tool: any) => {
+    setProcessingAction(tool.id)
+    try {
+      // TODO: Implement tool handlers
+      console.log('Tool selected:', tool.id)
+    } catch (error) {
+      console.error(`Error processing ${tool.id}:`, error)
+    } finally {
+      setProcessingAction(null)
+    }
+  }, [])
+
+  const handleQuickTabClick = useCallback(() => {
+    setActiveTab('quick')
+  }, [])
+
+  const handleAdvancedTabClick = useCallback(() => {
+    setActiveTab('advanced')
+  }, [])
+
   const HeaderContent = () => (
     <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
       <div className="flex items-center gap-4">
@@ -101,9 +125,38 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
         >
           <HeaderContent />
 
-          <div className="flex-1 overflow-auto p-2 sm:p-4">
-            <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
+          <div className="flex-1 overflow-auto">
+            <div className="flex gap-4 p-4 border-b border-neutral-200 dark:border-neutral-800">
+              <button
+                onClick={handleQuickTabClick}
+                className={`pb-2 text-sm font-medium transition-colors ${
+                  activeTab === 'quick'
+                    ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
+                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                }`}
+              >
+                Quick Actions
+              </button>
+              <button
+                onClick={handleAdvancedTabClick}
+                className={`pb-2 text-sm font-medium transition-colors ${
+                  activeTab === 'advanced'
+                    ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
+                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                }`}
+              >
+                Advanced Tools
+              </button>
+            </div>
+            <div className="p-4">
+              {activeTab === 'quick' ? (
+                <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
+              ) : (
+                <AdvancedTools onToolSelect={handleToolSelect} processingTool={processingAction} />
+              )}
+            </div>
           </div>
+
           <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
             <div className="relative">
               <textarea
