@@ -19,6 +19,7 @@ import {
   Maximize2,
   Minimize2,
   RefreshCw,
+  GraduationCap,
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Spinner } from '../ui/Spinner'
@@ -75,18 +76,18 @@ const QUICK_ACTIONS = [
     description: 'Optimize text for specific purpose (persuade, inform, engage)',
   },
   {
-    id: 'expand',
+    id: 'length',
     icon: <Maximize2 className="w-4 h-4 text-cyan-500" />,
-    color: 'text-cyan-500',
-    label: 'Make Longer',
-    description: 'Expand text with additional details and examples',
+    color: 'text-amber-500',
+    label: 'Adjust Length',
+    description: 'Expand and condense text while preserving key information',
   },
   {
-    id: 'shorten',
-    icon: <Minimize2 className="w-4 h-4 text-amber-500" />,
-    color: 'text-amber-500',
-    label: 'Shorten It',
-    description: 'Condense text while preserving key information',
+    id: 'readingLevel',
+    icon: <GraduationCap className="w-4 h-4 text-emerald-500" />,
+    color: 'text-emerald-500',
+    label: 'Reading Level',
+    description: 'Analyze and adjust text complexity',
   },
   {
     id: 'paraphrase',
