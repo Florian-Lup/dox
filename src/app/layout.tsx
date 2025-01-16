@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 
 import 'cal-sans'
 import { Inter } from 'next/font/google'
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="flex flex-col h-full">
         <main className="h-full">{children}</main>
+        <Analytics />
       </body>
     </html>
   )
