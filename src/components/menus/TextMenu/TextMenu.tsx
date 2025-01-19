@@ -12,7 +12,7 @@ import { FontSizePicker } from './components/FontSizePicker'
 import { useTextmenuContentTypes } from './hooks/useTextmenuContentTypes'
 import { ContentTypePicker } from './components/ContentTypePicker'
 import { EditLinkPopover } from './components/EditLinkPopover'
-import { ScopeSelector } from '@/components/aiComposer/ScopeSelector'
+import { ScopeSelector } from '@/components/aiComposer/core/ScopeSelector'
 import { useScope } from '@/hooks/useScope'
 
 // We memorize the button so each button is not rerendered
