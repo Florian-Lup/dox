@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { Surface } from '../ui/Surface'
 import { Textarea } from '../ui/Textarea'
+import { Toggle } from '../ui/Toggle'
 import { useState, useCallback } from 'react'
 import { ModelSelector, LLM_MODELS, type LLMModel } from './ModelSelector'
 import { ScopeSelector } from './ScopeSelector'
@@ -102,12 +103,8 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
     }
   }, [])
 
-  const handleQuickTabClick = useCallback(() => {
-    setActiveTab('quick')
-  }, [])
-
-  const handleAdvancedTabClick = useCallback(() => {
-    setActiveTab('advanced')
+  const handleTabChange = useCallback((isAdvanced: boolean) => {
+    setActiveTab(isAdvanced ? 'advanced' : 'quick')
   }, [])
 
   const HeaderContent = () => (
@@ -137,27 +134,26 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
             <HeaderContent />
 
             <div className="flex-1 overflow-auto">
-              <div className="flex gap-4 p-4 border-b border-neutral-200 dark:border-neutral-800">
-                <button
-                  onClick={handleQuickTabClick}
-                  className={`pb-2 text-sm font-medium transition-colors ${
+              <div className="flex items-center justify-center gap-3 p-4 border-b border-neutral-200 dark:border-neutral-800">
+                <div
+                  className={`text-sm font-medium transition-colors ${
                     activeTab === 'quick'
-                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
-                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                      ? 'text-neutral-900 dark:text-white'
+                      : 'text-neutral-500 dark:text-neutral-400'
                   }`}
                 >
                   Quick Actions
-                </button>
-                <button
-                  onClick={handleAdvancedTabClick}
-                  className={`pb-2 text-sm font-medium transition-colors ${
+                </div>
+                <Toggle active={activeTab === 'advanced'} onChange={handleTabChange} size="small" />
+                <div
+                  className={`text-sm font-medium transition-colors ${
                     activeTab === 'advanced'
-                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
-                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                      ? 'text-neutral-900 dark:text-white'
+                      : 'text-neutral-500 dark:text-neutral-400'
                   }`}
                 >
                   Advanced Tools
-                </button>
+                </div>
               </div>
               <div className="p-4">
                 {activeTab === 'quick' ? (
