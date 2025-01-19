@@ -15,10 +15,10 @@ export const ComposerFooter = ({ scope, onResetScope, selectedModel, onModelSele
     <div className="flex-shrink-0 h-[44px] px-4 border-t border-neutral-200 dark:border-neutral-800">
       <div className="grid grid-cols-2 h-full">
         <div className="flex items-center">
-          <ScopeSelector scope={scope} onReset={onResetScope} />
+          <ModelSelector selectedModel={selectedModel} onModelSelect={onModelSelect} />
         </div>
         <div className="flex items-center">
-          <ModelSelector selectedModel={selectedModel} onModelSelect={onModelSelect} />
+          <ScopeSelector scope={scope} onReset={onResetScope} />
         </div>
       </div>
     </div>
