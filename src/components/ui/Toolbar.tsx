@@ -1,17 +1,18 @@
 import React, { ButtonHTMLAttributes, HTMLProps, forwardRef } from 'react'
 
 import { cn } from '@/lib/utils'
-import { Surface } from './Surface'
+import { Surface, SurfaceProps } from './Surface'
 import { Button, ButtonProps } from './Button'
 import Tooltip from './Tooltip'
 
 export type ToolbarWrapperProps = {
   shouldShowContent?: boolean
   isVertical?: boolean
-} & HTMLProps<HTMLDivElement>
+} & Omit<HTMLProps<HTMLDivElement>, 'role'> &
+  Pick<SurfaceProps, 'role'>
 
 const ToolbarWrapper = forwardRef<HTMLDivElement, ToolbarWrapperProps>(
-  ({ shouldShowContent = true, children, isVertical = false, className, ...rest }, ref) => {
+  ({ shouldShowContent = true, children, isVertical = false, className, role = 'region', ...rest }, ref) => {
     const toolbarClassName = cn(
       'text-black inline-flex h-full leading-none gap-0.5',
       isVertical ? 'flex-col p-2' : 'flex-row p-1 items-center',
@@ -20,7 +21,7 @@ const ToolbarWrapper = forwardRef<HTMLDivElement, ToolbarWrapperProps>(
 
     return (
       shouldShowContent && (
-        <Surface className={toolbarClassName} {...rest} ref={ref}>
+        <Surface className={toolbarClassName} role={role} {...rest} ref={ref}>
           {children}
         </Surface>
       )
