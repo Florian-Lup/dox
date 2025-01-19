@@ -25,34 +25,9 @@ interface ComposerPanelProps {
 
 export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) => {
   const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
-  const [inputValue, setInputValue] = useState('')
   const { scope, resetScope } = useScope(editor)
   const [processingAction, setProcessingAction] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabType>('quick')
-
-  const handleSubmit = useCallback(() => {
-    if (!inputValue.trim()) return
-    // TODO: Handle submission
-    console.log('Submitting:', inputValue)
-    setInputValue('')
-  }, [inputValue])
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter') {
-        if (e.shiftKey) {
-          return // Allow new line with Shift+Enter
-        }
-        e.preventDefault()
-        handleSubmit()
-      }
-    },
-    [handleSubmit],
-  )
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value)
-  }, [])
 
   const handleActionSelect = useCallback(
     async (action: any, data?: any) => {
@@ -161,20 +136,6 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 ) : (
                   <AdvancedTools onToolSelect={handleToolSelect} processingTool={processingAction} />
                 )}
-              </div>
-            </div>
-
-            <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
-              <div className="relative">
-                <Textarea
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  spellCheck={false}
-                  autoComplete="off"
-                  className="h-12 sm:h-16 resize-none"
-                  placeholder="Ask anything..."
-                />
               </div>
             </div>
           </Surface>
