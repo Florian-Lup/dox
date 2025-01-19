@@ -14,9 +14,9 @@ import {
   Search,
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { Spinner } from '../ui/Spinner'
-import { Button } from '../ui/Button'
-import { LanguagePicker } from './QuickActions/core/LanguagePicker'
+import { Spinner } from '../../ui/Spinner'
+import { Button } from '../../ui/Button'
+import { LanguagePicker } from './components/LanguagePicker'
 
 const QUICK_ACTIONS = [
   {
@@ -114,12 +114,12 @@ const QUICK_ACTIONS = [
 
 type QuickActionType = (typeof QUICK_ACTIONS)[number]
 
-interface QuickActionsProps {
+interface QuickActionListProps {
   onActionSelect?: (action: QuickActionType, data?: any) => void
   processingAction?: string | null
 }
 
-export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsProps) => {
+export const QuickActionList = ({ onActionSelect, processingAction }: QuickActionListProps) => {
   const handleActionClick = useCallback(
     (action: QuickActionType, data?: any) => () => {
       onActionSelect?.(action, data)

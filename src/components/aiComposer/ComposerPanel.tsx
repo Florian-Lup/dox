@@ -1,14 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Surface } from '../ui/Surface'
 import { useState, useCallback } from 'react'
-import { LLM_MODELS, type LLMModel } from './ModelSelector'
+import { LLM_MODELS, type LLMModel } from './core/ModelSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
-import { QuickActions } from './QuickActions'
-import { ChatContainer } from './CustomInstructions'
-import { handleGrammarFix } from './QuickActions/grammar'
-import { handleTranslate } from './QuickActions/translate'
-import { handleClarityImprovement } from './QuickActions/ImproveClarity'
+import { QuickActionList } from './QuickActions/QuickActionList'
+import { ChatContainer } from './CustomInstructions/ChatContainer'
+import { handleGrammarFix } from './QuickActions/actions/grammar'
+import { handleTranslate } from './QuickActions/actions/translate'
+import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
 import { ComposerFooter } from './ComposerFooter'
 import { ComposerHeader } from './ComposerHeader'
 
@@ -83,7 +83,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
 
             <div className="flex-1 min-h-0">
               {activeTab === 'quick' ? (
-                <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
+                <QuickActionList onActionSelect={handleActionSelect} processingAction={processingAction} />
               ) : (
                 <ChatContainer selectedModel={selectedModel} />
               )}
