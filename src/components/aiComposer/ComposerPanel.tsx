@@ -1,12 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
-import { Button } from '../ui/Button'
 import { Surface } from '../ui/Surface'
-import { Textarea } from '../ui/Textarea'
-import { Toggle } from '../ui/Toggle'
 import { useState, useCallback } from 'react'
-import { ModelSelector, LLM_MODELS, type LLMModel } from './ModelSelector'
-import { ScopeSelector } from './ScopeSelector'
+import { LLM_MODELS, type LLMModel } from './ModelSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
 import { QuickActions } from './QuickActions'
@@ -14,6 +9,8 @@ import { AdvancedTools } from './AdvancedTools'
 import { handleGrammarFix } from './QuickActions/grammar'
 import { handleTranslate } from './QuickActions/translate'
 import { handleClarityImprovement } from './QuickActions/ImproveClarity'
+import { ComposerFooter } from './ComposerFooter'
+import { ComposerHeader } from './ComposerHeader'
 
 type TabType = 'quick' | 'advanced'
 
@@ -82,18 +79,6 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
     setActiveTab(isAdvanced ? 'advanced' : 'quick')
   }, [])
 
-  const HeaderContent = () => (
-    <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
-      <div className="flex items-center gap-4">
-        <ScopeSelector scope={scope} onReset={resetScope} />
-        <ModelSelector selectedModel={selectedModel} onModelSelect={setSelectedModel} />
-      </div>
-      <Button variant="ghost" buttonSize="iconSmall" onClick={onClose}>
-        <X className="w-4 h-4" />
-      </Button>
-    </div>
-  )
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -106,30 +91,9 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
             max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[61px]"
         >
           <Surface className="h-full flex flex-col">
-            <HeaderContent />
+            <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
 
             <div className="flex-1 overflow-auto">
-              <div className="flex items-center justify-center gap-3 p-4 border-b border-neutral-200 dark:border-neutral-800">
-                <div
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === 'quick'
-                      ? 'text-neutral-900 dark:text-white'
-                      : 'text-neutral-500 dark:text-neutral-400'
-                  }`}
-                >
-                  Quick Actions
-                </div>
-                <Toggle active={activeTab === 'advanced'} onChange={handleTabChange} size="small" />
-                <div
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === 'advanced'
-                      ? 'text-neutral-900 dark:text-white'
-                      : 'text-neutral-500 dark:text-neutral-400'
-                  }`}
-                >
-                  Advanced Tools
-                </div>
-              </div>
               <div className="p-4">
                 {activeTab === 'quick' ? (
                   <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
@@ -138,6 +102,13 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 )}
               </div>
             </div>
+
+            <ComposerFooter
+              scope={scope}
+              onResetScope={resetScope}
+              selectedModel={selectedModel}
+              onModelSelect={setSelectedModel}
+            />
           </Surface>
         </motion.div>
       )}

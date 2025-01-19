@@ -20,7 +20,7 @@ export const ScopeSelector = ({ className, scope, onReset }: ScopeSelectorProps)
 
   return (
     <Tooltip title="The text range that will be affected by AI actions">
-      <div className="inline-flex items-center gap-1 text-xs font-medium">
+      <div className="inline-flex items-center gap-1 text-xs font-medium leading-none">
         <span className="text-neutral-500">Scope @ </span>
         <span className="text-neutral-900 dark:text-white">{displayText}</span>
         {scope.type === 'selection' && (
@@ -28,7 +28,7 @@ export const ScopeSelector = ({ className, scope, onReset }: ScopeSelectorProps)
             onClick={onReset}
             variant="ghost"
             buttonSize="iconSmall"
-            className="text-neutral-400 hover:text-neutral-500 dark:text-neutral-500 dark:hover:text-neutral-400"
+            className="text-neutral-400 hover:text-neutral-500 dark:text-neutral-500 dark:hover:text-neutral-400 -my-1"
           >
             <X className="w-3 h-3" />
           </Button>

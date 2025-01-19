@@ -28,7 +28,7 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
   )
 
   const trigger = (
-    <button type="button" className="flex items-center gap-1 text-xs font-medium group">
+    <button type="button" className="flex items-center gap-1 text-xs font-medium leading-none group">
       <Tooltip title="Select the AI model to use for text operations">
         <span className="text-neutral-500">LLM : </span>
       </Tooltip>
