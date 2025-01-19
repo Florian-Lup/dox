@@ -25,7 +25,7 @@ export const ComposerHeader = ({ onClose, activeTab, onTabChange }: ComposerHead
             activeTab === 'advanced' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'
           }`}
         >
-          Advanced Tools
+          Custom Instructions
         </div>
       </div>
       <Button variant="ghost" buttonSize="iconSmall" onClick={onClose}>

@@ -13,11 +13,11 @@ interface Message {
   timestamp: Date
 }
 
-interface AdvancedToolsProps {
+interface CustomInstructionsProps {
   selectedModel: LLMModel
 }
 
-export const AdvancedTools = ({ selectedModel }: AdvancedToolsProps) => {
+export const CustomInstructions = ({ selectedModel }: CustomInstructionsProps) => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
