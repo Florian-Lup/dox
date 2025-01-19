@@ -5,7 +5,7 @@ import { LLM_MODELS, type LLMModel } from './ModelSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
 import { QuickActions } from './QuickActions'
-import { CustomInstructions } from './CustomInstructions'
+import { ChatContainer } from './CustomInstructions'
 import { handleGrammarFix } from './QuickActions/grammar'
 import { handleTranslate } from './QuickActions/translate'
 import { handleClarityImprovement } from './QuickActions/ImproveClarity'
@@ -86,7 +86,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 {activeTab === 'quick' ? (
                   <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
                 ) : (
-                  <CustomInstructions selectedModel={selectedModel} />
+                  <ChatContainer selectedModel={selectedModel} />
                 )}
               </div>
             </div>
