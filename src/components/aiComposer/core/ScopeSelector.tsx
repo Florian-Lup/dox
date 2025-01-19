@@ -1,4 +1,3 @@
-import { Icon } from '@/components/ui/Icon'
 import { Button } from '@/components/ui/Button'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { Scope } from '@/hooks/useScope'

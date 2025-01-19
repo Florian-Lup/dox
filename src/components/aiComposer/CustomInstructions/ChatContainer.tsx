@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { LLMModel } from '../ModelSelector'
+import { LLMModel } from '../core/ModelSelector'
 import { MessageWindow } from './MessageWindow'
 import { InputArea } from './InputArea'
 
@@ -35,14 +35,27 @@ export const ChatContainer = ({ selectedModel }: ChatContainerProps) => {
     setIsProcessing(true)
 
     try {
-      // TODO: Implement actual AI response logic here using selectedModel
-      // For now, just simulate a response after a delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          modelName: selectedModel.id,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send message')
+      }
+
+      const data = await response.json()
 
       // Add AI response
       const aiMessage: Message = {
         id: uuidv4(),
-        content: 'This is a placeholder response. AI integration coming soon!',
+        content: data.message,
         isUser: false,
         timestamp: new Date(),
       }
@@ -52,7 +65,7 @@ export const ChatContainer = ({ selectedModel }: ChatContainerProps) => {
     } finally {
       setIsProcessing(false)
     }
-  }, [message, isProcessing])
+  }, [message, isProcessing, selectedModel.id])
 
   return (
     <div className="flex flex-col h-full gap-4">
