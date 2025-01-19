@@ -29,14 +29,14 @@ export const InputArea = ({ message, isProcessing, onMessageChange, onSend }: In
   )
 
   return (
-    <div className="border-t border-neutral-200 dark:border-neutral-800 px-3 py-3">
+    <div className="border-t border-neutral-200 dark:border-neutral-800 px-0 py-2">
       <div className="flex gap-2 items-end">
         <Textarea
           value={message}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
-          className="resize-none min-h-[44px] max-h-[44px] py-2.5 px-3 text-sm"
+          className="resize-none min-h-[44px] max-h-[44px] py-2 px-2 text-sm flex-1"
           disabled={isProcessing}
         />
         <Button
