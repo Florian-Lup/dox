@@ -63,18 +63,6 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
     [editor, scope, selectedModel.id, resetScope],
   )
 
-  const handleToolSelect = useCallback(async (tool: any) => {
-    setProcessingAction(tool.id)
-    try {
-      // TODO: Implement tool handlers
-      console.log('Tool selected:', tool.id)
-    } catch (error) {
-      console.error(`Error processing ${tool.id}:`, error)
-    } finally {
-      setProcessingAction(null)
-    }
-  }, [])
-
   const handleTabChange = useCallback((isAdvanced: boolean) => {
     setActiveTab(isAdvanced ? 'advanced' : 'quick')
   }, [])
@@ -98,7 +86,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 {activeTab === 'quick' ? (
                   <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
                 ) : (
-                  <AdvancedTools onToolSelect={handleToolSelect} processingTool={processingAction} />
+                  <AdvancedTools selectedModel={selectedModel} />
                 )}
               </div>
             </div>

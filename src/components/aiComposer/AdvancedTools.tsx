@@ -1,74 +1,112 @@
-import { Globe2, CheckCircle2, Search } from 'lucide-react'
-import { useCallback } from 'react'
-import { Spinner } from '../ui/Spinner'
+import { Send } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { Button } from '../ui/Button'
+import { Textarea } from '../ui/Textarea'
+import { Surface } from '../ui/Surface'
+import { v4 as uuidv4 } from 'uuid'
+import { LLMModel } from './ModelSelector'
 
-const ADVANCED_TOOLS = [
-  {
-    id: 'localization',
-    icon: <Globe2 className="w-4 h-4 text-violet-500" />,
-    color: 'text-violet-500',
-    label: 'Localization',
-    description: 'Adapt content for specific regions and cultures',
-  },
-  {
-    id: 'factCheck',
-    icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
-    color: 'text-emerald-500',
-    label: 'Fact-checking',
-    description: 'Verify accuracy of statements and claims',
-  },
-  {
-    id: 'plagiarism',
-    icon: <Search className="w-4 h-4 text-sky-500" />,
-    color: 'text-sky-500',
-    label: 'Plagiarism Check',
-    description: 'Check for content originality and citations',
-  },
-] as const
-
-type AdvancedToolType = (typeof ADVANCED_TOOLS)[number]
-
-interface AdvancedToolsProps {
-  onToolSelect?: (tool: AdvancedToolType, data?: any) => void
-  processingTool?: string | null
+interface Message {
+  id: string
+  content: string
+  isUser: boolean
+  timestamp: Date
 }
 
-export const AdvancedTools = ({ onToolSelect, processingTool }: AdvancedToolsProps) => {
-  const handleToolClick = useCallback(
-    (tool: AdvancedToolType) => () => {
-      onToolSelect?.(tool)
+interface AdvancedToolsProps {
+  selectedModel: LLMModel
+}
+
+export const AdvancedTools = ({ selectedModel }: AdvancedToolsProps) => {
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const handleSend = useCallback(async () => {
+    if (!message.trim() || isProcessing) return
+
+    // Add user message
+    const userMessage: Message = {
+      id: uuidv4(),
+      content: message.trim(),
+      isUser: true,
+      timestamp: new Date(),
+    }
+    setMessages(prev => [...prev, userMessage])
+    setMessage('')
+    setIsProcessing(true)
+
+    try {
+      // TODO: Implement actual AI response logic here using selectedModel
+      // For now, just simulate a response after a delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Add AI response
+      const aiMessage: Message = {
+        id: uuidv4(),
+        content: 'This is a placeholder response. AI integration coming soon!',
+        isUser: false,
+        timestamp: new Date(),
+      }
+      setMessages(prev => [...prev, aiMessage])
+    } catch (error) {
+      console.error('Error processing message:', error)
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [message, isProcessing])
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        handleSend()
+      }
     },
-    [onToolSelect],
+    [handleSend],
   )
 
-  const renderToolButton = useCallback(
-    (tool: AdvancedToolType) => {
-      const isProcessing = processingTool === tool.id
-      return (
-        <button
-          key={tool.label}
-          onClick={handleToolClick(tool)}
-          className="flex items-center gap-2 sm:gap-3 w-full text-left px-3 sm:px-4 py-2 sm:py-3 
-            rounded-lg border border-neutral-200 dark:border-neutral-700 
-            hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
-        >
-          <span className={`flex-shrink-0 ${isProcessing ? tool.color : ''}`}>
-            {isProcessing ? <Spinner className="w-4 h-4" /> : tool.icon}
-          </span>
-          <div className="min-w-0">
-            <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{tool.label}</div>
-            <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{tool.description}</div>
-          </div>
-        </button>
-      )
-    },
-    [handleToolClick, processingTool],
-  )
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value)
+  }, [])
 
   return (
-    <div className="space-y-3 sm:space-y-4">
-      <div className="text-sm text-neutral-500 dark:text-neutral-400">Coming Soon</div>
-      <div className="flex flex-col gap-2">{ADVANCED_TOOLS.map(renderToolButton)}</div>
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-auto space-y-4 mb-4">
+        {messages.map(msg => (
+          <div key={msg.id} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
+            <Surface
+              className={`max-w-[85%] p-3 rounded-lg ${
+                msg.isUser ? 'bg-blue-500 text-white' : 'bg-neutral-100 dark:bg-neutral-800'
+              }`}
+            >
+              <div className="text-sm whitespace-pre-wrap break-words">{msg.content}</div>
+              <div className="text-xs mt-1 opacity-70">
+                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+            </Surface>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex gap-2 items-end">
+        <Textarea
+          value={message}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message..."
+          className="resize-none"
+          disabled={isProcessing}
+        />
+        <Button
+          onClick={handleSend}
+          disabled={!message.trim() || isProcessing}
+          variant="primary"
+          className="flex-shrink-0"
+        >
+          <Send className="w-4 h-4" />
+        </Button>
+      </div>
     </div>
   )
 }
