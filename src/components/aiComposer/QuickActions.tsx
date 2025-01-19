@@ -20,6 +20,9 @@ import {
   Minimize2,
   RefreshCw,
   GraduationCap,
+  Globe2,
+  CheckCircle2,
+  Search,
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Spinner } from '../ui/Spinner'
@@ -90,25 +93,32 @@ const QUICK_ACTIONS = [
     description: 'Analyze and adjust text complexity',
   },
   {
+    id: 'localization',
+    icon: <Globe2 className="w-4 h-4 text-violet-500" />,
+    color: 'text-violet-500',
+    label: 'Localization',
+    description: 'Adapt content for specific regions and cultures',
+  },
+  {
+    id: 'factCheck',
+    icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+    color: 'text-emerald-500',
+    label: 'Fact-checking',
+    description: 'Verify accuracy of statements and claims',
+  },
+  {
+    id: 'plagiarism',
+    icon: <Search className="w-4 h-4 text-sky-500" />,
+    color: 'text-sky-500',
+    label: 'Plagiarism Check',
+    description: 'Check for content originality and citations',
+  },
+  {
     id: 'paraphrase',
     icon: <RefreshCw className="w-4 h-4 text-lime-500" />,
     color: 'text-lime-500',
     label: 'Paraphrase',
     description: 'Rewrite text while maintaining original meaning',
-  },
-  {
-    id: 'docs',
-    icon: <MessageSquare className="w-4 h-4 text-teal-500" />,
-    color: 'text-teal-500',
-    label: 'Add documentation',
-    description: 'Generate helpful comments and docs',
-  },
-  {
-    id: 'git',
-    icon: <GitBranch className="w-4 h-4 text-orange-500" />,
-    color: 'text-orange-500',
-    label: 'Suggest git message',
-    description: 'Generate a commit message',
   },
   {
     id: 'custom',

@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { Button } from '../ui/Button'
+import { Surface } from '../ui/Surface'
+import { Textarea } from '../ui/Textarea'
 import { useState, useCallback } from 'react'
-import { ModelSelector, LLM_MODELS } from './ModelSelector'
+import { ModelSelector, LLM_MODELS, type LLMModel } from './ModelSelector'
 import { ScopeSelector } from './ScopeSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
@@ -21,7 +23,7 @@ interface ComposerPanelProps {
 }
 
 export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) => {
-  const [selectedModel, setSelectedModel] = useState(LLM_MODELS[0])
+  const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
   const [inputValue, setInputValue] = useState('')
   const { scope, resetScope } = useScope(editor)
   const [processingAction, setProcessingAction] = useState<string | null>(null)
@@ -129,62 +131,57 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
           className="fixed sm:right-6 sm:top-[61px] sm:bottom-6 sm:w-[400px] 
-            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[61px]
-            bg-white dark:bg-neutral-900 shadow-xl z-[9999] 
-            border border-neutral-200 dark:border-neutral-800 rounded-lg 
-            flex flex-col"
+            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[61px]"
         >
-          <HeaderContent />
+          <Surface className="h-full flex flex-col">
+            <HeaderContent />
 
-          <div className="flex-1 overflow-auto">
-            <div className="flex gap-4 p-4 border-b border-neutral-200 dark:border-neutral-800">
-              <button
-                onClick={handleQuickTabClick}
-                className={`pb-2 text-sm font-medium transition-colors ${
-                  activeTab === 'quick'
-                    ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
-                }`}
-              >
-                Quick Actions
-              </button>
-              <button
-                onClick={handleAdvancedTabClick}
-                className={`pb-2 text-sm font-medium transition-colors ${
-                  activeTab === 'advanced'
-                    ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
-                }`}
-              >
-                Advanced Tools
-              </button>
+            <div className="flex-1 overflow-auto">
+              <div className="flex gap-4 p-4 border-b border-neutral-200 dark:border-neutral-800">
+                <button
+                  onClick={handleQuickTabClick}
+                  className={`pb-2 text-sm font-medium transition-colors ${
+                    activeTab === 'quick'
+                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
+                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                  }`}
+                >
+                  Quick Actions
+                </button>
+                <button
+                  onClick={handleAdvancedTabClick}
+                  className={`pb-2 text-sm font-medium transition-colors ${
+                    activeTab === 'advanced'
+                      ? 'text-neutral-900 dark:text-white border-b-2 border-neutral-900 dark:border-white'
+                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                  }`}
+                >
+                  Advanced Tools
+                </button>
+              </div>
+              <div className="p-4">
+                {activeTab === 'quick' ? (
+                  <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
+                ) : (
+                  <AdvancedTools onToolSelect={handleToolSelect} processingTool={processingAction} />
+                )}
+              </div>
             </div>
-            <div className="p-4">
-              {activeTab === 'quick' ? (
-                <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
-              ) : (
-                <AdvancedTools onToolSelect={handleToolSelect} processingTool={processingAction} />
-              )}
-            </div>
-          </div>
 
-          <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
-            <div className="relative">
-              <textarea
-                value={inputValue}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                spellCheck={false}
-                autoComplete="off"
-                className="w-full h-12 sm:h-16 p-2 sm:p-3 text-sm rounded-lg 
-                  border border-neutral-200 dark:border-neutral-700 
-                  bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white 
-                  placeholder-neutral-500 dark:placeholder-neutral-400 resize-none 
-                  focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ask anything..."
-              />
+            <div className="p-2 sm:p-4 border-t border-neutral-200 dark:border-neutral-800">
+              <div className="relative">
+                <Textarea
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  spellCheck={false}
+                  autoComplete="off"
+                  className="h-12 sm:h-16 resize-none"
+                  placeholder="Ask anything..."
+                />
+              </div>
             </div>
-          </div>
+          </Surface>
         </motion.div>
       )}
     </AnimatePresence>

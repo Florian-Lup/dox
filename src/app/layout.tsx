@@ -15,7 +15,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://notion-dev-tan.vercel.app'),
+  metadataBase: new URL('https://doxai.vercel.app/'),
   title: 'Dox AI',
   description:
     'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
