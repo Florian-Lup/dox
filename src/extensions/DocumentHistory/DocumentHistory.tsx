@@ -5,7 +5,8 @@ import { Icon } from '../../components/ui/Icon'
 import { VersionModal } from './VersionModal'
 import { renderDate } from './utils'
 import type { Version } from './VersionModal'
-import { SidebarButton } from '@/components/Sidebar/SidebarButton'
+import { Menu } from '@/components/ui/PopoverMenu'
+import * as Popover from '@radix-ui/react-popover'
 
 // Generate a short unique ID (6 characters)
 const generateShortId = () => {
@@ -22,7 +23,7 @@ interface StorageVersion {
 export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
   const [versionName, setVersionName] = useState('')
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
 
   const handleCreateVersion = useCallback(() => {
@@ -39,7 +40,6 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
     editor.commands.saveVersion(JSON.stringify(versionData))
 
     setVersionName('')
-    setIsPopoverOpen(false) // Close the popover
     setShowToast(true) // Show success toast
   }, [editor, versionName])
 
@@ -98,39 +98,42 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <SidebarButton
-        tooltip="Document History"
-        icon="History"
-        title="Document History"
-        description="Create and manage versions"
-        isOpen={isPopoverOpen}
-        onOpenChange={setIsPopoverOpen}
-      >
-        <div className="space-y-2">
-          <input
-            type="text"
-            value={versionName}
-            onChange={handleVersionNameChange}
-            placeholder="Version name"
-            className="w-full px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500"
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={handleCreateVersion}
-              disabled={!versionName.trim()}
-              className="flex-1 px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Create
-            </button>
-            <button
-              onClick={handleShowHistory}
-              className="flex-1 px-3 py-1.5 text-sm rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-            >
-              View History
-            </button>
+      <Menu trigger={<Icon name="History" />} tooltip="Document History" isOpen={isOpen} onOpenChange={setIsOpen}>
+        <div className="p-4 space-y-3 w-80">
+          <div>
+            <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Document History</h3>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Create and manage versions</p>
+          </div>
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={versionName}
+              onChange={handleVersionNameChange}
+              placeholder="Version name"
+              className="w-full px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+            />
+            <div className="flex gap-2">
+              <Popover.Close asChild>
+                <button
+                  onClick={handleCreateVersion}
+                  disabled={!versionName.trim()}
+                  className="flex-1 px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Create
+                </button>
+              </Popover.Close>
+              <Popover.Close asChild>
+                <button
+                  onClick={handleShowHistory}
+                  className="flex-1 px-3 py-1.5 text-sm rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                >
+                  View History
+                </button>
+              </Popover.Close>
+            </div>
           </div>
         </div>
-      </SidebarButton>
+      </Menu>
 
       <VersionModal
         isOpen={isHistoryModalOpen}

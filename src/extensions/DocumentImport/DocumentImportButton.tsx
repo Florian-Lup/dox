@@ -1,8 +1,8 @@
 import { Editor } from '@tiptap/react'
 import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '@/components/ui/Icon'
-import { useCallback, useState } from 'react'
-import { SidebarButton } from '@/components/Sidebar/SidebarButton'
+import { Toolbar } from '@/components/ui/Toolbar'
+import { useCallback, useState, useRef } from 'react'
 
 // Helper function to ensure minimum loading time
 const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
@@ -17,25 +17,21 @@ const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
 
 export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
   const [showSuccessToast, setShowSuccessToast] = useState(false)
   const [showErrorToast, setShowErrorToast] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = useCallback(
+  const handleFileSelect = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (!file) return
 
       setIsLoading(true)
-      setError(null)
-      setIsOpen(false)
 
       try {
         await withMinLoadingTime(
-          (async () => {
-            let importSuccess = true
-            await editor
+          new Promise((resolve, reject) => {
+            editor
               .chain()
               .focus()
               .import({
@@ -44,21 +40,22 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
                   const { setEditorContent, error: importError } = context
 
                   if (importError) {
-                    setError(importError.message)
-                    importSuccess = false
+                    reject(importError)
                     return
                   }
 
                   setEditorContent()
+                  resolve(true)
                 },
               })
               .run()
-            return importSuccess
-          })(),
+          }),
         )
         setShowSuccessToast(true)
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to import document')
         setShowErrorToast(true)
       } finally {
         setIsLoading(false)
@@ -67,39 +64,24 @@ export const DocumentImportButton = ({ editor }: { editor: Editor }) => {
     [editor],
   )
 
+  const handleTriggerClick = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }, [])
+
   return (
     <>
-      <SidebarButton
-        tooltip="Import Document"
-        icon="Upload"
-        title="Import Document"
-        description="Upload a document to import its content (.docx, .odt, .rtf, .md)"
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-        isLoading={isLoading}
-      >
-        {error && (
-          <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">
-            {error}
-          </div>
-        )}
-        <div className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg border-neutral-200 dark:border-neutral-800">
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept=".docx,.odt,.rtf,.md"
-            disabled={isLoading}
-            className="block w-full text-sm text-neutral-500 dark:text-neutral-400
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-full file:border-0
-              file:text-sm file:font-semibold
-              file:bg-neutral-100 file:text-neutral-700
-              dark:file:bg-neutral-800 dark:file:text-neutral-300
-              hover:file:bg-neutral-200 dark:hover:file:bg-neutral-700
-              disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
-      </SidebarButton>
+      <input
+        ref={fileInputRef}
+        type="file"
+        onChange={handleFileSelect}
+        accept=".docx,.odt,.rtf,.md"
+        className="hidden"
+      />
+      <Toolbar.Button onClick={handleTriggerClick} tooltip="Import Document (.docx, .odt, .rtf, .md)">
+        <Icon name={isLoading ? 'Loader' : 'Upload'} className={isLoading ? 'animate-spin' : ''} />
+      </Toolbar.Button>
 
       <Toast.Provider>
         <Toast.Root

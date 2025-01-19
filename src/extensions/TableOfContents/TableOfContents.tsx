@@ -5,7 +5,8 @@ import { memo } from 'react'
 import { TableOfContentsStorage } from '@tiptap-pro/extension-table-of-contents'
 import { cn } from '@/lib/utils'
 import { useEditorState } from '@tiptap/react'
-import { SidebarButton } from '@/components/Sidebar/SidebarButton'
+import { Menu } from '@/components/ui/PopoverMenu'
+import { Icon } from '@/components/ui/Icon'
 
 export type TableOfContentsProps = {
   editor: CoreEditor
@@ -51,14 +52,15 @@ const TableOfContentsList = memo(({ editor, onItemClick, className }: TableOfCon
 
 export const TableOfContentsButton = memo(({ editor }: { editor: CoreEditor }) => {
   return (
-    <SidebarButton
-      tooltip="Table of contents"
-      icon="BetweenHorizontalStart"
-      title="Table of Contents"
-      description="Navigate through document sections"
-    >
-      <TableOfContentsList editor={editor} className="hover:bg-neutral-100 dark:hover:bg-neutral-700" />
-    </SidebarButton>
+    <Menu trigger={<Icon name="BetweenHorizontalStart" />} tooltip="Table of contents">
+      <div className="p-4 space-y-3 w-80">
+        <div>
+          <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Table of Contents</h3>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">Navigate through document sections</p>
+        </div>
+        <TableOfContentsList editor={editor} className="hover:bg-neutral-100 dark:hover:bg-neutral-700" />
+      </div>
+    </Menu>
   )
 })
 
