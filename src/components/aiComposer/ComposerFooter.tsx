@@ -13,8 +13,8 @@ interface ComposerFooterProps {
 export const ComposerFooter = ({ scope, onResetScope, selectedModel, onModelSelect }: ComposerFooterProps) => {
   return (
     <Surface className="flex items-center justify-between gap-4 p-4 border-t border-neutral-100 dark:border-neutral-800">
-      <ScopeSelector scope={scope} onReset={onResetScope} />
       <ModelSelector selectedModel={selectedModel} onModelSelect={onModelSelect} />
+      <ScopeSelector scope={scope} onReset={onResetScope} />
     </Surface>
   )
 }
