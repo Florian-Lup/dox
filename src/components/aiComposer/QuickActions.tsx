@@ -1,14 +1,4 @@
 import {
-  Code2,
-  Wand2,
-  MessageSquare,
-  FileSearch,
-  BrainCircuit,
-  Bug,
-  GitBranch,
-  Sparkles,
-  Scale,
-  Wrench,
   Type,
   Languages,
   BookOpen,
@@ -17,7 +7,6 @@ import {
   MessageCircle,
   Target,
   Maximize2,
-  Minimize2,
   RefreshCw,
   GraduationCap,
   Globe2,
@@ -121,13 +110,6 @@ const QUICK_ACTIONS = [
     label: 'Paraphrase',
     description: 'Rewrite text while maintaining original meaning',
   },
-  {
-    id: 'custom',
-    icon: <BrainCircuit className="w-4 h-4 text-rose-500" />,
-    color: 'text-rose-500',
-    label: 'Custom instruction',
-    description: 'Give specific instructions',
-  },
 ] as const
 
 type QuickActionType = (typeof QUICK_ACTIONS)[number]
@@ -184,5 +166,9 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
     [handleActionClick, handleLanguageSelect, processingAction],
   )
 
-  return <div className="flex flex-col gap-2">{QUICK_ACTIONS.map(renderActionButton)}</div>
+  return (
+    <div className="h-full overflow-auto p-4">
+      <div className="flex flex-col gap-2">{QUICK_ACTIONS.map(renderActionButton)}</div>
+    </div>
+  )
 }

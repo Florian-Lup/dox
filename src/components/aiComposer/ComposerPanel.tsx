@@ -81,14 +81,12 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           <Surface className="h-full flex flex-col">
             <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
 
-            <div className="flex-1 overflow-auto">
-              <div className="p-4">
-                {activeTab === 'quick' ? (
-                  <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
-                ) : (
-                  <ChatContainer selectedModel={selectedModel} />
-                )}
-              </div>
+            <div className="flex-1 min-h-0">
+              {activeTab === 'quick' ? (
+                <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
+              ) : (
+                <ChatContainer selectedModel={selectedModel} />
+              )}
             </div>
 
             <ComposerFooter

@@ -29,18 +29,26 @@ export const InputArea = ({ message, isProcessing, onMessageChange, onSend }: In
   )
 
   return (
-    <div className="flex gap-2 items-end">
-      <Textarea
-        value={message}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Type a message..."
-        className="resize-none h-[40px] min-h-[40px] max-h-[40px] py-2"
-        disabled={isProcessing}
-      />
-      <Button onClick={onSend} disabled={!message.trim() || isProcessing} variant="primary" className="flex-shrink-0">
-        <Send className="w-4 h-4" />
-      </Button>
+    <div className="border-t border-neutral-200 dark:border-neutral-800 px-3 py-3">
+      <div className="flex gap-2 items-end">
+        <Textarea
+          value={message}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Type a message..."
+          className="resize-none min-h-[44px] max-h-[44px] py-2.5 px-3 text-sm"
+          disabled={isProcessing}
+        />
+        <Button
+          onClick={onSend}
+          disabled={!message.trim() || isProcessing}
+          variant="primary"
+          buttonSize="iconSmall"
+          className="flex-shrink-0 h-[44px] w-[44px]"
+        >
+          <Send className="w-5 h-5" />
+        </Button>
+      </div>
     </div>
   )
 }
