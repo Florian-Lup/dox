@@ -35,28 +35,31 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
 
 export const createStreamingResponse = async (
   streamGenerator: AsyncGenerator<string>,
-  wordDelay = 10,
+  chunkDelay = 20, // Consistent delay between chunks in milliseconds
+  bufferSize = 2, // Number of characters to buffer before sending
 ): Promise<Response> => {
   const encoder = new TextEncoder()
   const stream = new TransformStream()
   const writer = stream.writable.getWriter()
 
-  // Process the complete output and then stream it
   ;(async () => {
     try {
-      // Collect the streamed output
-      let completeOutput = ''
+      let buffer = ''
       for await (const chunk of streamGenerator) {
-        completeOutput += chunk
-      }
-
-      // Stream the complete output to frontend
-      const words = completeOutput.split(/(\s+)/)
-      for (const word of words) {
-        if (word) {
-          await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: word })}\n\n`))
-          await new Promise(resolve => setTimeout(resolve, wordDelay))
+        if (chunk) {
+          buffer += chunk
+          // Send chunks when buffer reaches the threshold
+          while (buffer.length >= bufferSize) {
+            const sendChunk = buffer.slice(0, bufferSize)
+            buffer = buffer.slice(bufferSize)
+            await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: sendChunk })}\n\n`))
+            await new Promise(resolve => setTimeout(resolve, chunkDelay))
+          }
         }
+      }
+      // Send any remaining buffer content
+      if (buffer.length > 0) {
+        await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: buffer })}\n\n`))
       }
     } catch (error) {
       console.error('Stream error:', error)
