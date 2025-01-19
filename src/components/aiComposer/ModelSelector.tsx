@@ -44,7 +44,7 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
     <Menu.Menu
       trigger={trigger}
       customTrigger
-      align="center"
+      align="start"
       side="bottom"
       sideOffset={4}
       isOpen={isOpen}
