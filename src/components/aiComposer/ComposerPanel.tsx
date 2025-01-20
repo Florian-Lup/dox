@@ -75,8 +75,8 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="fixed sm:right-6 sm:top-[61px] sm:bottom-6 sm:w-[400px] 
-            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[61px]"
+          className="fixed sm:right-6 sm:top-[80px] sm:bottom-6 sm:w-[400px] 
+            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[80px]"
         >
           <Surface className="h-full flex flex-col">
             <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />

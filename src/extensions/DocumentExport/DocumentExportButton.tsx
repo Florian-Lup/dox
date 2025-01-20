@@ -3,6 +3,7 @@ import * as Toast from '@radix-ui/react-toast'
 import { Icon } from '@/components/ui/Icon'
 import { useCallback, useState } from 'react'
 import { Menu, Item, CategoryTitle } from '@/components/ui/PopoverMenu'
+import { Toolbar } from '@/components/ui/Toolbar'
 
 // Helper function to ensure minimum loading time
 const withMinLoadingTime = async (promise: Promise<any>, minTime = 500) => {
@@ -90,7 +91,11 @@ export const DocumentExportButton = ({ editor }: { editor: Editor }) => {
   return (
     <>
       <Menu
-        trigger={<Icon name={isLoading ? 'Loader' : 'Download'} className={isLoading ? 'animate-spin' : ''} />}
+        trigger={
+          <Toolbar.Button tooltip="Export Document" variant="ghost">
+            <Icon name={isLoading ? 'Loader' : 'Download'} className={isLoading ? 'animate-spin' : ''} />
+          </Toolbar.Button>
+        }
         tooltip="Export Document"
         isOpen={isOpen}
         onOpenChange={setIsOpen}
@@ -98,7 +103,7 @@ export const DocumentExportButton = ({ editor }: { editor: Editor }) => {
         <div className="p-4 space-y-3">
           <div>
             <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Export Document</h3>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Choose a format to export your document</p>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">Choose a format to export</p>
           </div>
           {error && (
             <div className="p-2 text-sm text-red-600 bg-red-100 rounded dark:text-red-400 dark:bg-red-900/20">

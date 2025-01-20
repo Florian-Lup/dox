@@ -65,15 +65,7 @@ export const Menu = ({
 }: MenuProps) => {
   return (
     <Popover.Root onOpenChange={onOpenChange}>
-      {customTrigger ? (
-        <Trigger asChild>{trigger}</Trigger>
-      ) : (
-        <Trigger asChild>
-          <Toolbar.Button className={triggerClassName} tooltip={!isOpen ? tooltip : ''}>
-            {trigger}
-          </Toolbar.Button>
-        </Trigger>
-      )}
+      {customTrigger ? <Trigger asChild>{trigger}</Trigger> : <Trigger asChild>{trigger}</Trigger>}
       {withPortal ? (
         <Portal>
           <Popover.Content asChild side={side} align={align} sideOffset={sideOffset}>

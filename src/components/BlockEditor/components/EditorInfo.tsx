@@ -20,7 +20,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
   const strokeDashoffset = circumference - (percentage / 100) * circumference
 
   return (
-    <div className="flex items-center gap-2 sm:gap-4">
+    <div className="flex items-center gap-x-0.5 sm:gap-x-1.5">
       <div className="hidden sm:flex flex-col justify-center text-right">
         <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 flex items-center">
           <span>
@@ -32,47 +32,51 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
           </span>
         </div>
       </div>
-      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-2 sm:pr-4">
+      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-0.5 sm:pr-1.5">
         <Tooltip title={`${characters}/${limit} characters (${percentage.toFixed(1)}%)`}>
-          <svg width="20" height="20" className="transform -rotate-90">
-            <circle
-              cx="10"
-              cy="10"
-              r={radius}
-              fill="transparent"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-neutral-200 dark:text-neutral-800"
-            />
-            <circle
-              cx="10"
-              cy="10"
-              r={radius}
-              fill="transparent"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              className={cn('transition-all duration-300', {
-                'text-green-500 dark:text-green-400': percentage <= 70,
-                'text-yellow-500 dark:text-yellow-400': percentage > 70 && percentage <= 90,
-                'text-red-500 dark:text-red-400': percentage > 90,
-              })}
-              style={{
-                transformOrigin: '50% 50%',
-              }}
-            />
-          </svg>
+          <div className="w-8 h-8 flex items-center justify-center">
+            <svg width="20" height="20" className="transform -rotate-90">
+              <circle
+                cx="10"
+                cy="10"
+                r={radius}
+                fill="transparent"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="text-neutral-200 dark:text-neutral-800"
+              />
+              <circle
+                cx="10"
+                cy="10"
+                r={radius}
+                fill="transparent"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                className={cn('transition-all duration-300', {
+                  'text-green-500 dark:text-green-400': percentage <= 70,
+                  'text-yellow-500 dark:text-yellow-400': percentage > 70 && percentage <= 90,
+                  'text-red-500 dark:text-red-400': percentage > 90,
+                })}
+                style={{
+                  transformOrigin: '50% 50%',
+                }}
+              />
+            </svg>
+          </div>
         </Tooltip>
       </div>
-      <div className="flex items-center gap-1 sm:gap-2">
-        <div
-          className={cn('w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full', {
-            'bg-yellow-500 dark:bg-yellow-400': collabState === 'connecting',
-            'bg-green-500 dark:bg-green-400': collabState === 'connected',
-            'bg-red-500 dark:bg-red-400': collabState === 'disconnected',
-          })}
-        />
+      <div className="flex items-center gap-x-0.5 sm:gap-x-1.5">
+        <div className="w-8 h-8 flex items-center justify-center">
+          <div
+            className={cn('w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full', {
+              'bg-yellow-500 dark:bg-yellow-400': collabState === 'connecting',
+              'bg-green-500 dark:bg-green-400': collabState === 'connected',
+              'bg-red-500 dark:bg-red-400': collabState === 'disconnected',
+            })}
+          />
+        </div>
         <span className="hidden sm:inline max-w-[4rem] text-xs text-neutral-500 dark:text-neutral-400 font-semibold">
           {getConnectionText(collabState)}
         </span>
@@ -81,20 +85,22 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
         <div className="flex flex-row items-center">
           <div className="relative flex flex-row items-center">
             {users.slice(0, 2).map((user: EditorUser) => (
-              <div key={user.clientId} className="-ml-1.5 sm:-ml-3 first:ml-0">
+              <div key={user.clientId} className="-ml-0.5 sm:-ml-1.5 first:ml-0">
                 <Tooltip title={user.name}>
-                  <img
-                    className="w-6 h-6 sm:w-8 sm:h-8 border border-white rounded-full dark:border-black"
-                    src={`https://api.dicebear.com/7.x/notionists-neutral/svg?seed=${
-                      user.name
-                    }&backgroundColor=${user.color.replace('#', '')}`}
-                    alt="avatar"
-                  />
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <img
+                      className="w-6 h-6 sm:w-6 sm:h-6 border border-white rounded-full dark:border-black"
+                      src={`https://api.dicebear.com/7.x/notionists-neutral/svg?seed=${
+                        user.name
+                      }&backgroundColor=${user.color.replace('#', '')}`}
+                      alt="avatar"
+                    />
+                  </div>
                 </Tooltip>
               </div>
             ))}
             {users.length > 2 && (
-              <div className="-ml-1.5 sm:-ml-3">
+              <div className="-ml-0.5 sm:-ml-1.5">
                 <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 font-bold text-[10px] sm:text-xs leading-none border border-white dark:border-black bg-[#FFA2A2] rounded-full">
                   +{users.length - 2}
                 </div>

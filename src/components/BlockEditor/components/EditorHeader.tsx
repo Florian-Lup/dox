@@ -23,24 +23,19 @@ export const EditorHeader = ({ editor, collabState, users, onDrawerOpenChange }:
   }, [onDrawerOpenChange])
 
   return (
-    <header className="flex flex-row items-center h-12 sm:h-14 px-2 sm:px-4 md:px-6 text-black bg-white border-b border-neutral-200 dark:bg-black dark:text-white dark:border-neutral-800 z-[9999] relative">
+    <header className="flex flex-row items-center h-12 sm:h-14 px-2 sm:px-3 md:px-4 text-black bg-white border border-neutral-200 dark:bg-black dark:text-white dark:border-neutral-800 z-[9999] relative mx-auto mt-2 sm:mt-4 rounded-lg w-[calc(100%-16px)] sm:w-[calc(100%-32px)] max-w-[625px]">
       {/* Left section with Sidebar */}
-      <div className="flex-none sm:flex-1 flex items-center">
+      <div className="flex items-center">
         <Sidebar editor={editor} />
       </div>
 
-      {/* Mobile AI button */}
-      <div className="flex-1 flex sm:hidden items-center pl-2.5">
-        <ComposerButton onClick={handleAIAssistantClick} />
-      </div>
-
-      {/* Center section with AI button (desktop only) */}
-      <div className="hidden sm:flex flex-none">
+      {/* Center section with AI button */}
+      <div className="flex-1 flex items-center justify-center">
         <ComposerButton onClick={handleAIAssistantClick} />
       </div>
 
       {/* Right section */}
-      <div className="flex-1 flex justify-end">
+      <div className="flex items-center">
         <EditorInfo characters={characters} words={words} limit={limit} collabState={collabState} users={users} />
       </div>
     </header>

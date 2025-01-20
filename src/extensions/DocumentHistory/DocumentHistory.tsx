@@ -7,6 +7,9 @@ import { renderDate } from './utils'
 import type { Version } from './VersionModal'
 import { Menu } from '@/components/ui/PopoverMenu'
 import * as Popover from '@radix-ui/react-popover'
+import { Toolbar } from '@/components/ui/Toolbar'
+import { Textarea } from '@/components/ui/Textarea'
+import { Button } from '@/components/ui/Button'
 
 // Generate a short unique ID (6 characters)
 const generateShortId = () => {
@@ -51,7 +54,7 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
     setIsHistoryModalOpen(false)
   }, [])
 
-  const handleVersionNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVersionNameChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setVersionName(e.target.value)
   }, [])
 
@@ -98,37 +101,43 @@ export const DocumentHistory = memo(({ editor }: { editor: Editor }) => {
 
   return (
     <>
-      <Menu trigger={<Icon name="History" />} tooltip="Document History" isOpen={isOpen} onOpenChange={setIsOpen}>
-        <div className="p-4 space-y-3 w-80">
+      <Menu
+        trigger={
+          <Toolbar.Button tooltip="Document History" variant="ghost">
+            <Icon name="History" />
+          </Toolbar.Button>
+        }
+        tooltip="Document History"
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+      >
+        <div className="p-4 space-y-3 w-72">
           <div>
             <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Document History</h3>
             <p className="text-sm text-neutral-500 dark:text-neutral-400">Create and manage versions</p>
           </div>
-          <div className="space-y-2">
-            <input
-              type="text"
+          <div className="space-y-3">
+            <Textarea
               value={versionName}
               onChange={handleVersionNameChange}
               placeholder="Version name"
-              className="w-full px-2 py-1.5 text-sm rounded border border-neutral-200 dark:border-neutral-700 bg-transparent focus:outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-500"
+              className="min-h-[36px] max-h-[36px] py-1.5 rounded-md resize-none"
             />
             <div className="flex gap-2">
               <Popover.Close asChild>
-                <button
+                <Button
                   onClick={handleCreateVersion}
                   disabled={!versionName.trim()}
-                  className="flex-1 px-3 py-1.5 text-sm rounded-md bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  variant="secondary"
+                  className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create
-                </button>
+                </Button>
               </Popover.Close>
               <Popover.Close asChild>
-                <button
-                  onClick={handleShowHistory}
-                  className="flex-1 px-3 py-1.5 text-sm rounded-md text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                >
+                <Button onClick={handleShowHistory} variant="secondary" className="flex-1">
                   View History
-                </button>
+                </Button>
               </Popover.Close>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { useEditorState } from '@tiptap/react'
 import { Menu } from '@/components/ui/PopoverMenu'
 import { Icon } from '@/components/ui/Icon'
+import { Toolbar } from '@/components/ui/Toolbar'
 
 export type TableOfContentsProps = {
   editor: CoreEditor
@@ -52,7 +53,13 @@ const TableOfContentsList = memo(({ editor, onItemClick, className }: TableOfCon
 
 export const TableOfContentsButton = memo(({ editor }: { editor: CoreEditor }) => {
   return (
-    <Menu trigger={<Icon name="BetweenHorizontalStart" />} tooltip="Table of contents">
+    <Menu
+      trigger={
+        <Toolbar.Button tooltip="Table of contents" variant="ghost">
+          <Icon name="BetweenHorizontalStart" />
+        </Toolbar.Button>
+      }
+    >
       <div className="p-4 space-y-3 w-80">
         <div>
           <h3 className="text-base font-medium text-neutral-900 dark:text-neutral-100">Table of Contents</h3>
