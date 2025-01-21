@@ -11,6 +11,10 @@
     "format": "prettier --write --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx,json,css}\""
   },
   "dependencies": {
+    "@dicebear/avatars": "^4.10.8",
+    "@dicebear/core": "^9.2.2",
+    "@dicebear/miniavs": "^9.2.2",
+    "@dicebear/notionists-neutral": "^9.2.2",
     "@hocuspocus/provider": "^2.14.0",
     "@hocuspocus/transformer": "^2.14.0",
     "@langchain/core": "^0.3.29",

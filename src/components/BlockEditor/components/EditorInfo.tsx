@@ -4,6 +4,7 @@ import { EditorUser } from '../types'
 import { cn } from '../../../lib/utils'
 import { getConnectionText } from '../../../lib/utils/getConnectionText'
 import Tooltip from '../../ui/Tooltip'
+import { Avatar } from '../../ui/Avatar'
 
 export type EditorInfoProps = {
   characters: number
@@ -84,21 +85,21 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
       {collabState === 'connected' && (
         <div className="flex flex-row items-center">
           <div className="relative flex flex-row items-center">
-            {users.slice(0, 2).map((user: EditorUser) => (
-              <div key={user.clientId} className="-ml-0.5 sm:-ml-1.5 first:ml-0">
-                <Tooltip title={user.name}>
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <img
-                      className="w-6 h-6 sm:w-6 sm:h-6 border border-white rounded-full dark:border-black"
-                      src={`https://api.dicebear.com/7.x/notionists-neutral/svg?seed=${
-                        user.name
-                      }&backgroundColor=${user.color.replace('#', '')}`}
-                      alt="avatar"
-                    />
-                  </div>
-                </Tooltip>
-              </div>
-            ))}
+            {users.slice(0, 2).map((user: EditorUser) => {
+              return (
+                <div key={user.clientId} className="-ml-0.5 sm:-ml-1.5 first:ml-0">
+                  <Tooltip title={user.name}>
+                    <div className="w-8 h-8 flex items-center justify-center">
+                      <Avatar
+                        name={user.name}
+                        className="w-6 h-6 sm:w-6 sm:h-6 border border-white rounded-full dark:border-black"
+                        backgroundColor={user.color}
+                      />
+                    </div>
+                  </Tooltip>
+                </div>
+              )
+            })}
             {users.length > 2 && (
               <div className="-ml-0.5 sm:-ml-1.5">
                 <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 font-bold text-[10px] sm:text-xs leading-none border border-white dark:border-black bg-[#FFA2A2] rounded-full">
