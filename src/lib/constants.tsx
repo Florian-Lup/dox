@@ -8,7 +8,7 @@ export const userNames = [
   'Playful Panda',
   'Clever Cat',
   'Mighty Mouse',
-  'Quiet Quokka',
+  'Pretty Frog',
   'Running Raccoon',
   'Smart Snake',
   'Gentle Giraffe',

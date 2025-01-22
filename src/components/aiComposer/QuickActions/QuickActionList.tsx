@@ -17,6 +17,7 @@ import { useCallback, useState } from 'react'
 import { Spinner } from '../../ui/Spinner'
 import { Button } from '../../ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
+import { LengthSlider } from './components/LengthSlider'
 
 const QUICK_ACTIONS = [
   {
@@ -41,34 +42,6 @@ const QUICK_ACTIONS = [
     description: 'Enhance sentence flow and refine word choice',
   },
   {
-    id: 'audience',
-    icon: <Users className="w-4 h-4 text-indigo-500" />,
-    color: 'text-indigo-500',
-    label: 'Target Audience',
-    description: 'Adapt text for a specific audience or expertise level',
-  },
-  {
-    id: 'style',
-    icon: <Palette className="w-4 h-4 text-pink-500" />,
-    color: 'text-pink-500',
-    label: 'Change Style',
-    description: 'Modify writing style (academic, casual, professional)',
-  },
-  {
-    id: 'tone',
-    icon: <MessageCircle className="w-4 h-4 text-yellow-500" />,
-    color: 'text-yellow-500',
-    label: 'Change Tone',
-    description: 'Adjust emotional tone (friendly, formal, enthusiastic)',
-  },
-  {
-    id: 'intent',
-    icon: <Target className="w-4 h-4 text-red-500" />,
-    color: 'text-red-500',
-    label: 'Intent',
-    description: 'Optimize text for specific purpose (persuade, inform, engage)',
-  },
-  {
     id: 'length',
     icon: <Maximize2 className="w-4 h-4 text-cyan-500" />,
     color: 'text-amber-500',
@@ -81,6 +54,34 @@ const QUICK_ACTIONS = [
     color: 'text-emerald-500',
     label: 'Reading Level',
     description: 'Analyze and adjust text complexity',
+  },
+  {
+    id: 'audience',
+    icon: <Users className="w-4 h-4 text-indigo-500" />,
+    color: 'text-indigo-500',
+    label: 'Target Audience',
+    description: 'Adapt text for a specific audience or expertise level',
+  },
+  {
+    id: 'style',
+    icon: <Palette className="w-4 h-4 text-pink-500" />,
+    color: 'text-pink-500',
+    label: 'Style',
+    description: 'Modify writing style (academic, casual, professional)',
+  },
+  {
+    id: 'tone',
+    icon: <MessageCircle className="w-4 h-4 text-yellow-500" />,
+    color: 'text-yellow-500',
+    label: 'Tone',
+    description: 'Adjust emotional tone (friendly, formal, enthusiastic)',
+  },
+  {
+    id: 'intent',
+    icon: <Target className="w-4 h-4 text-red-500" />,
+    color: 'text-red-500',
+    label: 'Intent',
+    description: 'Optimize text for specific purpose (persuade, inform, engage)',
   },
   {
     id: 'localization',
@@ -134,13 +135,20 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
     [onActionSelect],
   )
 
+  const handleLengthChange = useCallback(
+    (action: QuickActionType) => (value: number) => {
+      onActionSelect?.(action, { lengthAdjustment: value })
+    },
+    [onActionSelect],
+  )
+
   const renderActionButton = useCallback(
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
       const button = (
         <Button
           key={action.label}
-          onClick={handleActionClick(action)}
+          onClick={action.id !== 'length' ? handleActionClick(action) : undefined}
           variant="ghost"
           className="flex items-center gap-3 w-full text-left px-4 py-3 
             hover:bg-neutral-50 dark:hover:bg-neutral-800"
@@ -161,9 +169,13 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
         return <LanguagePicker key={action.label} trigger={button} onLanguageSelect={handleLanguageSelect(action)} />
       }
 
+      if (action.id === 'length') {
+        return <LengthSlider key={action.label} trigger={button} onValueChange={handleLengthChange(action)} />
+      }
+
       return button
     },
-    [handleActionClick, handleLanguageSelect, processingAction],
+    [handleActionClick, handleLanguageSelect, handleLengthChange, processingAction],
   )
 
   return (
