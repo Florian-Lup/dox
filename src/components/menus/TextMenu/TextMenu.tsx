@@ -12,8 +12,7 @@ import { FontSizePicker } from './components/FontSizePicker'
 import { useTextmenuContentTypes } from './hooks/useTextmenuContentTypes'
 import { ContentTypePicker } from './components/ContentTypePicker'
 import { EditLinkPopover } from './components/EditLinkPopover'
-import { ScopeSelector } from '@/components/aiComposer/core/ScopeSelector'
-import { useScope } from '@/hooks/useScope'
+import { ScopeButton } from './components/ScopeButton'
 
 // We memorize the button so each button is not rerendered
 // on every editor state change
@@ -31,7 +30,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
   const commands = useTextmenuCommands(editor)
   const states = useTextmenuStates(editor)
   const blockOptions = useTextmenuContentTypes(editor)
-  const { scope, captureSelection, resetScope } = useScope(editor)
 
   return (
     <BubbleMenu
@@ -63,9 +61,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       updateDelay={100}
     >
       <Toolbar.Wrapper className="flex flex-wrap gap-0.5">
-        <MemoButton tooltip="Add scope" onClick={captureSelection}>
-          <Icon name="AtSign" className="text-blue-500 dark:text-blue-400" />
-        </MemoButton>
+        <ScopeButton editor={editor} />
         <Toolbar.Divider />
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker onChange={commands.onSetFont} value={states.currentFont || ''} />
