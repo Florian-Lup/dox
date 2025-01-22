@@ -15,44 +15,36 @@ export interface AIRequestParams {
   [key: string]: any
 }
 
+const hasValidSelection = (scope: Scope) => {
+  return scope.position.text.length > 0 && scope.position.from !== scope.position.to
+}
+
 export const getTextFromScope = (editor: Editor, scope: Scope) => {
-  return scope.type === 'full'
-    ? editor.getText()
-    : editor.state.doc.textBetween(scope.position?.from || 0, scope.position?.to || 0)
+  if (!hasValidSelection(scope)) {
+    throw new Error('Please select some text before performing this action')
+  }
+  return editor.state.doc.textBetween(scope.position.from, scope.position.to)
 }
 
 export const updateEditorContent = (editor: Editor, scope: Scope, text: string) => {
-  if (scope.type === 'full') {
-    editor.chain().focus().clearContent().insertContent(text).run()
-  } else if (scope.position) {
-    const { from, to } = scope.position
-    editor.chain().focus().deleteRange({ from, to }).insertContent(text).run()
-  }
+  if (!hasValidSelection(scope)) return
+  const { from, to } = scope.position
+  editor.chain().focus().deleteRange({ from, to }).insertContent(text).run()
 }
 
 export const applyVisualFeedback = (editor: Editor, scope: Scope, options?: StreamingOptions['visualFeedback']) => {
-  if (!options?.mark) return
+  if (!options?.mark || !hasValidSelection(scope)) return
 
-  if (scope.type === 'selection' && scope.position) {
-    editor.commands.setTextSelection(scope.position)
-  } else {
-    editor.commands.selectAll()
-  }
-
+  editor.commands.setTextSelection(scope.position)
   if (options.mark) {
     editor.commands.setMark(options.mark)
   }
 }
 
 export const removeVisualFeedback = (editor: Editor, scope: Scope, options?: StreamingOptions['visualFeedback']) => {
-  if (!options?.mark) return
+  if (!options?.mark || !hasValidSelection(scope)) return
 
-  if (scope.type === 'selection' && scope.position) {
-    editor.commands.setTextSelection(scope.position)
-  } else {
-    editor.commands.selectAll()
-  }
-
+  editor.commands.setTextSelection(scope.position)
   if (options.mark) {
     editor.commands.unsetMark(options.mark)
   }
@@ -65,8 +57,11 @@ export const createStreamingHandler = async (
   params: AIRequestParams,
   options?: StreamingOptions,
 ) => {
+  if (!hasValidSelection(scope)) {
+    throw new Error('Please select some text before performing this action')
+  }
+
   try {
-    // Apply visual feedback if configured
     if (options?.visualFeedback) {
       applyVisualFeedback(editor, scope, options.visualFeedback)
     }
@@ -81,30 +76,19 @@ export const createStreamingHandler = async (
       if (options?.visualFeedback) {
         removeVisualFeedback(editor, scope, options.visualFeedback)
       }
-      const errorData = await response.json().catch(() => ({}))
-      console.error('Request failed:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorData,
-      })
-      throw new Error(`Failed to process with ${endpoint}`)
+      return
     }
 
     if (!response.body) {
-      throw new Error('No response body')
+      return
     }
 
     const reader = response.body.getReader()
     let accumulatedText = ''
 
     try {
-      const initialPosition = scope.type === 'selection' && scope.position ? scope.position : null
-      let currentFrom = initialPosition?.from
-
-      if (scope.type === 'selection' && initialPosition) {
-        editor.commands.deleteRange(initialPosition)
-        currentFrom = initialPosition.from
-      }
+      editor.commands.deleteRange(scope.position)
+      let currentFrom = scope.position.from
 
       while (true) {
         const { done, value } = await reader.read()
@@ -121,16 +105,12 @@ export const createStreamingHandler = async (
 
               if (data.chunk) {
                 accumulatedText += data.chunk
-                if (scope.type === 'selection' && currentFrom !== undefined) {
-                  editor.commands.insertContentAt(currentFrom, data.chunk)
-                  currentFrom += data.chunk.length
-                } else {
-                  editor.commands.setContent(accumulatedText)
-                }
+                editor.commands.insertContentAt(currentFrom, data.chunk)
+                currentFrom += data.chunk.length
                 options?.onProgress?.(accumulatedText)
               }
             } catch (e) {
-              console.warn('Failed to parse chunk:', e)
+              // Silently handle JSON parsing errors
             }
           }
         }
@@ -142,7 +122,9 @@ export const createStreamingHandler = async (
     if (options?.visualFeedback) {
       removeVisualFeedback(editor, scope, options.visualFeedback)
     }
-    console.error('Error during streaming:', error)
-    throw error
+    // Only rethrow text selection errors
+    if (error instanceof Error && error.message.includes('Please select some text')) {
+      throw error
+    }
   }
 }

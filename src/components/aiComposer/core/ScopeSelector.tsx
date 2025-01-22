@@ -10,19 +10,14 @@ interface ScopeSelectorProps {
 }
 
 export const ScopeSelector = ({ className, scope, onReset }: ScopeSelectorProps) => {
-  const displayText =
-    scope.type === 'full'
-      ? 'Full Document'
-      : scope.position
-        ? `(${scope.position.from} → ${scope.position.to})`
-        : 'Selection'
+  const displayText = scope.position.text ? `(${scope.position.from} → ${scope.position.to})` : 'Select Text'
 
   return (
     <Tooltip title="The text range that will be affected by AI actions">
       <div className="inline-flex items-center gap-1 text-xs font-medium leading-none">
         <span className="text-neutral-500">Scope @ </span>
         <span className="text-neutral-900 dark:text-white">{displayText}</span>
-        {scope.type === 'selection' && (
+        {scope.position.text && (
           <Button
             onClick={onReset}
             variant="ghost"

@@ -11,6 +11,8 @@ import { handleTranslate } from './QuickActions/actions/translate'
 import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
 import { ComposerFooter } from './ComposerFooter'
 import { ComposerHeader } from './ComposerHeader'
+import * as Toast from '@radix-ui/react-toast'
+import { X } from 'lucide-react'
 
 type TabType = 'quick' | 'advanced'
 
@@ -25,6 +27,13 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   const { scope, resetScope } = useScope(editor)
   const [processingAction, setProcessingAction] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabType>('quick')
+  const [showErrorToast, setShowErrorToast] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleError = (error: Error) => {
+    setErrorMessage(error.message)
+    setShowErrorToast(true)
+  }
 
   const handleActionSelect = useCallback(
     async (action: any, data?: any) => {
@@ -34,7 +43,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           await handleGrammarFix(editor, scope, selectedModel.id)
           resetScope()
         } catch (error) {
-          console.error('Error fixing grammar:', error)
+          handleError(error as Error)
         } finally {
           setProcessingAction(null)
         }
@@ -44,7 +53,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           await handleTranslate(editor, scope, selectedModel.id, data.targetLanguage)
           resetScope()
         } catch (error) {
-          console.error('Error translating:', error)
+          handleError(error as Error)
         } finally {
           setProcessingAction(null)
         }
@@ -54,7 +63,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
           await handleClarityImprovement(editor, scope, selectedModel.id)
           resetScope()
         } catch (error) {
-          console.error('Error improving clarity:', error)
+          handleError(error as Error)
         } finally {
           setProcessingAction(null)
         }
@@ -68,36 +77,51 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
   }, [])
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.2 }}
-          className="fixed sm:right-6 sm:top-[80px] sm:bottom-6 sm:w-[400px] 
-            max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[80px]"
-        >
-          <Surface className="h-full flex flex-col">
-            <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
+    <Toast.Provider>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed sm:right-6 sm:top-[80px] sm:bottom-6 sm:w-[400px] 
+              max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[80px]"
+          >
+            <Surface className="h-full flex flex-col">
+              <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
 
-            <div className="flex-1 min-h-0">
-              {activeTab === 'quick' ? (
-                <QuickActionList onActionSelect={handleActionSelect} processingAction={processingAction} />
-              ) : (
-                <ChatContainer selectedModel={selectedModel} />
-              )}
-            </div>
+              <div className="flex-1 min-h-0">
+                {activeTab === 'quick' ? (
+                  <QuickActionList onActionSelect={handleActionSelect} processingAction={processingAction} />
+                ) : (
+                  <ChatContainer selectedModel={selectedModel} />
+                )}
+              </div>
 
-            <ComposerFooter
-              scope={scope}
-              onResetScope={resetScope}
-              selectedModel={selectedModel}
-              onModelSelect={setSelectedModel}
-            />
-          </Surface>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              <ComposerFooter
+                scope={scope}
+                onResetScope={resetScope}
+                selectedModel={selectedModel}
+                onModelSelect={setSelectedModel}
+              />
+            </Surface>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Toast.Root
+        className="bg-red-100 dark:bg-red-900 border border-red-200 dark:border-red-800 rounded-lg shadow-lg p-4 items-center fixed bottom-4 left-4 z-[9999] data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-left-full"
+        open={showErrorToast}
+        onOpenChange={setShowErrorToast}
+        duration={3000}
+      >
+        <Toast.Title className="text-sm font-medium text-red-900 dark:text-red-100 flex items-center gap-2">
+          <X className="w-4 h-4" />
+          {errorMessage}
+        </Toast.Title>
+      </Toast.Root>
+      <Toast.Viewport className="fixed bottom-0 left-0 z-[9999] m-4" />
+    </Toast.Provider>
   )
 }
