@@ -145,13 +145,16 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
   const renderActionButton = useCallback(
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
+      const isAnyProcessing = !!processingAction
       const button = (
         <Button
           key={action.label}
           onClick={action.id !== 'length' ? handleActionClick(action) : undefined}
           variant="ghost"
-          className="flex items-center gap-3 w-full text-left px-4 py-3 
-            hover:bg-neutral-50 dark:hover:bg-neutral-800"
+          disabled={isAnyProcessing}
+          className={`flex items-center gap-3 w-full text-left px-4 py-3 
+            hover:bg-neutral-50 dark:hover:bg-neutral-800
+            ${isAnyProcessing && !isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <span className={`flex-shrink-0 ${isProcessing ? action.color : ''}`}>
             {isProcessing ? <Spinner className="w-4 h-4" /> : action.icon}
