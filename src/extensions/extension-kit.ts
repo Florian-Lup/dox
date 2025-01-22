@@ -76,7 +76,6 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
   Highlight.configure({ multicolor: true }),
   Underline,
   CharacterCount.configure({
-    limit: 5000,
     mode: 'textSize',
   }),
   CharacterCounter,

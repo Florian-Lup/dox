@@ -14,12 +14,7 @@ export type EditorInfoProps = {
   limit: number
 }
 
-export const EditorInfo = memo(({ characters, collabState, users, words, limit }: EditorInfoProps) => {
-  const percentage = Math.max(0, Math.min((characters / limit) * 100, 100))
-  const radius = 8
-  const circumference = 2 * Math.PI * radius
-  const strokeDashoffset = circumference - (percentage / 100) * circumference
-
+export const EditorInfo = memo(({ characters, collabState, users, words }: EditorInfoProps) => {
   return (
     <div className="flex items-center gap-x-0.5 sm:gap-x-1.5">
       <div className="hidden sm:flex flex-col justify-center text-right">
@@ -33,41 +28,7 @@ export const EditorInfo = memo(({ characters, collabState, users, words, limit }
           </span>
         </div>
       </div>
-      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-0.5 sm:pr-1.5">
-        <Tooltip title={`${characters}/${limit} characters (${percentage.toFixed(1)}%)`}>
-          <div className="w-8 h-8 flex items-center justify-center">
-            <svg width="20" height="20" className="transform -rotate-90">
-              <circle
-                cx="10"
-                cy="10"
-                r={radius}
-                fill="transparent"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-neutral-200 dark:text-neutral-800"
-              />
-              <circle
-                cx="10"
-                cy="10"
-                r={radius}
-                fill="transparent"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                className={cn('transition-all duration-300', {
-                  'text-green-500 dark:text-green-400': percentage <= 70,
-                  'text-yellow-500 dark:text-yellow-400': percentage > 70 && percentage <= 90,
-                  'text-red-500 dark:text-red-400': percentage > 90,
-                })}
-                style={{
-                  transformOrigin: '50% 50%',
-                }}
-              />
-            </svg>
-          </div>
-        </Tooltip>
-      </div>
+      <div className="flex items-center border-r border-neutral-200 dark:border-neutral-800 pr-0.5 sm:pr-1.5" />
       <div className="flex items-center gap-x-0.5 sm:gap-x-1.5">
         <div className="w-8 h-8 flex items-center justify-center">
           <div
