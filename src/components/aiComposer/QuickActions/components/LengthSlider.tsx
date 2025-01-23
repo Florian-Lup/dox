@@ -1,10 +1,8 @@
 import * as Slider from '@radix-ui/react-slider'
-import { useState, useCallback } from 'react'
-import { Menu } from '../../../ui/PopoverMenu'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { Check } from 'lucide-react'
 import { Button } from '../../../ui/Button'
 import { cn } from '@/lib/utils'
-import * as Popover from '@radix-ui/react-popover'
 
 interface LengthSliderProps {
   trigger: React.ReactNode
@@ -25,6 +23,8 @@ const SLIDER_MARKS = [
 
 export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
   const [value, setValue] = useState([0])
+  const [isOpen, setIsOpen] = useState(false)
+  const popoverRef = useRef<HTMLDivElement>(null)
 
   const handleValueChange = useCallback(
     (newValue: number[]) => {
@@ -36,6 +36,7 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
 
   const handleOpenChange = useCallback(
     (open: boolean) => {
+      setIsOpen(open)
       if (open) {
         setValue([0])
         onValueChange?.(0)
@@ -46,63 +47,85 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
 
   const handleConfirm = useCallback(() => {
     onValueChange?.(value[0])
+    setIsOpen(false)
   }, [onValueChange, value])
 
+  const handleTriggerClick = useCallback(() => {
+    handleOpenChange(!isOpen)
+  }, [handleOpenChange, isOpen])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
-    <Menu trigger={trigger} customTrigger onOpenChange={handleOpenChange} align="center" side="bottom">
-      <div className="w-[350px] p-4">
-        <div className="space-y-4 flex flex-col items-center">
-          <div className="w-[95%] flex justify-between items-center">
-            <span className="text-sm font-medium text-neutral-900 dark:text-white pl-[10px]">Adjust Length</span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                {value[0] >= 0 ? '+' : ''}
-                {value[0]}%
-              </span>
-              <Popover.Close asChild>
-                <Button
-                  variant="ghost"
-                  buttonSize="icon"
-                  disabled={value[0] === 0}
-                  className={cn(
-                    'relative h-7 w-7 transition-colors rounded-full',
-                    value[0] === 0
-                      ? 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-300 dark:hover:text-neutral-600 cursor-not-allowed'
-                      : 'text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-950 before:absolute before:inset-0 before:rounded-full before:border-2 before:border-t-emerald-500 before:border-r-emerald-500 before:border-b-transparent before:border-l-transparent dark:before:border-t-emerald-400 dark:before:border-r-emerald-400 before:animate-[spin_1s_linear_infinite]',
-                  )}
-                  onClick={handleConfirm}
-                >
-                  <Check className="h-4 w-4 relative" />
-                </Button>
-              </Popover.Close>
-            </div>
-          </div>
-          <div className="w-[95%]">
-            <Slider.Root
-              className="relative flex items-center select-none touch-none w-full h-5"
-              value={value}
-              onValueChange={handleValueChange}
-              max={100}
-              min={-100}
-              step={25}
-            >
-              <Slider.Track className="relative grow h-[3px] bg-transparent">
-                <div className="absolute inset-0 flex items-center justify-between px-[10px]">
-                  {SLIDER_MARKS.map(mark => (
-                    <div key={mark.value} className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600" />
-                  ))}
+    <div className="relative inline-block">
+      <div onClick={handleTriggerClick}>{trigger}</div>
+      {isOpen && (
+        <div
+          ref={popoverRef}
+          className="absolute z-50 mt-2 transform -translate-x-1/2 left-1/2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-800"
+        >
+          <div className="w-[350px] p-4">
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-[95%] flex justify-between items-center">
+                <span className="text-sm font-medium text-neutral-900 dark:text-white pl-[10px]">Adjust Length</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                    {value[0] >= 0 ? '+' : ''}
+                    {value[0]}%
+                  </span>
+                  <Button
+                    variant="ghost"
+                    buttonSize="icon"
+                    disabled={value[0] === 0}
+                    className={cn(
+                      'relative h-7 w-7 transition-colors rounded-full',
+                      value[0] === 0
+                        ? 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-300 dark:hover:text-neutral-600 cursor-not-allowed'
+                        : 'text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-950 before:absolute before:inset-0 before:rounded-full before:border-2 before:border-t-emerald-500 before:border-r-emerald-500 before:border-b-transparent before:border-l-transparent dark:before:border-t-emerald-400 dark:before:border-r-emerald-400 before:animate-[spin_1s_linear_infinite]',
+                    )}
+                    onClick={handleConfirm}
+                  >
+                    <Check className="h-4 w-4 relative" />
+                  </Button>
                 </div>
-              </Slider.Track>
-              <Slider.Thumb className="block w-5 h-5 bg-white dark:bg-neutral-800 border-2 border-emerald-500 hover:border-emerald-600 dark:border-emerald-400 dark:hover:border-emerald-300 rounded-full focus:outline-none" />
-            </Slider.Root>
-            <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 mt-4 px-[10px]">
-              <span>Shorter</span>
-              <span>Original</span>
-              <span>Longer</span>
+              </div>
+              <div className="w-[95%]">
+                <Slider.Root
+                  className="relative flex items-center select-none touch-none w-full h-5"
+                  value={value}
+                  onValueChange={handleValueChange}
+                  max={100}
+                  min={-100}
+                  step={25}
+                >
+                  <Slider.Track className="relative grow h-[3px] bg-transparent">
+                    <div className="absolute inset-0 flex items-center justify-between px-[10px]">
+                      {SLIDER_MARKS.map(mark => (
+                        <div key={mark.value} className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+                      ))}
+                    </div>
+                  </Slider.Track>
+                  <Slider.Thumb className="block w-5 h-5 bg-white dark:bg-neutral-800 border-2 border-emerald-500 hover:border-emerald-600 dark:border-emerald-400 dark:hover:border-emerald-300 rounded-full focus:outline-none" />
+                </Slider.Root>
+                <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 mt-4 px-[10px]">
+                  <span>Shorter</span>
+                  <span>Original</span>
+                  <span>Longer</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Menu>
+      )}
+    </div>
   )
 }
