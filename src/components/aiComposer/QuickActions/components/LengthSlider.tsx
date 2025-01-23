@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 interface LengthSliderProps {
   trigger: React.ReactNode
   onValueChange?: (value: number) => void
+  onLengthSelect?: (percentage: number) => void
 }
 
 const SLIDER_MARKS = [
@@ -21,7 +22,7 @@ const SLIDER_MARKS = [
   { value: 100, label: '+100%' },
 ]
 
-export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
+export const LengthSlider = ({ trigger, onValueChange, onLengthSelect }: LengthSliderProps) => {
   const [value, setValue] = useState([0])
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -47,9 +48,10 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
   )
 
   const handleConfirm = useCallback(() => {
-    onValueChange?.(value[0])
+    if (value[0] === 0) return
+    onLengthSelect?.(value[0])
     setIsOpen(false)
-  }, [onValueChange, value])
+  }, [value, onLengthSelect])
 
   const handleTriggerClick = useCallback(
     (e: React.MouseEvent) => {

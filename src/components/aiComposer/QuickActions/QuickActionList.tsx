@@ -137,7 +137,15 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
 
   const handleLengthChange = useCallback(
     (action: QuickActionType) => (value: number) => {
-      onActionSelect?.(action, { lengthAdjustment: value })
+      // This is just for live preview/feedback, not the actual API call
+      // onActionSelect?.(action, { lengthAdjustment: value })
+    },
+    [],
+  )
+
+  const handleLengthSelect = useCallback(
+    (action: QuickActionType) => (percentage: number) => {
+      onActionSelect?.(action, { percentage })
     },
     [onActionSelect],
   )
@@ -173,12 +181,19 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       }
 
       if (action.id === 'length') {
-        return <LengthSlider key={action.label} trigger={button} onValueChange={handleLengthChange(action)} />
+        return (
+          <LengthSlider
+            key={action.label}
+            trigger={button}
+            onValueChange={handleLengthChange(action)}
+            onLengthSelect={handleLengthSelect(action)}
+          />
+        )
       }
 
       return button
     },
-    [handleActionClick, handleLanguageSelect, handleLengthChange, processingAction],
+    [handleActionClick, handleLanguageSelect, handleLengthChange, handleLengthSelect, processingAction],
   )
 
   return (

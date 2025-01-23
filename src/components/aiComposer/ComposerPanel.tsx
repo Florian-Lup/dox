@@ -9,6 +9,7 @@ import { ChatContainer } from './CustomInstructions/ChatContainer'
 import { handleGrammarFix } from './QuickActions/actions/grammar'
 import { handleTranslate } from './QuickActions/actions/translate'
 import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
+import { handleAdjustLength } from './QuickActions/actions/AdjustLength'
 import { ComposerFooter } from './ComposerFooter'
 import { ComposerHeader } from './ComposerHeader'
 import * as Toast from '@radix-ui/react-toast'
@@ -61,6 +62,16 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
         setProcessingAction('readability')
         try {
           await handleClarityImprovement(editor, scope, selectedModel.id)
+          resetScope()
+        } catch (error) {
+          handleError(error as Error)
+        } finally {
+          setProcessingAction(null)
+        }
+      } else if (action.id === 'length' && data?.percentage !== undefined) {
+        setProcessingAction('length')
+        try {
+          await handleAdjustLength(editor, scope, selectedModel.id, data.percentage)
           resetScope()
         } catch (error) {
           handleError(error as Error)
