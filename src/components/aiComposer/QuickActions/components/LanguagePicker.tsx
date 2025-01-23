@@ -1,6 +1,6 @@
 import { Icon } from '@/components/ui/Icon'
-import * as Menu from '@/components/ui/PopoverMenu'
-import { useCallback } from 'react'
+import { useCallback, useRef, useState, useEffect } from 'react'
+import { cn } from '@/lib/utils'
 
 const LANGUAGES = [
   {
@@ -90,30 +90,99 @@ interface LanguagePickerProps {
   trigger: React.ReactNode
 }
 
+const CategoryTitle = ({ children }: { children: React.ReactNode }) => (
+  <div className="px-2 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{children}</div>
+)
+
+const MenuItem = ({
+  label,
+  iconComponent,
+  onClick,
+}: {
+  label: string
+  iconComponent: React.ReactNode
+  onClick: () => void
+}) => (
+  <button
+    className={cn(
+      'flex w-full items-center gap-2 px-2 py-1.5 text-sm text-neutral-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors',
+      'focus:outline-none focus:bg-neutral-100 dark:focus:bg-neutral-800',
+    )}
+    onClick={onClick}
+  >
+    {iconComponent}
+    {label}
+  </button>
+)
+
+const Divider = () => <div className="my-1 border-t border-neutral-200 dark:border-neutral-800" />
+
 export const LanguagePicker = ({ onLanguageSelect, trigger }: LanguagePickerProps) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const popoverRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
+
   const handleLanguageSelect = useCallback(
     (language: Language) => () => {
       onLanguageSelect?.(language)
+      setIsOpen(false)
     },
     [onLanguageSelect],
   )
 
+  const handleTriggerClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      setIsOpen(!isOpen)
+    },
+    [isOpen],
+  )
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(target)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
-    <Menu.Menu trigger={trigger} customTrigger withPortal>
-      {LANGUAGES.map(region => (
-        <div key={region.region}>
-          <Menu.CategoryTitle>{region.region}</Menu.CategoryTitle>
-          {region.languages.map(language => (
-            <Menu.Item
-              key={language.code}
-              label={language.name}
-              iconComponent={<Icon name="Languages" className="w-4 h-4" />}
-              onClick={handleLanguageSelect(language)}
-            />
-          ))}
-          {region !== LANGUAGES[LANGUAGES.length - 1] && <Menu.Divider />}
+    <div className="relative inline-block">
+      <div ref={triggerRef} onClick={handleTriggerClick}>
+        {trigger}
+      </div>
+      {isOpen && (
+        <div
+          ref={popoverRef}
+          className="absolute z-50 mt-2 transform -translate-x-1/2 left-1/2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-800"
+        >
+          <div className="w-[350px] max-h-[260px] overflow-y-auto">
+            {LANGUAGES.map(region => (
+              <div key={region.region}>
+                <CategoryTitle>{region.region}</CategoryTitle>
+                {region.languages.map(language => (
+                  <MenuItem
+                    key={language.code}
+                    label={language.name}
+                    iconComponent={<Icon name="Languages" className="w-4 h-4" />}
+                    onClick={handleLanguageSelect(language)}
+                  />
+                ))}
+                {region !== LANGUAGES[LANGUAGES.length - 1] && <Divider />}
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </Menu.Menu>
+      )}
+    </div>
   )
 }

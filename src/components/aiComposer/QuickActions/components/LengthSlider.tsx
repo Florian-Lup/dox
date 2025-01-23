@@ -25,6 +25,7 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
   const [value, setValue] = useState([0])
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
 
   const handleValueChange = useCallback(
     (newValue: number[]) => {
@@ -50,13 +51,27 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
     setIsOpen(false)
   }, [onValueChange, value])
 
-  const handleTriggerClick = useCallback(() => {
-    handleOpenChange(!isOpen)
-  }, [handleOpenChange, isOpen])
+  const handleTriggerClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (!isOpen) {
+        setValue([0])
+        onValueChange?.(0)
+      }
+      setIsOpen(!isOpen)
+    },
+    [isOpen, onValueChange],
+  )
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+      const target = event.target as Node
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(target)
+      ) {
         setIsOpen(false)
       }
     }
@@ -67,7 +82,9 @@ export const LengthSlider = ({ trigger, onValueChange }: LengthSliderProps) => {
 
   return (
     <div className="relative inline-block">
-      <div onClick={handleTriggerClick}>{trigger}</div>
+      <div ref={triggerRef} onClick={handleTriggerClick}>
+        {trigger}
+      </div>
       {isOpen && (
         <div
           ref={popoverRef}
