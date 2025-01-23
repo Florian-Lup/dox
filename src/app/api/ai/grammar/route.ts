@@ -5,37 +5,32 @@ import { RunnableSequence } from '@langchain/core/runnables'
 import { initializeAIModel, createStreamingResponse } from '../utils'
 
 const grammarFixPrompt = PromptTemplate.fromTemplate(`
-Fix any grammar, punctuation, spelling, and syntax issues in the TARGET TEXT while preserving its meaning and style.
-If there are no grammar issues, return the target text unchanged.
-Use the full document context to better understand the meaning and flow.
+Fix any grammar, punctuation, spelling, and syntax issues in the text while preserving its meaning and style.
+If there are no grammar issues, return the text unchanged.
 
 IMPORTANT: Return ONLY the corrected text without any explanations, comments, or analysis.
 
-Full document:
-{fullContent}
-
-TARGET TEXT TO FIX (located within the document):
+TEXT TO FIX:
 {text}
 
 Corrected text (return ONLY the fixed text, no explanations):`)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, fullContent = '' } = await req.json()
+    const { text, modelName } = await req.json()
 
     const model = initializeAIModel(modelName)
 
     const chain = RunnableSequence.from([
       {
-        text: (input: { text: string; fullContent: string }) => input.text,
-        fullContent: (input: { text: string; fullContent: string }) => input.fullContent,
+        text: (input: { text: string }) => input.text,
       },
       grammarFixPrompt,
       model,
       new StringOutputParser(),
     ])
 
-    const stream = await chain.stream({ text, fullContent })
+    const stream = await chain.stream({ text })
     return createStreamingResponse(stream)
   } catch (error) {
     console.error('Grammar fix error:', error)

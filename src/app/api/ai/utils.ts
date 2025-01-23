@@ -35,8 +35,9 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
 
 export const createStreamingResponse = async (
   streamGenerator: AsyncGenerator<string>,
-  chunkDelay = 20, // Consistent delay between chunks in milliseconds
-  bufferSize = 2, // Number of characters to buffer before sending
+  chunkSize = 3, // Number of characters to send in each chunk
+  bufferThreshold = 20, // Minimum characters to accumulate before starting to stream
+  streamInterval = 30, // Milliseconds between each chunk sent
 ): Promise<Response> => {
   const encoder = new TextEncoder()
   const stream = new TransformStream()
@@ -45,21 +46,46 @@ export const createStreamingResponse = async (
   ;(async () => {
     try {
       let buffer = ''
+      let isStreaming = false
+
+      // Accumulate initial content
       for await (const chunk of streamGenerator) {
         if (chunk) {
           buffer += chunk
-          // Send chunks when buffer reaches the threshold
-          while (buffer.length >= bufferSize) {
-            const sendChunk = buffer.slice(0, bufferSize)
-            buffer = buffer.slice(bufferSize)
-            await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: sendChunk })}\n\n`))
-            await new Promise(resolve => setTimeout(resolve, chunkDelay))
+
+          // Start streaming once we have enough content
+          if (!isStreaming && buffer.length >= bufferThreshold) {
+            isStreaming = true
+
+            // Start the streaming process in a separate async function
+            ;(async () => {
+              while (buffer.length > 0) {
+                const sendSize = Math.min(chunkSize, buffer.length)
+                const sendChunk = buffer.slice(0, sendSize)
+                buffer = buffer.slice(sendSize)
+
+                await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: sendChunk })}\n\n`))
+                await new Promise(resolve => setTimeout(resolve, streamInterval))
+              }
+
+              if (!buffer.length && !streamGenerator[Symbol.asyncIterator]) {
+                await writer.close()
+              }
+            })()
           }
         }
       }
-      // Send any remaining buffer content
+
+      // Handle any remaining buffer content
       if (buffer.length > 0) {
-        await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: buffer })}\n\n`))
+        while (buffer.length > 0) {
+          const sendSize = Math.min(chunkSize, buffer.length)
+          const sendChunk = buffer.slice(0, sendSize)
+          buffer = buffer.slice(sendSize)
+
+          await writer.write(encoder.encode(`data: ${JSON.stringify({ chunk: sendChunk })}\n\n`))
+          await new Promise(resolve => setTimeout(resolve, streamInterval))
+        }
       }
     } catch (error) {
       console.error('Stream error:', error)
