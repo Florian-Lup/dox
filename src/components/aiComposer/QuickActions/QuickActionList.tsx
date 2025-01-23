@@ -18,6 +18,7 @@ import { Spinner } from '../../ui/Spinner'
 import { Button } from '../../ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
 import { LengthSlider } from './components/LengthSlider'
+import { ReadingLevelSlider } from './components/ReadingLevelSlider'
 
 const QUICK_ACTIONS = [
   {
@@ -150,6 +151,20 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
     [onActionSelect],
   )
 
+  const handleReadingLevelSelect = useCallback(
+    (action: QuickActionType) => (level: number) => {
+      onActionSelect?.(action, { readingLevel: level })
+    },
+    [onActionSelect],
+  )
+
+  const handleReadingLevelChange = useCallback(
+    (action: QuickActionType) => (value: number) => {
+      // This is just for live preview/feedback, not the actual API call
+    },
+    [],
+  )
+
   const renderActionButton = useCallback(
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
@@ -157,7 +172,7 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       const button = (
         <Button
           key={action.label}
-          onClick={action.id !== 'length' ? handleActionClick(action) : undefined}
+          onClick={action.id !== 'length' && action.id !== 'readingLevel' ? handleActionClick(action) : undefined}
           variant="ghost"
           disabled={isAnyProcessing}
           className={`flex items-center gap-3 w-full text-left px-4 py-3 
@@ -191,9 +206,28 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
         )
       }
 
+      if (action.id === 'readingLevel') {
+        return (
+          <ReadingLevelSlider
+            key={action.label}
+            trigger={button}
+            onValueChange={handleReadingLevelChange(action)}
+            onReadingLevelSelect={handleReadingLevelSelect(action)}
+          />
+        )
+      }
+
       return button
     },
-    [handleActionClick, handleLanguageSelect, handleLengthChange, handleLengthSelect, processingAction],
+    [
+      handleActionClick,
+      handleLanguageSelect,
+      handleLengthChange,
+      handleLengthSelect,
+      handleReadingLevelChange,
+      handleReadingLevelSelect,
+      processingAction,
+    ],
   )
 
   return (
