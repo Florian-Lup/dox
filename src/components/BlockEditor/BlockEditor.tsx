@@ -4,6 +4,7 @@ import React, { useRef, useState, useCallback } from 'react'
 import { LinkMenu } from '@/components/menus'
 
 import { useBlockEditor } from '@/hooks/useBlockEditor'
+import { useScope } from '@/hooks/useScope'
 
 import '@/styles/index.css'
 
@@ -23,11 +24,13 @@ export const BlockEditor = ({
 }) => {
   const menuContainerRef = useRef(null)
   const { editor, users, collabState } = useBlockEditor({ ydoc, provider })
+  const { resetScope } = useScope(editor)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const handleDrawerClose = useCallback(() => {
     setIsDrawerOpen(false)
-  }, [])
+    resetScope()
+  }, [resetScope])
 
   if (!editor || !users) {
     return null
@@ -48,7 +51,7 @@ export const BlockEditor = ({
             </div>
             <ContentItemMenu editor={editor} />
             <LinkMenu editor={editor} appendTo={menuContainerRef} />
-            <TextMenu editor={editor} />
+            <TextMenu editor={editor} onDrawerOpenChange={setIsDrawerOpen} />
           </div>
         </div>
       </div>

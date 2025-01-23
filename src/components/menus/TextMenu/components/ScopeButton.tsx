@@ -2,17 +2,23 @@ import { Icon } from '@/components/ui/Icon'
 import { Toolbar } from '@/components/ui/Toolbar'
 import { Editor, useEditorState } from '@tiptap/react'
 import { useScope } from '@/hooks/useScope'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { Tooltip } from '@/components/ui/Tooltip'
 
 interface ScopeButtonProps {
   editor: Editor
+  onDrawerOpenChange: (isOpen: boolean) => void
 }
 
-export const ScopeButton = memo(({ editor }: ScopeButtonProps) => {
+export const ScopeButton = memo(({ editor, onDrawerOpenChange }: ScopeButtonProps) => {
   const { captureSelection } = useScope(editor)
   const limit = 1000 // Character limit for selection
+
+  const handleClick = useCallback(() => {
+    captureSelection()
+    onDrawerOpenChange(true)
+  }, [captureSelection, onDrawerOpenChange])
 
   const { characterCount, percentage } = useEditorState({
     editor,
@@ -40,7 +46,7 @@ export const ScopeButton = memo(({ editor }: ScopeButtonProps) => {
     <div className="flex items-center gap-0.5">
       <Tooltip title={isOverLimit ? 'Selection exceeds 1000 characters' : 'Add scope'}>
         <Toolbar.Button
-          onClick={captureSelection}
+          onClick={handleClick}
           disabled={isOverLimit}
           className={cn(isOverLimit && 'opacity-50 cursor-not-allowed')}
         >

@@ -24,9 +24,10 @@ const MemoContentTypePicker = memo(ContentTypePicker)
 
 export type TextMenuProps = {
   editor: Editor
+  onDrawerOpenChange: (isOpen: boolean) => void
 }
 
-export const TextMenu = ({ editor }: TextMenuProps) => {
+export const TextMenu = ({ editor, onDrawerOpenChange }: TextMenuProps) => {
   const commands = useTextmenuCommands(editor)
   const states = useTextmenuStates(editor)
   const blockOptions = useTextmenuContentTypes(editor)
@@ -61,7 +62,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       updateDelay={100}
     >
       <Toolbar.Wrapper className="flex flex-wrap gap-0.5">
-        <ScopeButton editor={editor} />
+        <ScopeButton editor={editor} onDrawerOpenChange={onDrawerOpenChange} />
         <Toolbar.Divider />
         <MemoContentTypePicker options={blockOptions} />
         <MemoFontFamilyPicker onChange={commands.onSetFont} value={states.currentFont || ''} />
