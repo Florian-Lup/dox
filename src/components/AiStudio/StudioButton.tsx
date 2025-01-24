@@ -3,12 +3,12 @@ import { Pen } from 'lucide-react'
 import { Button } from '../ui/Button'
 import Tooltip from '../ui/Tooltip'
 
-interface ComposerButtonProps {
+interface StudioButtonProps {
   onClick: () => void
   className?: string
 }
 
-export const ComposerButton = ({ onClick, className }: ComposerButtonProps) => {
+export const StudioButton = ({ onClick, className }: StudioButtonProps) => {
   return (
     <Tooltip title="AI Assistant">
       <Button

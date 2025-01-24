@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react'
 import { LLM_MODELS, type LLMModel } from './core/ModelSelector'
 import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
-import { QuickActionList } from './QuickActions/QuickActionList'
+import { QuickActions } from './QuickActions/QuickActions'
 import { ChatContainer } from './CustomInstructions/ChatContainer'
 import { handleGrammarFix } from './QuickActions/actions/FixGrammar'
 import { handleTranslate } from './QuickActions/actions/translate'
@@ -11,21 +11,21 @@ import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
 import { handleAdjustLength } from './QuickActions/actions/AdjustLength'
 import { handleReadingLevel } from './QuickActions/actions/ReadingLevel'
 import { handleTargetAudience } from './QuickActions/actions/TargetAudience'
-import { ComposerFooter } from './ComposerFooter'
-import { ComposerHeader } from './ComposerHeader'
+import { StudioFooter } from './StudioFooter'
+import { StudioHeader } from './StudioHeader'
 import * as Toast from '@radix-ui/react-toast'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type TabType = 'quick' | 'advanced'
 
-interface ComposerPanelProps {
+interface AiStudioProps {
   isOpen: boolean
   onClose: () => void
   editor: Editor
 }
 
-export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) => {
+export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
   const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
   const { scope, resetScope } = useScope(editor)
   const [processingAction, setProcessingAction] = useState<string | null>(null)
@@ -128,17 +128,17 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 'shadow-sm border border-neutral-200 dark:border-neutral-800',
               )}
             >
-              <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
+              <StudioHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
 
               <div className="flex-1 min-h-0">
                 {activeTab === 'quick' ? (
-                  <QuickActionList onActionSelect={handleActionSelect} processingAction={processingAction} />
+                  <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
                 ) : (
                   <ChatContainer selectedModel={selectedModel} />
                 )}
               </div>
 
-              <ComposerFooter
+              <StudioFooter
                 scope={scope}
                 onResetScope={resetScope}
                 selectedModel={selectedModel}

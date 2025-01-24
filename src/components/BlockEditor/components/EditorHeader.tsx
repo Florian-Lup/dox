@@ -4,7 +4,7 @@ import { EditorUser } from '../types'
 import { WebSocketStatus } from '@hocuspocus/provider'
 import { Editor } from '@tiptap/core'
 import { Sidebar } from '@/components/Sidebar'
-import { ComposerButton } from '@/components/AiStudio/ComposerButton'
+import { StudioButton } from '@/components/AiStudio/StudioButton'
 import { useCallback } from 'react'
 import { useCharacterCount } from '@/extensions/CharacterCounter'
 
@@ -32,7 +32,7 @@ export const EditorHeader = ({ editor, collabState, users, onDrawerOpenChange }:
       {/* Center section with AI button */}
       <div className="w-[44px] flex items-center justify-center">
         <div className="transform hover:scale-[1.02] transition-transform">
-          <ComposerButton onClick={handleAIAssistantClick} />
+          <StudioButton onClick={handleAIAssistantClick} />
         </div>
       </div>
 

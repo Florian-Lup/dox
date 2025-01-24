@@ -110,12 +110,12 @@ const QUICK_ACTIONS = [
 
 type QuickActionType = (typeof QUICK_ACTIONS)[number]
 
-interface QuickActionListProps {
+interface QuickActionsProps {
   onActionSelect?: (action: QuickActionType, data?: any) => void
   processingAction?: string | null
 }
 
-export const QuickActionList = ({ onActionSelect, processingAction }: QuickActionListProps) => {
+export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsProps) => {
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({})
   const [activePopover, setActivePopover] = useState<string | null>(null)
 

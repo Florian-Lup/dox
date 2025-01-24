@@ -2,13 +2,13 @@ import { X } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { Toggle } from '../ui/Toggle'
 
-interface ComposerHeaderProps {
+interface StudioHeaderProps {
   onClose: () => void
   activeTab: 'quick' | 'advanced'
   onTabChange: (isAdvanced: boolean) => void
 }
 
-export const ComposerHeader = ({ onClose, activeTab, onTabChange }: ComposerHeaderProps) => {
+export const StudioHeader = ({ onClose, activeTab, onTabChange }: StudioHeaderProps) => {
   return (
     <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
       <div className="flex items-center justify-center gap-3">

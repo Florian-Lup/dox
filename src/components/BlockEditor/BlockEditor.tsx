@@ -11,7 +11,7 @@ import '@/styles/index.css'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { ComposerPanel } from '@/components/AiStudio/ComposerPanel'
+import { AiStudio } from '@/components/AiStudio/AiStudio'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
@@ -55,7 +55,7 @@ export const BlockEditor = ({
           </div>
         </div>
       </div>
-      <ComposerPanel isOpen={isDrawerOpen} onClose={handleDrawerClose} editor={editor} />
+      <AiStudio isOpen={isDrawerOpen} onClose={handleDrawerClose} editor={editor} />
     </>
   )
 }
