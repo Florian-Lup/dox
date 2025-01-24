@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/Icon'
-import { useCallback, useRef, useState, useEffect } from 'react'
+import { useCallback } from 'react'
 import { cn } from '@/lib/utils'
+import { ActionPopover, PopoverHeader, PopoverContent } from './ActionPopover'
 
 const LANGUAGES = [
   {
@@ -120,78 +121,33 @@ const MenuItem = ({
 const Divider = () => <div className="my-1 border-t border-neutral-200 dark:border-neutral-800" />
 
 export const LanguagePicker = ({ onLanguageSelect, trigger, onOpen, onClose }: LanguagePickerProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const popoverRef = useRef<HTMLDivElement>(null)
-  const triggerRef = useRef<HTMLDivElement>(null)
-
   const handleLanguageSelect = useCallback(
     (language: Language) => () => {
       onLanguageSelect?.(language)
-      setIsOpen(false)
       onClose?.()
     },
     [onLanguageSelect, onClose],
   )
 
-  const handleTriggerClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
-      setIsOpen(!isOpen)
-      if (!isOpen) {
-        onOpen?.()
-      } else {
-        onClose?.()
-      }
-    },
-    [isOpen, onOpen, onClose],
-  )
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node
-      if (
-        popoverRef.current &&
-        !popoverRef.current.contains(target) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(target)
-      ) {
-        setIsOpen(false)
-        onClose?.()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
-
   return (
-    <div className="relative inline-block">
-      <div ref={triggerRef} onClick={handleTriggerClick}>
-        {trigger}
-      </div>
-      {isOpen && (
-        <div
-          ref={popoverRef}
-          className="absolute z-50 mt-2 transform -translate-x-1/2 left-1/2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-800"
-        >
-          <div className="w-[350px] max-h-[260px] overflow-y-auto">
-            {LANGUAGES.map(region => (
-              <div key={region.region}>
-                <CategoryTitle>{region.region}</CategoryTitle>
-                {region.languages.map(language => (
-                  <MenuItem
-                    key={language.code}
-                    label={language.name}
-                    iconComponent={<Icon name="Languages" className="w-4 h-4" />}
-                    onClick={handleLanguageSelect(language)}
-                  />
-                ))}
-                {region !== LANGUAGES[LANGUAGES.length - 1] && <Divider />}
-              </div>
+    <ActionPopover id="translate" trigger={trigger} onOpen={onOpen} onClose={onClose} maxHeight="260px">
+      <PopoverContent>
+        <PopoverHeader title="Select Language" />
+        {LANGUAGES.map(region => (
+          <div key={region.region} className="w-full">
+            <CategoryTitle>{region.region}</CategoryTitle>
+            {region.languages.map(language => (
+              <MenuItem
+                key={language.code}
+                label={language.name}
+                iconComponent={<Icon name="Languages" className="w-4 h-4" />}
+                onClick={handleLanguageSelect(language)}
+              />
             ))}
+            {region !== LANGUAGES[LANGUAGES.length - 1] && <Divider />}
           </div>
-        </div>
-      )}
-    </div>
+        ))}
+      </PopoverContent>
+    </ActionPopover>
   )
 }
