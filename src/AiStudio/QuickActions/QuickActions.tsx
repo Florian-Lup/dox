@@ -13,8 +13,8 @@ import {
   Search,
 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { Spinner } from '../../ui/Spinner'
-import { Button } from '../../ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+import { Button } from '@/components/ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
 import { LengthSlider } from './components/LengthSlider'
 import { ReadingLevelSlider } from './components/ReadingLevelSlider'

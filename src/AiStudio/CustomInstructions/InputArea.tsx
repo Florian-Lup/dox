@@ -1,7 +1,7 @@
 import { Send } from 'lucide-react'
 import { useCallback } from 'react'
-import { Button } from '../../ui/Button'
-import { Textarea } from '../../ui/Textarea'
+import { Button } from '@/components/ui/Button'
+import { Textarea } from '@/components/ui/Textarea'
 
 interface InputAreaProps {
   message: string

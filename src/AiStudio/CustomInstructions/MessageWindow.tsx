@@ -1,4 +1,4 @@
-import { Surface } from '../../ui/Surface'
+import { Surface } from '@/components/ui/Surface'
 
 interface Message {
   id: string

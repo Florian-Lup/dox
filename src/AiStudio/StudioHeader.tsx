@@ -1,6 +1,6 @@
 import { X } from 'lucide-react'
-import { Button } from '../ui/Button'
-import { Toggle } from '../ui/Toggle'
+import { Button } from '@/components/ui/Button'
+import { Toggle } from '@/components/ui/Toggle'
 
 interface StudioHeaderProps {
   onClose: () => void
