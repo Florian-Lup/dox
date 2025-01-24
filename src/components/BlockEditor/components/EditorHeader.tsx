@@ -4,7 +4,7 @@ import { EditorUser } from '../types'
 import { WebSocketStatus } from '@hocuspocus/provider'
 import { Editor } from '@tiptap/core'
 import { Sidebar } from '@/components/Sidebar'
-import { ComposerButton } from '@/components/aiComposer/ComposerButton'
+import { ComposerButton } from '@/components/AiStudio/ComposerButton'
 import { useCallback } from 'react'
 import { useCharacterCount } from '@/extensions/CharacterCounter'
 
