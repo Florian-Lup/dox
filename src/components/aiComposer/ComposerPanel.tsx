@@ -10,6 +10,7 @@ import { handleGrammarFix } from './QuickActions/actions/FixGrammar'
 import { handleTranslate } from './QuickActions/actions/translate'
 import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
 import { handleAdjustLength } from './QuickActions/actions/AdjustLength'
+import { handleReadingLevel } from './QuickActions/actions/ReadingLevel'
 import { ComposerFooter } from './ComposerFooter'
 import { ComposerHeader } from './ComposerHeader'
 import * as Toast from '@radix-ui/react-toast'
@@ -72,6 +73,16 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
         setProcessingAction('length')
         try {
           await handleAdjustLength(editor, scope, selectedModel.id, data.percentage)
+          resetScope()
+        } catch (error) {
+          handleError(error as Error)
+        } finally {
+          setProcessingAction(null)
+        }
+      } else if (action.id === 'readingLevel' && data?.readingLevel !== undefined) {
+        setProcessingAction('readingLevel')
+        try {
+          await handleReadingLevel(editor, scope, selectedModel.id, data.readingLevel)
           resetScope()
         } catch (error) {
           handleError(error as Error)
