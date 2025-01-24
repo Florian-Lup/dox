@@ -19,6 +19,7 @@ import { Button } from '../../ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
 import { LengthSlider } from './components/LengthSlider'
 import { ReadingLevelSlider } from './components/ReadingLevelSlider'
+import { TargetAudienceInput } from './components/TargetAudienceInput'
 
 const QUICK_ACTIONS = [
   {
@@ -158,6 +159,13 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
     [],
   )
 
+  const handleTargetAudienceSelect = useCallback(
+    (action: QuickActionType) => (audience: string) => {
+      onActionSelect?.(action, { targetAudience: audience })
+    },
+    [onActionSelect],
+  )
+
   const renderActionButton = useCallback(
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
@@ -165,7 +173,11 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       const button = (
         <Button
           key={action.label}
-          onClick={action.id !== 'length' && action.id !== 'readingLevel' ? handleActionClick(action) : undefined}
+          onClick={
+            action.id !== 'length' && action.id !== 'readingLevel' && action.id !== 'audience'
+              ? handleActionClick(action)
+              : undefined
+          }
           variant="ghost"
           disabled={isAnyProcessing}
           className={`flex items-center gap-3 w-full text-left px-4 py-3 
@@ -210,6 +222,16 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
         )
       }
 
+      if (action.id === 'audience') {
+        return (
+          <TargetAudienceInput
+            key={action.label}
+            trigger={button}
+            onTargetAudienceSelect={handleTargetAudienceSelect(action)}
+          />
+        )
+      }
+
       return button
     },
     [
@@ -219,6 +241,7 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       handleLengthSelect,
       handleReadingLevelChange,
       handleReadingLevelSelect,
+      handleTargetAudienceSelect,
       processingAction,
     ],
   )
