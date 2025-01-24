@@ -33,6 +33,11 @@ export const ReadingLevelSlider = ({
   const [value, setValue] = useState([4]) // Default to Standard
   const popoverRef = useRef<ActionPopoverRef>(null)
 
+  const resetValue = useCallback(() => {
+    setValue([4]) // Reset to Standard
+    onValueChange?.(4)
+  }, [onValueChange])
+
   const handleValueChange = useCallback(
     (newValue: number[]) => {
       setValue(newValue)
@@ -46,12 +51,17 @@ export const ReadingLevelSlider = ({
     popoverRef.current?.close()
   }, [value, onReadingLevelSelect])
 
+  const handleOpen = useCallback(() => {
+    resetValue()
+    onOpen?.()
+  }, [onOpen, resetValue])
+
   const getCurrentMark = (value: number) => {
     return SLIDER_MARKS.find(mark => mark.value === value)
   }
 
   return (
-    <ActionPopover ref={popoverRef} id="readingLevel" trigger={trigger} onOpen={onOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="readingLevel" trigger={trigger} onOpen={handleOpen} onClose={onClose}>
       <PopoverContent>
         <PopoverHeader title="Reading Level">
           <div className="flex items-center gap-2">

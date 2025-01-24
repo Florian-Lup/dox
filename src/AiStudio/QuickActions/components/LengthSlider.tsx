@@ -14,7 +14,6 @@ interface LengthSliderProps {
 }
 
 const SLIDER_MARKS = [
-  { value: -100, label: '-100%' },
   { value: -75, label: '-75%' },
   { value: -50, label: '-50%' },
   { value: -25, label: '-25%' },
@@ -22,12 +21,16 @@ const SLIDER_MARKS = [
   { value: 25, label: '+25%' },
   { value: 50, label: '+50%' },
   { value: 75, label: '+75%' },
-  { value: 100, label: '+100%' },
 ]
 
 export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, onClose }: LengthSliderProps) => {
   const [value, setValue] = useState([0])
   const popoverRef = useRef<ActionPopoverRef>(null)
+
+  const resetValue = useCallback(() => {
+    setValue([0])
+    onValueChange?.(0)
+  }, [onValueChange])
 
   const handleValueChange = useCallback(
     (newValue: number[]) => {
@@ -43,8 +46,13 @@ export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, o
     popoverRef.current?.close()
   }, [value, onLengthSelect])
 
+  const handleOpen = useCallback(() => {
+    resetValue()
+    onOpen?.()
+  }, [onOpen, resetValue])
+
   return (
-    <ActionPopover ref={popoverRef} id="length" trigger={trigger} onOpen={onOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="length" trigger={trigger} onOpen={handleOpen} onClose={onClose}>
       <PopoverContent>
         <PopoverHeader title="Adjust Length">
           <div className="flex items-center gap-2">
@@ -73,8 +81,8 @@ export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, o
             className="relative flex items-center select-none touch-none w-full h-5"
             value={value}
             onValueChange={handleValueChange}
-            max={100}
-            min={-100}
+            max={75}
+            min={-75}
             step={25}
           >
             <Slider.Track className="relative grow h-[3px] bg-transparent">
