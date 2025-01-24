@@ -92,13 +92,6 @@ const QUICK_ACTIONS = [
     description: 'Adapt content for specific regions and cultures',
   },
   {
-    id: 'factCheck',
-    icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
-    color: 'text-emerald-500',
-    label: 'Fact-checking',
-    description: 'Verify accuracy of statements and claims',
-  },
-  {
     id: 'plagiarism',
     icon: <Search className="w-4 h-4 text-sky-500" />,
     color: 'text-sky-500',

@@ -17,7 +17,15 @@ interface ChatContainerProps {
 
 export const ChatContainer = ({ selectedModel }: ChatContainerProps) => {
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: uuidv4(),
+      content:
+        'This is a placeholder message. Custom AI instructions functionality is coming soon! Stay tuned for updates.',
+      isUser: false,
+      timestamp: new Date(),
+    },
+  ])
   const [isProcessing, setIsProcessing] = useState(false)
 
   const handleSend = useCallback(async () => {
