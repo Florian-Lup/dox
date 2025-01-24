@@ -11,15 +11,17 @@ interface ReadingLevelSliderProps {
 }
 
 const SLIDER_MARKS = [
-  { value: 1, label: 'Elementary' },
-  { value: 2, label: 'Middle School' },
-  { value: 3, label: 'High School' },
-  { value: 4, label: 'College' },
-  { value: 5, label: 'Graduate' },
+  { value: 1, label: 'Very Easy', score: '90-100' },
+  { value: 2, label: 'Easy', score: '80-90' },
+  { value: 3, label: 'Fairly Easy', score: '70-80' },
+  { value: 4, label: 'Standard', score: '60-70' },
+  { value: 5, label: 'Fairly Hard', score: '50-60' },
+  { value: 6, label: 'Hard', score: '30-50' },
+  { value: 7, label: 'Very Hard', score: '0-30' },
 ]
 
 export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelect }: ReadingLevelSliderProps) => {
-  const [value, setValue] = useState([3])
+  const [value, setValue] = useState([4]) // Default to Standard
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLDivElement>(null)
@@ -36,8 +38,8 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
     (open: boolean) => {
       setIsOpen(open)
       if (open) {
-        setValue([3])
-        onValueChange?.(3)
+        setValue([4]) // Reset to Standard
+        onValueChange?.(4)
       }
     },
     [onValueChange],
@@ -52,8 +54,8 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
     (e: React.MouseEvent) => {
       e.stopPropagation()
       if (!isOpen) {
-        setValue([3])
-        onValueChange?.(3)
+        setValue([4]) // Reset to Standard
+        onValueChange?.(4)
       }
       setIsOpen(!isOpen)
     },
@@ -77,8 +79,8 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const getLevelLabel = (value: number) => {
-    return SLIDER_MARKS.find(mark => mark.value === value)?.label || ''
+  const getCurrentMark = (value: number) => {
+    return SLIDER_MARKS.find(mark => mark.value === value)
   }
 
   return (
@@ -96,7 +98,12 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
               <div className="w-[95%] flex justify-between items-center">
                 <span className="text-sm font-medium text-neutral-900 dark:text-white pl-[10px]">Reading Level</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-neutral-500 dark:text-neutral-400">{getLevelLabel(value[0])}</span>
+                  <div className="text-right">
+                    <div className="text-sm text-neutral-900 dark:text-white">{getCurrentMark(value[0])?.label}</div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Score: {getCurrentMark(value[0])?.score}
+                    </div>
+                  </div>
                   <Button
                     variant="ghost"
                     buttonSize="icon"
@@ -115,7 +122,7 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
                   className="relative flex items-center select-none touch-none w-full h-5"
                   value={value}
                   onValueChange={handleValueChange}
-                  max={5}
+                  max={7}
                   min={1}
                   step={1}
                 >
@@ -129,8 +136,9 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
                   <Slider.Thumb className="block w-5 h-5 bg-white dark:bg-neutral-800 border-2 border-emerald-500 hover:border-emerald-600 dark:border-emerald-400 dark:hover:border-emerald-300 rounded-full focus:outline-none" />
                 </Slider.Root>
                 <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 mt-4 px-[10px]">
-                  <span>Elementary</span>
-                  <span>Graduate</span>
+                  <span>Very Easy</span>
+                  <span>Standard</span>
+                  <span>Very Hard</span>
                 </div>
               </div>
             </div>
