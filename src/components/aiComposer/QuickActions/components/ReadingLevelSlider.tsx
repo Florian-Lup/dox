@@ -84,12 +84,13 @@ export const ReadingLevelSlider = ({
         !triggerRef.current.contains(target)
       ) {
         setIsOpen(false)
+        onClose?.()
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [onClose])
 
   const getCurrentMark = (value: number) => {
     return SLIDER_MARKS.find(mark => mark.value === value)

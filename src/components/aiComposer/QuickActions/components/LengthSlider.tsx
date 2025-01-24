@@ -81,12 +81,13 @@ export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, o
         !triggerRef.current.contains(target)
       ) {
         setIsOpen(false)
+        onClose?.()
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [onClose])
 
   return (
     <div className="relative inline-block">

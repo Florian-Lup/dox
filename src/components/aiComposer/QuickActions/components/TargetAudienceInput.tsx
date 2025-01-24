@@ -32,22 +32,16 @@ export const TargetAudienceInput = ({
     [onValueChange],
   )
 
-  const handleConfirm = useCallback(
-    (e?: React.MouseEvent | React.KeyboardEvent) => {
-      e?.preventDefault()
-      e?.stopPropagation()
-      const trimmedAudience = audience.trim()
-      if (!trimmedAudience) return
-      onTargetAudienceSelect?.(trimmedAudience)
-      setIsOpen(false)
-      onClose?.()
-    },
-    [audience, onTargetAudienceSelect, onClose],
-  )
+  const handleConfirm = useCallback(() => {
+    const trimmedAudience = audience.trim()
+    if (!trimmedAudience) return
+    onTargetAudienceSelect?.(trimmedAudience)
+    setIsOpen(false)
+    onClose?.()
+  }, [audience, onTargetAudienceSelect, onClose])
 
   const handleTriggerClick = useCallback(
     (e: React.MouseEvent) => {
-      e.preventDefault()
       e.stopPropagation()
       if (!isOpen) {
         setAudience('')
@@ -63,7 +57,6 @@ export const TargetAudienceInput = ({
 
   const handleTextareaChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      e.stopPropagation()
       handleValueChange(e.target.value)
     },
     [handleValueChange],
@@ -71,21 +64,13 @@ export const TargetAudienceInput = ({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      e.stopPropagation()
       if (e.key === 'Enter' && !e.shiftKey) {
-        handleConfirm(e)
+        e.preventDefault()
+        handleConfirm()
       }
     },
     [handleConfirm],
   )
-
-  const handleContainerClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
-  }, [])
-
-  const handlePopoverClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation()
-  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,17 +90,8 @@ export const TargetAudienceInput = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [onClose])
 
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      // Delay focus to prevent scroll issues
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100)
-    }
-  }, [isOpen])
-
   return (
-    <div className="relative inline-block" onClick={handleContainerClick}>
+    <div className="relative inline-block">
       <div ref={triggerRef} onClick={handleTriggerClick}>
         {trigger}
       </div>
@@ -123,7 +99,6 @@ export const TargetAudienceInput = ({
         <div
           ref={popoverRef}
           className="absolute z-50 mt-2 transform -translate-x-1/2 left-1/2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-800"
-          onClick={handlePopoverClick}
         >
           <div className="w-[350px] p-4">
             <div className="space-y-4 flex flex-col items-center">
