@@ -10,16 +10,16 @@ import {
   RefreshCw,
   GraduationCap,
   Globe2,
-  CheckCircle2,
   Search,
 } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Spinner } from '../../ui/Spinner'
 import { Button } from '../../ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
 import { LengthSlider } from './components/LengthSlider'
 import { ReadingLevelSlider } from './components/ReadingLevelSlider'
 import { TargetAudienceInput } from './components/TargetAudienceInput'
+import { cn } from '@/lib/utils'
 
 const QUICK_ACTIONS = [
   {
@@ -116,6 +116,46 @@ interface QuickActionListProps {
 }
 
 export const QuickActionList = ({ onActionSelect, processingAction }: QuickActionListProps) => {
+  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({})
+  const [activePopover, setActivePopover] = useState<string | null>(null)
+
+  const scrollToButton = useCallback((id: string) => {
+    if (buttonRefs.current[id]) {
+      buttonRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [])
+
+  const handleButtonRef = useCallback(
+    (id: string) => (el: HTMLButtonElement | null) => {
+      buttonRefs.current[id] = el
+    },
+    [],
+  )
+
+  const handleTranslateOpen = useCallback(() => {
+    setActivePopover('translate')
+    scrollToButton('translate')
+  }, [scrollToButton])
+
+  const handleLengthOpen = useCallback(() => {
+    setActivePopover('length')
+    scrollToButton('length')
+  }, [scrollToButton])
+
+  const handleReadingLevelOpen = useCallback(() => {
+    setActivePopover('readingLevel')
+    scrollToButton('readingLevel')
+  }, [scrollToButton])
+
+  const handleAudienceOpen = useCallback(() => {
+    setActivePopover('audience')
+    scrollToButton('audience')
+  }, [scrollToButton])
+
+  const handlePopoverClose = useCallback(() => {
+    setActivePopover(null)
+  }, [])
+
   const handleActionClick = useCallback(
     (action: QuickActionType, data?: any) => () => {
       onActionSelect?.(action, data)
@@ -170,8 +210,11 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
       const isAnyProcessing = !!processingAction
+      const isActive = activePopover === action.id
+
       const button = (
         <Button
+          ref={handleButtonRef(action.id)}
           key={action.label}
           onClick={
             action.id !== 'length' && action.id !== 'readingLevel' && action.id !== 'audience'
@@ -180,9 +223,12 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
           }
           variant="ghost"
           disabled={isAnyProcessing}
-          className={`flex items-center gap-3 w-full text-left px-4 py-3 
-            hover:bg-neutral-50 dark:hover:bg-neutral-800
-            ${isAnyProcessing && !isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={cn(
+            'flex items-center gap-3 w-full text-left px-4 py-3',
+            'hover:bg-neutral-50 dark:hover:bg-neutral-800',
+            isActive && 'bg-neutral-100 dark:bg-neutral-800',
+            isAnyProcessing && !isProcessing && 'opacity-50 cursor-not-allowed',
+          )}
         >
           <span className={`flex-shrink-0 ${isProcessing ? action.color : ''}`}>
             {isProcessing ? <Spinner className="w-4 h-4" /> : action.icon}
@@ -197,7 +243,15 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       )
 
       if (action.id === 'translate') {
-        return <LanguagePicker key={action.label} trigger={button} onLanguageSelect={handleLanguageSelect(action)} />
+        return (
+          <LanguagePicker
+            key={action.label}
+            trigger={button}
+            onLanguageSelect={handleLanguageSelect(action)}
+            onOpen={handleTranslateOpen}
+            onClose={handlePopoverClose}
+          />
+        )
       }
 
       if (action.id === 'length') {
@@ -207,6 +261,8 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
             trigger={button}
             onValueChange={handleLengthChange(action)}
             onLengthSelect={handleLengthSelect(action)}
+            onOpen={handleLengthOpen}
+            onClose={handlePopoverClose}
           />
         )
       }
@@ -218,6 +274,8 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
             trigger={button}
             onValueChange={handleReadingLevelChange(action)}
             onReadingLevelSelect={handleReadingLevelSelect(action)}
+            onOpen={handleReadingLevelOpen}
+            onClose={handlePopoverClose}
           />
         )
       }
@@ -228,6 +286,8 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
             key={action.label}
             trigger={button}
             onTargetAudienceSelect={handleTargetAudienceSelect(action)}
+            onOpen={handleAudienceOpen}
+            onClose={handlePopoverClose}
           />
         )
       }
@@ -242,7 +302,14 @@ export const QuickActionList = ({ onActionSelect, processingAction }: QuickActio
       handleReadingLevelChange,
       handleReadingLevelSelect,
       handleTargetAudienceSelect,
+      handleTranslateOpen,
+      handleLengthOpen,
+      handleReadingLevelOpen,
+      handleAudienceOpen,
+      handlePopoverClose,
       processingAction,
+      handleButtonRef,
+      activePopover,
     ],
   )
 

@@ -8,6 +8,8 @@ interface ReadingLevelSliderProps {
   trigger: React.ReactNode
   onValueChange?: (value: number) => void
   onReadingLevelSelect?: (level: number) => void
+  onOpen?: () => void
+  onClose?: () => void
 }
 
 const SLIDER_MARKS = [
@@ -20,7 +22,13 @@ const SLIDER_MARKS = [
   { value: 7, label: 'Very Hard', score: '0-30' },
 ]
 
-export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelect }: ReadingLevelSliderProps) => {
+export const ReadingLevelSlider = ({
+  trigger,
+  onValueChange,
+  onReadingLevelSelect,
+  onOpen,
+  onClose,
+}: ReadingLevelSliderProps) => {
   const [value, setValue] = useState([4]) // Default to Standard
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -48,7 +56,8 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
   const handleConfirm = useCallback(() => {
     onReadingLevelSelect?.(value[0])
     setIsOpen(false)
-  }, [value, onReadingLevelSelect])
+    onClose?.()
+  }, [value, onReadingLevelSelect, onClose])
 
   const handleTriggerClick = useCallback(
     (e: React.MouseEvent) => {
@@ -56,10 +65,13 @@ export const ReadingLevelSlider = ({ trigger, onValueChange, onReadingLevelSelec
       if (!isOpen) {
         setValue([4]) // Reset to Standard
         onValueChange?.(4)
+        onOpen?.()
+      } else {
+        onClose?.()
       }
       setIsOpen(!isOpen)
     },
-    [isOpen, onValueChange],
+    [isOpen, onValueChange, onOpen, onClose],
   )
 
   useEffect(() => {

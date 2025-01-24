@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Surface } from '../ui/Surface'
 import { useState, useCallback } from 'react'
 import { LLM_MODELS, type LLMModel } from './core/ModelSelector'
 import { useScope } from '@/hooks/useScope'
@@ -16,6 +15,7 @@ import { ComposerFooter } from './ComposerFooter'
 import { ComposerHeader } from './ComposerHeader'
 import * as Toast from '@radix-ui/react-toast'
 import { X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type TabType = 'quick' | 'advanced'
 
@@ -121,7 +121,13 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
             className="fixed sm:right-6 sm:top-[80px] sm:bottom-6 sm:w-[400px] 
               max-sm:inset-x-2 max-sm:bottom-2 max-sm:top-[80px]"
           >
-            <Surface className="h-full flex flex-col">
+            <div
+              className={cn(
+                'h-full flex flex-col',
+                'bg-white dark:bg-black rounded-lg',
+                'shadow-sm border border-neutral-200 dark:border-neutral-800',
+              )}
+            >
               <ComposerHeader onClose={onClose} activeTab={activeTab} onTabChange={handleTabChange} />
 
               <div className="flex-1 min-h-0">
@@ -138,7 +144,7 @@ export const ComposerPanel = ({ isOpen, onClose, editor }: ComposerPanelProps) =
                 selectedModel={selectedModel}
                 onModelSelect={setSelectedModel}
               />
-            </Surface>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

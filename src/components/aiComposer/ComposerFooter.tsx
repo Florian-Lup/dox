@@ -1,4 +1,3 @@
-import { Surface } from '../ui/Surface'
 import { ModelSelector, type LLMModel } from './core/ModelSelector'
 import { ScopeSelector } from './core/ScopeSelector'
 import { Scope } from '@/hooks/useScope'

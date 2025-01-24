@@ -7,9 +7,17 @@ interface TargetAudienceInputProps {
   trigger: React.ReactNode
   onValueChange?: (value: string) => void
   onTargetAudienceSelect?: (audience: string) => void
+  onOpen?: () => void
+  onClose?: () => void
 }
 
-export const TargetAudienceInput = ({ trigger, onValueChange, onTargetAudienceSelect }: TargetAudienceInputProps) => {
+export const TargetAudienceInput = ({
+  trigger,
+  onValueChange,
+  onTargetAudienceSelect,
+  onOpen,
+  onClose,
+}: TargetAudienceInputProps) => {
   const [audience, setAudience] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -24,30 +32,27 @@ export const TargetAudienceInput = ({ trigger, onValueChange, onTargetAudienceSe
     [onValueChange],
   )
 
-  const handleOpenChange = useCallback(
-    (open: boolean) => {
-      setIsOpen(open)
-      if (open) {
-        setAudience('')
-        onValueChange?.('')
-      }
-    },
-    [onValueChange],
-  )
-
   const handleConfirm = useCallback(() => {
     const trimmedAudience = audience.trim()
     if (!trimmedAudience) return
     onTargetAudienceSelect?.(trimmedAudience)
-    handleOpenChange(false)
-  }, [audience, onTargetAudienceSelect, handleOpenChange])
+    setIsOpen(false)
+    onClose?.()
+  }, [audience, onTargetAudienceSelect, onClose])
 
   const handleTriggerClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
-      handleOpenChange(!isOpen)
+      if (!isOpen) {
+        setAudience('')
+        onValueChange?.('')
+        onOpen?.()
+      } else {
+        onClose?.()
+      }
+      setIsOpen(!isOpen)
     },
-    [isOpen, handleOpenChange],
+    [isOpen, onValueChange, onOpen, onClose],
   )
 
   const handleTextareaChange = useCallback(
@@ -76,17 +81,18 @@ export const TargetAudienceInput = ({ trigger, onValueChange, onTargetAudienceSe
         triggerRef.current &&
         !triggerRef.current.contains(target)
       ) {
-        handleOpenChange(false)
+        setIsOpen(false)
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [handleOpenChange])
+  }, [])
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus()
+      inputRef.current.scrollTop = 0
     }
   }, [isOpen])
 
@@ -101,9 +107,9 @@ export const TargetAudienceInput = ({ trigger, onValueChange, onTargetAudienceSe
           className="absolute z-50 mt-2 transform -translate-x-1/2 left-1/2 bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-800"
         >
           <div className="w-[350px] p-4">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-neutral-900 dark:text-white">Target Audience</span>
+            <div className="space-y-4 flex flex-col items-center">
+              <div className="w-[95%] flex justify-between items-center">
+                <span className="text-sm font-medium text-neutral-900 dark:text-white pl-[10px]">Target Audience</span>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
@@ -121,17 +127,19 @@ export const TargetAudienceInput = ({ trigger, onValueChange, onTargetAudienceSe
                   </Button>
                 </div>
               </div>
-              <textarea
-                ref={inputRef}
-                value={audience}
-                onChange={handleTextareaChange}
-                onKeyDown={handleKeyDown}
-                placeholder="Describe your target audience (e.g., 'technical professionals', 'high school students', 'marketing executives')"
-                className="w-full h-24 px-3 py-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 resize-none"
-              />
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                Press Enter to confirm, or Shift + Enter for a new line
-              </p>
+              <div className="w-[95%]">
+                <textarea
+                  ref={inputRef}
+                  value={audience}
+                  onChange={handleTextareaChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Describe your target audience (e.g., 'technical professionals', 'high school students', 'marketing executives')"
+                  className="w-full h-24 px-3 py-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 resize-none"
+                />
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 pl-[10px]">
+                  Press Enter to confirm, or Shift + Enter for a new line
+                </p>
+              </div>
             </div>
           </div>
         </div>

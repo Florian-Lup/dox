@@ -86,8 +86,10 @@ const LANGUAGES = [
 type Language = (typeof LANGUAGES)[number]['languages'][number]
 
 interface LanguagePickerProps {
-  onLanguageSelect?: (language: Language) => void
   trigger: React.ReactNode
+  onLanguageSelect?: (language: Language) => void
+  onOpen?: () => void
+  onClose?: () => void
 }
 
 const CategoryTitle = ({ children }: { children: React.ReactNode }) => (
@@ -117,7 +119,7 @@ const MenuItem = ({
 
 const Divider = () => <div className="my-1 border-t border-neutral-200 dark:border-neutral-800" />
 
-export const LanguagePicker = ({ onLanguageSelect, trigger }: LanguagePickerProps) => {
+export const LanguagePicker = ({ onLanguageSelect, trigger, onOpen, onClose }: LanguagePickerProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLDivElement>(null)
@@ -126,16 +128,22 @@ export const LanguagePicker = ({ onLanguageSelect, trigger }: LanguagePickerProp
     (language: Language) => () => {
       onLanguageSelect?.(language)
       setIsOpen(false)
+      onClose?.()
     },
-    [onLanguageSelect],
+    [onLanguageSelect, onClose],
   )
 
   const handleTriggerClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
       setIsOpen(!isOpen)
+      if (!isOpen) {
+        onOpen?.()
+      } else {
+        onClose?.()
+      }
     },
-    [isOpen],
+    [isOpen, onOpen, onClose],
   )
 
   useEffect(() => {
