@@ -1,7 +1,7 @@
 import { Icon } from '@/components/ui/Icon'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
-import { ActionPopover, PopoverHeader, PopoverContent } from './ActionPopover'
+import { ActionPopover, PopoverHeader, PopoverContent, ActionPopoverRef } from './ActionPopover'
 
 const LANGUAGES = [
   {
@@ -121,16 +121,25 @@ const MenuItem = ({
 const Divider = () => <div className="my-1 border-t border-neutral-200 dark:border-neutral-800" />
 
 export const LanguagePicker = ({ onLanguageSelect, trigger, onOpen, onClose }: LanguagePickerProps) => {
+  const popoverRef = useRef<ActionPopoverRef>(null)
+
   const handleLanguageSelect = useCallback(
     (language: Language) => () => {
       onLanguageSelect?.(language)
-      onClose?.()
+      popoverRef.current?.close()
     },
-    [onLanguageSelect, onClose],
+    [onLanguageSelect],
   )
 
   return (
-    <ActionPopover id="translate" trigger={trigger} onOpen={onOpen} onClose={onClose} maxHeight="260px">
+    <ActionPopover
+      ref={popoverRef}
+      id="translate"
+      trigger={trigger}
+      onOpen={onOpen}
+      onClose={onClose}
+      maxHeight="260px"
+    >
       <PopoverContent>
         <PopoverHeader title="Select Language" />
         {LANGUAGES.map(region => (

@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Check } from 'lucide-react'
 import { Button } from '../../../ui/Button'
 import { cn } from '@/lib/utils'
-import { ActionPopover, PopoverHeader, PopoverContent } from './ActionPopover'
+import { ActionPopover, PopoverHeader, PopoverContent, ActionPopoverRef } from './ActionPopover'
 
 interface TargetAudienceInputProps {
   trigger: React.ReactNode
@@ -20,6 +20,7 @@ export const TargetAudienceInput = ({
   onClose,
 }: TargetAudienceInputProps) => {
   const [audience, setAudience] = useState('')
+  const popoverRef = useRef<ActionPopoverRef>(null)
 
   const handleValueChange = useCallback(
     (newValue: string) => {
@@ -33,8 +34,8 @@ export const TargetAudienceInput = ({
     const trimmedAudience = audience.trim()
     if (!trimmedAudience) return
     onTargetAudienceSelect?.(trimmedAudience)
-    onClose?.()
-  }, [audience, onTargetAudienceSelect, onClose])
+    popoverRef.current?.close()
+  }, [audience, onTargetAudienceSelect])
 
   const handleTextareaChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,7 +55,7 @@ export const TargetAudienceInput = ({
   )
 
   return (
-    <ActionPopover id="audience" trigger={trigger} onOpen={onOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="audience" trigger={trigger} onOpen={onOpen} onClose={onClose}>
       <PopoverContent>
         <PopoverHeader title="Target Audience">
           <Button

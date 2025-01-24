@@ -1,9 +1,9 @@
 import * as Slider from '@radix-ui/react-slider'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Check } from 'lucide-react'
 import { Button } from '../../../ui/Button'
 import { cn } from '@/lib/utils'
-import { ActionPopover, PopoverHeader, PopoverContent } from './ActionPopover'
+import { ActionPopover, PopoverHeader, PopoverContent, ActionPopoverRef } from './ActionPopover'
 
 interface ReadingLevelSliderProps {
   trigger: React.ReactNode
@@ -31,6 +31,7 @@ export const ReadingLevelSlider = ({
   onClose,
 }: ReadingLevelSliderProps) => {
   const [value, setValue] = useState([4]) // Default to Standard
+  const popoverRef = useRef<ActionPopoverRef>(null)
 
   const handleValueChange = useCallback(
     (newValue: number[]) => {
@@ -42,15 +43,15 @@ export const ReadingLevelSlider = ({
 
   const handleConfirm = useCallback(() => {
     onReadingLevelSelect?.(value[0])
-    onClose?.()
-  }, [value, onReadingLevelSelect, onClose])
+    popoverRef.current?.close()
+  }, [value, onReadingLevelSelect])
 
   const getCurrentMark = (value: number) => {
     return SLIDER_MARKS.find(mark => mark.value === value)
   }
 
   return (
-    <ActionPopover id="readingLevel" trigger={trigger} onOpen={onOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="readingLevel" trigger={trigger} onOpen={onOpen} onClose={onClose}>
       <PopoverContent>
         <PopoverHeader title="Reading Level">
           <div className="flex items-center gap-2">

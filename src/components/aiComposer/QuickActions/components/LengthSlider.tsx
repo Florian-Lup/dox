@@ -1,9 +1,9 @@
 import * as Slider from '@radix-ui/react-slider'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Check } from 'lucide-react'
 import { Button } from '../../../ui/Button'
 import { cn } from '@/lib/utils'
-import { ActionPopover, PopoverHeader, PopoverContent } from './ActionPopover'
+import { ActionPopover, PopoverHeader, PopoverContent, ActionPopoverRef } from './ActionPopover'
 
 interface LengthSliderProps {
   trigger: React.ReactNode
@@ -27,6 +27,7 @@ const SLIDER_MARKS = [
 
 export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, onClose }: LengthSliderProps) => {
   const [value, setValue] = useState([0])
+  const popoverRef = useRef<ActionPopoverRef>(null)
 
   const handleValueChange = useCallback(
     (newValue: number[]) => {
@@ -39,11 +40,11 @@ export const LengthSlider = ({ trigger, onValueChange, onLengthSelect, onOpen, o
   const handleConfirm = useCallback(() => {
     if (value[0] === 0) return
     onLengthSelect?.(value[0])
-    onClose?.()
-  }, [value, onLengthSelect, onClose])
+    popoverRef.current?.close()
+  }, [value, onLengthSelect])
 
   return (
-    <ActionPopover id="length" trigger={trigger} onOpen={onOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="length" trigger={trigger} onOpen={onOpen} onClose={onClose}>
       <PopoverContent>
         <PopoverHeader title="Adjust Length">
           <div className="flex items-center gap-2">
