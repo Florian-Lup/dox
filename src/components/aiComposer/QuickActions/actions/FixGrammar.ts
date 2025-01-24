@@ -12,7 +12,7 @@ export const handleGrammarFix = async (
   const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
-    '/api/ai/grammar',
+    '/api/ai/FixGrammar',
     editor,
     scope,
     {

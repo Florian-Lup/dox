@@ -12,7 +12,7 @@ export const handleClarityImprovement = async (
   const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
-    '/api/ai/clarity',
+    '/api/ai/ImproveClarity',
     editor,
     scope,
     {
