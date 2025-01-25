@@ -108,14 +108,14 @@ const QUICK_ACTIONS = [
     id: 'structure',
     icon: <ListTree className="w-4 h-4 text-teal-500" />,
     color: 'text-teal-500',
-    label: 'Structure',
+    label: 'Structure (coming soon)',
     description: 'Organize content hierarchically with headings, paragraphs, and list layouts.',
   },
   {
     id: 'plagiarism',
     icon: <Quote className="w-4 h-4 text-sky-500" />,
     color: 'text-sky-500',
-    label: 'Plagiarism Check',
+    label: 'Plagiarism Check (coming soon)',
     description: 'Check for content originality and citations',
   },
 ] as const

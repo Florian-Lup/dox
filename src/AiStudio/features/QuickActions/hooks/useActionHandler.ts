@@ -10,6 +10,7 @@ import { handleReadingLevel } from '../actions/ReadingLevel'
 import { handleTargetAudience } from '../actions/TargetAudience'
 import { handleTone } from '../actions/tone'
 import { handleIntent } from '../actions/intent'
+import { handleDomain } from '../actions/domain'
 import { handleSummarize } from '../actions/summarize'
 import { useErrorHandler } from '../../../core/error/hooks/useErrorHandler'
 
@@ -175,6 +176,22 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHa
           setProcessingAction('intent')
           try {
             await handleIntent(editor, scope, modelName, data.intent)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
+        }
+      } else if (action.id === 'domain') {
+        if (data?.domain !== undefined) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('domain')
+          try {
+            await handleDomain(editor, scope, modelName, data.domain)
             resetScope()
           } catch (error) {
             handleError(error as Error)
