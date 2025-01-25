@@ -65,7 +65,7 @@ export const ScopeSelector = ({ className, scope, onReset }: ScopeSelectorProps)
               <div className="flex items-center justify-between px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 rounded">
                 <span className="text-xs text-neutral-500 dark:text-neutral-400">Characters</span>
                 <span className="text-xs font-medium text-neutral-900 dark:text-white">
-                  {scope.position.text ? scope.position.text.length : 0}
+                  {scope.position.text ? scope.position.text.length : 0} / 1000
                 </span>
               </div>
             </div>
