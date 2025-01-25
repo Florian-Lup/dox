@@ -10,7 +10,7 @@ interface AiStudioButtonProps {
 
 export const AiStudioButton = ({ onClick, className }: AiStudioButtonProps) => {
   return (
-    <Tooltip title="AI Assistant">
+    <Tooltip title="AI Studio">
       <Button
         onClick={onClick}
         className={`relative group overflow-hidden bg-neutral-800 dark:bg-neutral-200 text-neutral-200 dark:text-neutral-800 shadow-md hover:shadow-lg transition-all duration-300 scale-100 hover:scale-105 flex-shrink-0 border-0 sm:h-8 sm:w-8 ${className}`}
