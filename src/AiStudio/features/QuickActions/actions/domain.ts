@@ -1,12 +1,14 @@
 import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
 import { createStreamingHandler, getTextFromScope } from '../../../core/editor/editorUtils'
+import { DomainOption } from '../types'
 
 export const handleDomain = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
-  domain: number,
+  temperature: number,
+  domain: DomainOption,
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
@@ -19,7 +21,9 @@ export const handleDomain = async (
     {
       text: inputText,
       modelName,
+      temperature,
       domain,
+      fullContent,
     },
     {
       visualFeedback: {

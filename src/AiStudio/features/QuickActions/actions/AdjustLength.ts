@@ -6,6 +6,7 @@ export const handleAdjustLength = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
+  temperature: number,
   percentage: number,
   onProgress?: (text: string) => void,
 ) => {
@@ -19,8 +20,9 @@ export const handleAdjustLength = async (
     {
       text: inputText,
       modelName,
-      fullContent,
+      temperature,
       percentage,
+      fullContent,
     },
     {
       visualFeedback: {

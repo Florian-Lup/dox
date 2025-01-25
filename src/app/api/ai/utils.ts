@@ -7,7 +7,7 @@ export interface StreamResponse {
   error?: string
 }
 
-export const initializeAIModel = (modelName: string): BaseChatModel => {
+export const initializeAIModel = (modelName: string, temperature: number = 0.5): BaseChatModel => {
   const isGemini = modelName.startsWith('gemini')
 
   if (isGemini) {
@@ -16,7 +16,7 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
     }
     return new ChatGoogleGenerativeAI({
       modelName: modelName,
-      temperature: 0.1,
+      temperature: temperature,
       apiKey: process.env.GOOGLE_API_KEY,
       streaming: true,
     })
@@ -26,7 +26,7 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
     }
     return new ChatOpenAI({
       modelName,
-      temperature: 0.1,
+      temperature: temperature,
       openAIApiKey: process.env.OPENAI_API_KEY,
       streaming: true,
     })

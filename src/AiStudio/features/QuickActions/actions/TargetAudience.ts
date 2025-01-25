@@ -6,6 +6,7 @@ export const handleTargetAudience = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
+  temperature: number,
   targetAudience: string,
   onProgress?: (text: string) => void,
 ) => {
@@ -19,8 +20,9 @@ export const handleTargetAudience = async (
     {
       text: inputText,
       modelName,
-      fullContent,
+      temperature,
       targetAudience,
+      fullContent,
     },
     {
       visualFeedback: {

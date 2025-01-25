@@ -41,13 +41,13 @@ Length-adjusted text:`)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, percentage } = await req.json()
+    const { text, modelName, percentage, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName || percentage === undefined) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
     const chain = RunnableSequence.from([
       {
         text: (input: any) => input.text,

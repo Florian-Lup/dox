@@ -13,195 +13,133 @@ import { handleIntent } from '../actions/intent'
 import { handleDomain } from '../actions/domain'
 import { handleSummarize } from '../actions/summarize'
 import { useErrorHandler } from '../../../core/error/hooks/useErrorHandler'
+import { QuickAction, ActionData, ToneOption, IntentOption, DomainOption } from '../types'
 
 interface UseActionHandlerProps {
   editor: Editor
   scope: Scope
   resetScope: () => void
   modelName: string
+  temperature: number
   errorHandler?: ReturnType<typeof useErrorHandler>
 }
 
-export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHandler }: UseActionHandlerProps) => {
+type BaseActionHandler = (
+  editor: Editor,
+  scope: Scope,
+  modelName: string,
+  temperature: number,
+  onProgress?: (text: string) => void,
+) => Promise<void>
+
+type ActionHandlerWithData<T> = (
+  editor: Editor,
+  scope: Scope,
+  modelName: string,
+  temperature: number,
+  data: T,
+  onProgress?: (text: string) => void,
+) => Promise<void>
+
+interface ActionConfig<T = void> {
+  handler: T extends void ? BaseActionHandler : ActionHandlerWithData<T>
+  getData?: (data: ActionData) => T
+  requiresData: boolean
+}
+
+const actionConfigs: Record<string, ActionConfig<any>> = {
+  grammar: { handler: handleGrammarFix, requiresData: false },
+  summarize: { handler: handleSummarize, requiresData: false },
+  translate: {
+    handler: handleTranslate,
+    getData: data => data.targetLanguage,
+    requiresData: true,
+  },
+  localization: {
+    handler: handleLocalize,
+    getData: data => data.targetRegion,
+    requiresData: true,
+  },
+  readability: { handler: handleClarityImprovement, requiresData: false },
+  length: {
+    handler: handleAdjustLength,
+    getData: data => data.percentage,
+    requiresData: true,
+  },
+  readingLevel: {
+    handler: handleReadingLevel,
+    getData: data => data.readingLevel,
+    requiresData: true,
+  },
+  audience: {
+    handler: handleTargetAudience,
+    getData: data => data.targetAudience,
+    requiresData: true,
+  },
+  tone: {
+    handler: handleTone,
+    getData: (data: ActionData): ToneOption => data.tone!,
+    requiresData: true,
+  },
+  intent: {
+    handler: handleIntent,
+    getData: (data: ActionData): IntentOption => data.intent!,
+    requiresData: true,
+  },
+  domain: {
+    handler: handleDomain,
+    getData: (data: ActionData): DomainOption => data.domain!,
+    requiresData: true,
+  },
+}
+
+export const useActionHandler = ({
+  editor,
+  scope,
+  resetScope,
+  modelName,
+  temperature,
+  errorHandler,
+}: UseActionHandlerProps) => {
   const [processingAction, setProcessingAction] = useState<string | null>(null)
   const defaultErrorHandler = useErrorHandler()
   const { handleError } = errorHandler || defaultErrorHandler
 
   const handleActionSelect = useCallback(
-    async (action: any, data?: any) => {
-      if (action.id === 'grammar') {
-        if (!scope.position.text) {
-          handleError(new Error('Please select some text before using AI actions.'))
-          return
+    async (action: QuickAction, data?: ActionData) => {
+      const config = actionConfigs[action.id]
+      if (!config) {
+        handleError(new Error('Unknown action type'))
+        return
+      }
+
+      // If action requires data but doesn't have it yet, just return (this is normal for popover actions)
+      if (config.requiresData && !data) {
+        return
+      }
+
+      // Only check for text selection if we're actually executing the action
+      if (!scope.position.text) {
+        handleError(new Error('Please select some text before using AI actions.'))
+        return
+      }
+
+      setProcessingAction(action.id)
+      try {
+        if (config.requiresData && config.getData) {
+          const actionData = config.getData(data!)
+          await (config.handler as ActionHandlerWithData<any>)(editor, scope, modelName, temperature, actionData)
+        } else {
+          await (config.handler as BaseActionHandler)(editor, scope, modelName, temperature)
         }
-        setProcessingAction('grammar')
-        try {
-          await handleGrammarFix(editor, scope, modelName)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'summarize') {
-        if (!scope.position.text) {
-          handleError(new Error('Please select some text before using AI actions.'))
-          return
-        }
-        setProcessingAction('summarize')
-        try {
-          await handleSummarize(editor, scope, modelName)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'translate') {
-        if (data?.targetLanguage) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('translate')
-          try {
-            await handleTranslate(editor, scope, modelName, data.targetLanguage)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'localization') {
-        if (data?.targetRegion) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('localization')
-          try {
-            await handleLocalize(editor, scope, modelName, data.targetRegion)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'readability') {
-        if (!scope.position.text) {
-          handleError(new Error('Please select some text before using AI actions.'))
-          return
-        }
-        setProcessingAction('readability')
-        try {
-          await handleClarityImprovement(editor, scope, modelName)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'length') {
-        if (data?.percentage !== undefined) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('length')
-          try {
-            await handleAdjustLength(editor, scope, modelName, data.percentage)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'readingLevel') {
-        if (data?.readingLevel !== undefined) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('readingLevel')
-          try {
-            await handleReadingLevel(editor, scope, modelName, data.readingLevel)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'audience') {
-        if (data?.targetAudience) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('audience')
-          try {
-            await handleTargetAudience(editor, scope, modelName, data.targetAudience)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'tone') {
-        if (data?.tone) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('tone')
-          try {
-            await handleTone(editor, scope, modelName, data.tone)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'intent') {
-        if (data?.intent) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('intent')
-          try {
-            await handleIntent(editor, scope, modelName, data.intent)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
-      } else if (action.id === 'domain') {
-        if (data?.domain !== undefined) {
-          if (!scope.position.text) {
-            handleError(new Error('Please select some text before using AI actions.'))
-            return
-          }
-          setProcessingAction('domain')
-          try {
-            await handleDomain(editor, scope, modelName, data.domain)
-            resetScope()
-          } catch (error) {
-            handleError(error as Error)
-          } finally {
-            setProcessingAction(null)
-          }
-        }
+        resetScope()
+      } catch (error) {
+        handleError(error as Error)
+      } finally {
+        setProcessingAction(null)
       }
     },
-    [editor, scope, modelName, resetScope, handleError],
+    [editor, scope, modelName, temperature, resetScope, handleError],
   )
 
   return {

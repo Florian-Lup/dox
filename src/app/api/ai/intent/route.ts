@@ -57,13 +57,13 @@ Rewritten text (return ONLY the adjusted text, no explanations):`)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, intent } = await req.json()
+    const { text, modelName, intent, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName || !intent) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
 
     const chain = RunnableSequence.from([
       {

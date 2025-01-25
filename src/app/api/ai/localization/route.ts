@@ -53,13 +53,13 @@ Localization for {regionName} (return ONLY the localized text, no explanations):
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, targetRegion } = await req.json()
+    const { text, modelName, targetRegion, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName || !targetRegion?.code || !targetRegion?.name) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
     const chain = RunnableSequence.from([
       {
         text: (input: any) => input.text,

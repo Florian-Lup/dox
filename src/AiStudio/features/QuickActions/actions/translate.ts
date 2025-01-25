@@ -1,12 +1,14 @@
 import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
 import { createStreamingHandler, getTextFromScope } from '../../../core/editor/editorUtils'
+import { LanguageOption } from '../types'
 
 export const handleTranslate = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
-  targetLanguage: { code: string; name: string },
+  temperature: number,
+  targetLanguage: LanguageOption,
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
@@ -19,8 +21,9 @@ export const handleTranslate = async (
     {
       text: inputText,
       modelName,
-      fullContent,
+      temperature,
       targetLanguage,
+      fullContent,
     },
     {
       visualFeedback: {

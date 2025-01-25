@@ -6,6 +6,7 @@ export const handleReadingLevel = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
+  temperature: number,
   readingLevel: number,
   onProgress?: (text: string) => void,
 ) => {
@@ -19,7 +20,9 @@ export const handleReadingLevel = async (
     {
       text: inputText,
       modelName,
+      temperature,
       readingLevel,
+      fullContent,
     },
     {
       visualFeedback: {

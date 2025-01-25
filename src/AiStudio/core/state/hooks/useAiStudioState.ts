@@ -8,6 +8,7 @@ import type { AiStudioState, AiStudioStateProps } from '../types'
 
 export const useAiStudioState = ({ editor }: AiStudioStateProps): AiStudioState => {
   const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
+  const [temperature, setTemperature] = useState(0.5)
   const scope = useScope(editor)
   const { activeTab, handleTabChange } = useTabState()
   const errorHandler = useErrorHandler()
@@ -17,12 +18,15 @@ export const useAiStudioState = ({ editor }: AiStudioStateProps): AiStudioState 
     scope: scope.scope,
     resetScope: scope.resetScope,
     modelName: selectedModel.id,
+    temperature,
     errorHandler,
   })
 
   return {
     selectedModel,
     setSelectedModel,
+    temperature,
+    setTemperature,
     scope,
     activeTab,
     handleTabChange,

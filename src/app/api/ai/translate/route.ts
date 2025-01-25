@@ -68,13 +68,13 @@ Translation in {languageName} (return ONLY the translated text, no explanations)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, targetLanguage } = await req.json()
+    const { text, modelName, targetLanguage, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName || !targetLanguage?.code || !targetLanguage?.name) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
     const chain = RunnableSequence.from([
       {
         text: (input: any) => input.text,

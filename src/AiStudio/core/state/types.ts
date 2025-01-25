@@ -11,6 +11,8 @@ export interface AiStudioStateProps {
 export interface AiStudioState {
   selectedModel: LLMModel
   setSelectedModel: (model: LLMModel) => void
+  temperature: number
+  setTemperature: (temp: number) => void
   scope: {
     scope: Scope
     resetScope: () => void

@@ -94,13 +94,13 @@ Corrected text (return ONLY the fixed text, no explanations):`)
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, language = 'en' } = await req.json()
+    const { text, modelName, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
 
     const chain = RunnableSequence.from([
       {

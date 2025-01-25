@@ -6,6 +6,7 @@ export const handleGrammarFix = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
+  temperature: number,
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
@@ -18,6 +19,7 @@ export const handleGrammarFix = async (
     {
       text: inputText,
       modelName,
+      temperature,
       fullContent,
     },
     {

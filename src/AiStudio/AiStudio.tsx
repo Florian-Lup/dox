@@ -19,6 +19,8 @@ export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
   const {
     selectedModel,
     setSelectedModel,
+    temperature,
+    setTemperature,
     scope,
     activeTab,
     handleTabChange,
@@ -63,6 +65,8 @@ export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
                 onResetScope={scope.resetScope}
                 selectedModel={selectedModel}
                 onModelSelect={setSelectedModel}
+                temperature={temperature}
+                onTemperatureChange={setTemperature}
               />
             </div>
           </motion.div>

@@ -32,7 +32,7 @@ TEXT TO ADAPT:
 
 export async function POST(req: Request) {
   try {
-    const { text, modelName, domain } = await req.json()
+    const { text, modelName, domain, temperature = 0.5 } = await req.json()
 
     if (!text || !modelName || domain === undefined) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid domain type' }, { status: 400 })
     }
 
-    const model = initializeAIModel(modelName)
+    const model = initializeAIModel(modelName, temperature)
     const chain = RunnableSequence.from([
       {
         text: (input: any) => input.text,

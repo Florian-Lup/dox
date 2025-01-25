@@ -1,12 +1,14 @@
 import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
 import { createStreamingHandler, getTextFromScope } from '../../../core/editor/editorUtils'
+import { IntentOption } from '../types'
 
 export const handleIntent = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
-  intent: { code: string; name: string },
+  temperature: number,
+  intent: IntentOption,
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
@@ -19,8 +21,9 @@ export const handleIntent = async (
     {
       text: inputText,
       modelName,
-      fullContent,
+      temperature,
       intent,
+      fullContent,
     },
     {
       visualFeedback: {
