@@ -10,6 +10,7 @@ import { handleReadingLevel } from '../actions/ReadingLevel'
 import { handleTargetAudience } from '../actions/TargetAudience'
 import { handleTone } from '../actions/tone'
 import { handleIntent } from '../actions/intent'
+import { handleSummarize } from '../actions/summarize'
 import { useErrorHandler } from '../../../core/error/hooks/useErrorHandler'
 
 interface UseActionHandlerProps {
@@ -35,6 +36,20 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHa
         setProcessingAction('grammar')
         try {
           await handleGrammarFix(editor, scope, modelName)
+          resetScope()
+        } catch (error) {
+          handleError(error as Error)
+        } finally {
+          setProcessingAction(null)
+        }
+      } else if (action.id === 'summarize') {
+        if (!scope.position.text) {
+          handleError(new Error('Please select some text before using AI actions.'))
+          return
+        }
+        setProcessingAction('summarize')
+        try {
+          await handleSummarize(editor, scope, modelName)
           resetScope()
         } catch (error) {
           handleError(error as Error)

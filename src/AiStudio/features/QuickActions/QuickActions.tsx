@@ -99,16 +99,9 @@ const QUICK_ACTIONS = [
     description: 'Modify writing style (academic, casual, professional)',
   },
   {
-    id: 'paraphrase',
-    icon: <RefreshCw className="w-4 h-4 text-lime-500" />,
-    color: 'text-lime-500',
-    label: 'Paraphrase',
-    description: 'Rewrite text while maintaining original meaning',
-  },
-  {
     id: 'summarize',
-    icon: <FileText className="w-4 h-4 text-orange-500" />,
-    color: 'text-orange-500',
+    icon: <FileText className="w-4 h-4 text-lime-500" />,
+    color: 'text-lime-500',
     label: 'Summarize',
     description: 'Generate key points and condensed versions of text',
   },
