@@ -3,6 +3,7 @@ import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
 import { handleGrammarFix } from '../actions/FixGrammar'
 import { handleTranslate } from '../actions/translate'
+import { handleLocalize } from '../actions/localize'
 import { handleClarityImprovement } from '../actions/ImproveClarity'
 import { handleAdjustLength } from '../actions/AdjustLength'
 import { handleReadingLevel } from '../actions/ReadingLevel'
@@ -47,6 +48,22 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHa
           setProcessingAction('translate')
           try {
             await handleTranslate(editor, scope, modelName, data.targetLanguage)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
+        }
+      } else if (action.id === 'localization') {
+        if (data?.targetRegion) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('localization')
+          try {
+            await handleLocalize(editor, scope, modelName, data.targetRegion)
             resetScope()
           } catch (error) {
             handleError(error as Error)

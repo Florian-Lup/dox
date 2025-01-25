@@ -14,13 +14,13 @@ interface ReadingLevelSliderProps {
 }
 
 const SLIDER_MARKS = [
-  { value: 1, label: 'Very Easy', score: '90-100' },
-  { value: 2, label: 'Easy', score: '80-90' },
-  { value: 3, label: 'Fairly Easy', score: '70-80' },
-  { value: 4, label: 'Standard', score: '60-70' },
-  { value: 5, label: 'Fairly Hard', score: '50-60' },
-  { value: 6, label: 'Hard', score: '30-50' },
-  { value: 7, label: 'Very Hard', score: '0-30' },
+  { value: 1, label: 'Very Easy' },
+  { value: 2, label: 'Easy' },
+  { value: 3, label: 'Fairly Easy' },
+  { value: 4, label: 'Standard' },
+  { value: 5, label: 'Fairly Hard' },
+  { value: 6, label: 'Hard' },
+  { value: 7, label: 'Very Hard' },
 ]
 
 export const ReadingLevelSlider = ({
@@ -67,9 +67,6 @@ export const ReadingLevelSlider = ({
           <div className="flex items-center gap-2">
             <div className="text-right">
               <div className="text-sm text-neutral-900 dark:text-white">{getCurrentMark(value[0])?.label}</div>
-              <div className="text-xs text-neutral-500 dark:text-neutral-400">
-                Score: {getCurrentMark(value[0])?.score}
-              </div>
             </div>
             <Button
               variant="ghost"

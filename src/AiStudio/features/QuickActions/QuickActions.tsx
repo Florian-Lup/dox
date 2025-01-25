@@ -16,6 +16,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner'
 import { Button } from '@/components/ui/Button'
 import { LanguagePicker } from './components/LanguagePicker'
+import { RegionPicker } from './components/RegionPicker'
 import { LengthSlider } from './components/LengthSlider'
 import { ReadingLevelSlider } from './components/ReadingLevelSlider'
 import { TargetAudienceInput } from './components/TargetAudienceInput'
@@ -35,6 +36,13 @@ const QUICK_ACTIONS = [
     color: 'text-green-500',
     label: 'Translate',
     description: 'Translate text to another language',
+  },
+  {
+    id: 'localization',
+    icon: <Globe2 className="w-4 h-4 text-violet-500" />,
+    color: 'text-violet-500',
+    label: 'Localization',
+    description: 'Adapt content for specific regions and cultures',
   },
   {
     id: 'readability',
@@ -86,13 +94,6 @@ const QUICK_ACTIONS = [
     description: 'Optimize text for specific purpose (persuade, inform, engage)',
   },
   {
-    id: 'localization',
-    icon: <Globe2 className="w-4 h-4 text-violet-500" />,
-    color: 'text-violet-500',
-    label: 'Localization',
-    description: 'Adapt content for specific regions and cultures',
-  },
-  {
     id: 'plagiarism',
     icon: <Search className="w-4 h-4 text-sky-500" />,
     color: 'text-sky-500',
@@ -137,6 +138,11 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
     scrollToButton('translate')
   }, [scrollToButton])
 
+  const handleLocalizeOpen = useCallback(() => {
+    setActivePopover('localization')
+    scrollToButton('localization')
+  }, [scrollToButton])
+
   const handleLengthOpen = useCallback(() => {
     setActivePopover('length')
     scrollToButton('length')
@@ -166,6 +172,13 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
   const handleLanguageSelect = useCallback(
     (action: QuickActionType) => (language: any) => {
       onActionSelect?.(action, { targetLanguage: language })
+    },
+    [onActionSelect],
+  )
+
+  const handleRegionSelect = useCallback(
+    (action: QuickActionType) => (region: any) => {
+      onActionSelect?.(action, { targetRegion: region })
     },
     [onActionSelect],
   )
@@ -254,6 +267,18 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
         )
       }
 
+      if (action.id === 'localization') {
+        return (
+          <RegionPicker
+            key={action.label}
+            trigger={button}
+            onRegionSelect={handleRegionSelect(action)}
+            onOpen={handleLocalizeOpen}
+            onClose={handlePopoverClose}
+          />
+        )
+      }
+
       if (action.id === 'length') {
         return (
           <LengthSlider
@@ -297,12 +322,14 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
     [
       handleActionClick,
       handleLanguageSelect,
+      handleRegionSelect,
       handleLengthChange,
       handleLengthSelect,
       handleReadingLevelChange,
       handleReadingLevelSelect,
       handleTargetAudienceSelect,
       handleTranslateOpen,
+      handleLocalizeOpen,
       handleLengthOpen,
       handleReadingLevelOpen,
       handleAudienceOpen,
