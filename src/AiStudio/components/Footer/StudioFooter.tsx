@@ -25,9 +25,11 @@ export const StudioFooter = ({
 }: StudioFooterProps) => {
   return (
     <div className="flex-shrink-0 h-[44px] px-4 border-t border-neutral-200 dark:border-neutral-800">
-      <div className="grid grid-cols-2 h-full">
-        <div className="flex items-center gap-4">
+      <div className="grid grid-cols-3 h-full">
+        <div className="flex items-center justify-start">
           <ModelSelector selectedModel={selectedModel} onModelSelect={onModelSelect} />
+        </div>
+        <div className="flex items-center justify-center">
           <Popover.Root>
             <Popover.Trigger asChild>
               <button type="button" className="flex items-center gap-1 text-xs font-medium leading-none group">
@@ -39,7 +41,7 @@ export const StudioFooter = ({
             </Popover.Trigger>
             <Popover.Portal>
               <Popover.Content
-                align="start"
+                align="center"
                 side="top"
                 sideOffset={8}
                 className={cn(

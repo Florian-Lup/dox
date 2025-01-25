@@ -1,6 +1,5 @@
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Cpu, X } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { Tooltip } from '@/components/ui/Tooltip'
 import * as Popover from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 
@@ -13,68 +12,88 @@ export const LLM_MODELS = [
 
 export type LLMModel = (typeof LLM_MODELS)[number]
 
+interface ModelButtonProps {
+  model: LLMModel
+  isActive: boolean
+  onClick: (model: LLMModel) => void
+}
+
+const ModelButton = ({ model, isActive, onClick }: ModelButtonProps) => {
+  const handleClick = useCallback(() => {
+    onClick(model)
+  }, [model, onClick])
+
+  return (
+    <button
+      onClick={handleClick}
+      className={cn(
+        'flex flex-col gap-1 p-2 text-left rounded transition-colors',
+        'hover:bg-neutral-100 dark:hover:bg-neutral-800',
+        isActive && 'bg-neutral-100 dark:bg-neutral-800',
+      )}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm font-medium text-neutral-900 dark:text-white">{model.name}</span>
+        {isActive && (
+          <div className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-blue-500 text-white shrink-0">Active</div>
+        )}
+      </div>
+      <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>
+    </button>
+  )
+}
+
 interface ModelSelectorProps {
   selectedModel: LLMModel
   onModelSelect: (model: LLMModel) => void
 }
 
 export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const handleModelSelect = useCallback(
-    (model: LLMModel) => () => {
-      onModelSelect(model)
-      setIsOpen(false)
-    },
-    [onModelSelect],
-  )
-
   return (
-    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Popover.Root>
       <Popover.Trigger asChild>
         <button type="button" className="flex items-center gap-1 text-xs font-medium leading-none group">
-          <Tooltip title="Select the AI model to use for text operations">
-            <span className="text-neutral-500">LLM : </span>
-          </Tooltip>
+          <Cpu className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300" />
           <span className="text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-300">
             {selectedModel.name}
           </span>
-          <ChevronDown
-            className="w-3 h-3 text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-transform duration-200"
-            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-          />
         </button>
       </Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content
           align="start"
-          side="bottom"
-          sideOffset={4}
+          side="top"
+          sideOffset={8}
           className={cn(
-            'min-w-[15rem] p-2 flex flex-col gap-0.5 max-h-80 overflow-auto z-[9999]',
+            'w-[280px] p-4',
             'bg-white dark:bg-neutral-900 rounded-lg',
             'shadow-lg border border-neutral-200 dark:border-neutral-800',
+            'focus:outline-none select-none z-[9999]',
           )}
         >
-          {LLM_MODELS.map(model => (
-            <button
-              key={model.id}
-              onClick={handleModelSelect(model)}
-              className={cn(
-                'flex items-center gap-2 p-1.5 text-sm font-medium text-left bg-transparent w-full rounded',
-                'text-neutral-500 dark:text-neutral-400',
-                selectedModel.id === model.id
-                  ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white'
-                  : 'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-white',
-              )}
-            >
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-medium">{model.name}</span>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">{model.description}</span>
-              </div>
-            </button>
-          ))}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-sm font-medium text-neutral-900 dark:text-white">Model</h3>
+              <Popover.Close className="w-6 h-6 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none flex items-center justify-center">
+                <X className="w-4 h-4 text-neutral-500" />
+              </Popover.Close>
+            </div>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              Choose the AI model that best fits your needs. More capable models can handle complex tasks but may be
+              slower.
+            </p>
+            <div className="flex flex-col gap-2">
+              {LLM_MODELS.map(model => (
+                <ModelButton
+                  key={model.id}
+                  model={model}
+                  isActive={selectedModel.id === model.id}
+                  onClick={onModelSelect}
+                />
+              ))}
+            </div>
+          </div>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
