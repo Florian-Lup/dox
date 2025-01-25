@@ -1,5 +1,5 @@
-import { ModelSelector, type LLMModel } from './core/ModelSelector'
-import { ScopeSelector } from './core/ScopeSelector'
+import { ModelSelector, type LLMModel } from '../../core/ai/components/ModelSelector'
+import { ScopeSelector } from '../../core/editor/components/ScopeSelector'
 import { Scope } from '@/hooks/useScope'
 
 interface StudioFooterProps {

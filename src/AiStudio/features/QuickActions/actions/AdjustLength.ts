@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
-import { createStreamingHandler, getTextFromScope } from '../../core/editorUtils'
+import { createStreamingHandler, getTextFromScope } from '../../../core/editor/editorUtils'
 
 export const handleAdjustLength = async (
   editor: Editor,

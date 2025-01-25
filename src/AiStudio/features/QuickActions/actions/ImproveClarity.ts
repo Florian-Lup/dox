@@ -1,26 +1,24 @@
 import { Editor } from '@tiptap/react'
 import { Scope } from '@/hooks/useScope'
-import { createStreamingHandler, getTextFromScope } from '../../core/editorUtils'
+import { createStreamingHandler, getTextFromScope } from '../../../core/editor/editorUtils'
 
-export const handleTranslate = async (
+export const handleClarityImprovement = async (
   editor: Editor,
   scope: Scope,
   modelName: string,
-  targetLanguage: { code: string; name: string },
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
   const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
-    '/api/ai/translate',
+    '/api/ai/ImproveClarity',
     editor,
     scope,
     {
       text: inputText,
       modelName,
       fullContent,
-      targetLanguage,
     },
     {
       visualFeedback: {

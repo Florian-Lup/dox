@@ -1,23 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useCallback } from 'react'
-import { LLM_MODELS, type LLMModel } from './core/ModelSelector'
-import { useScope } from '@/hooks/useScope'
 import { Editor } from '@tiptap/react'
-import { QuickActions } from './QuickActions/QuickActions'
-import { ChatContainer } from './CustomInstructions/ChatContainer'
-import { handleGrammarFix } from './QuickActions/actions/FixGrammar'
-import { handleTranslate } from './QuickActions/actions/translate'
-import { handleClarityImprovement } from './QuickActions/actions/ImproveClarity'
-import { handleAdjustLength } from './QuickActions/actions/AdjustLength'
-import { handleReadingLevel } from './QuickActions/actions/ReadingLevel'
-import { handleTargetAudience } from './QuickActions/actions/TargetAudience'
-import { StudioFooter } from './StudioFooter'
-import { StudioHeader } from './StudioHeader'
+import { QuickActions } from './features/QuickActions/QuickActions'
+import { StudioFooter } from './components/Footer/StudioFooter'
+import { StudioHeader } from './components/Header/StudioHeader'
 import * as Toast from '@radix-ui/react-toast'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-type TabType = 'quick' | 'advanced'
+import { useAiStudioState } from './core/state/hooks/useAiStudioState'
+import { ChatContainer } from './features/CustomInstructions/ChatContainer'
 
 interface AiStudioProps {
   isOpen: boolean
@@ -26,88 +16,18 @@ interface AiStudioProps {
 }
 
 export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
-  const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
-  const { scope, resetScope } = useScope(editor)
-  const [processingAction, setProcessingAction] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<TabType>('quick')
-  const [showErrorToast, setShowErrorToast] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-
-  const handleError = (error: Error) => {
-    setErrorMessage(error.message)
-    setShowErrorToast(true)
-  }
-
-  const handleActionSelect = useCallback(
-    async (action: any, data?: any) => {
-      if (action.id === 'grammar') {
-        setProcessingAction('grammar')
-        try {
-          await handleGrammarFix(editor, scope, selectedModel.id)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'translate' && data?.targetLanguage) {
-        setProcessingAction('translate')
-        try {
-          await handleTranslate(editor, scope, selectedModel.id, data.targetLanguage)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'readability') {
-        setProcessingAction('readability')
-        try {
-          await handleClarityImprovement(editor, scope, selectedModel.id)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'length' && data?.percentage !== undefined) {
-        setProcessingAction('length')
-        try {
-          await handleAdjustLength(editor, scope, selectedModel.id, data.percentage)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'readingLevel' && data?.readingLevel !== undefined) {
-        setProcessingAction('readingLevel')
-        try {
-          await handleReadingLevel(editor, scope, selectedModel.id, data.readingLevel)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      } else if (action.id === 'audience' && data?.targetAudience) {
-        setProcessingAction('audience')
-        try {
-          await handleTargetAudience(editor, scope, selectedModel.id, data.targetAudience)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
-        }
-      }
-    },
-    [editor, scope, selectedModel.id, resetScope],
-  )
-
-  const handleTabChange = useCallback((isAdvanced: boolean) => {
-    setActiveTab(isAdvanced ? 'advanced' : 'quick')
-  }, [])
+  const {
+    selectedModel,
+    setSelectedModel,
+    scope,
+    activeTab,
+    handleTabChange,
+    processingAction,
+    handleActionSelect,
+    showErrorToast,
+    errorMessage,
+    setShowErrorToast,
+  } = useAiStudioState({ editor })
 
   return (
     <Toast.Provider>
@@ -139,8 +59,8 @@ export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
               </div>
 
               <StudioFooter
-                scope={scope}
-                onResetScope={resetScope}
+                scope={scope.scope}
+                onResetScope={scope.resetScope}
                 selectedModel={selectedModel}
                 onModelSelect={setSelectedModel}
               />
