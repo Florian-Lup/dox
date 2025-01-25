@@ -12,7 +12,6 @@ export const handleLocalize = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/localize',
@@ -23,7 +22,6 @@ export const handleLocalize = async (
       modelName,
       temperature,
       targetRegion,
-      fullContent,
     },
     {
       visualFeedback: {

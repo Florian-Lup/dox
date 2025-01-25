@@ -11,7 +11,6 @@ export const handleReadingLevel = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/ReadingLevel',
@@ -22,7 +21,6 @@ export const handleReadingLevel = async (
       modelName,
       temperature,
       readingLevel,
-      fullContent,
     },
     {
       visualFeedback: {

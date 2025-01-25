@@ -10,7 +10,6 @@ export const handleGrammarFix = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/FixGrammar',
@@ -20,7 +19,6 @@ export const handleGrammarFix = async (
       text: inputText,
       modelName,
       temperature,
-      fullContent,
     },
     {
       visualFeedback: {

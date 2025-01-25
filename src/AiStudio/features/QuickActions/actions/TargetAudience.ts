@@ -11,7 +11,6 @@ export const handleTargetAudience = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/TargetAudience',
@@ -22,7 +21,6 @@ export const handleTargetAudience = async (
       modelName,
       temperature,
       targetAudience,
-      fullContent,
     },
     {
       visualFeedback: {

@@ -12,7 +12,6 @@ export const handleDomain = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/domain',
@@ -23,7 +22,6 @@ export const handleDomain = async (
       modelName,
       temperature,
       domain,
-      fullContent,
     },
     {
       visualFeedback: {

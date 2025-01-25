@@ -11,7 +11,6 @@ export const handleAdjustLength = async (
   onProgress?: (text: string) => void,
 ) => {
   const inputText = getTextFromScope(editor, scope)
-  const fullContent = editor.state.doc.textContent
 
   return createStreamingHandler(
     '/api/ai/AdjustLength',
@@ -22,7 +21,6 @@ export const handleAdjustLength = async (
       modelName,
       temperature,
       percentage,
-      fullContent,
     },
     {
       visualFeedback: {
