@@ -10,12 +10,14 @@ export const useAiStudioState = ({ editor }: AiStudioStateProps): AiStudioState 
   const [selectedModel, setSelectedModel] = useState<LLMModel>(LLM_MODELS[0])
   const scope = useScope(editor)
   const { activeTab, handleTabChange } = useTabState()
-  const { showErrorToast, errorMessage, setShowErrorToast } = useErrorHandler()
+  const errorHandler = useErrorHandler()
+  const { showErrorToast, errorMessage, setShowErrorToast } = errorHandler
   const { processingAction, handleActionSelect } = useActionHandler({
     editor,
     scope: scope.scope,
     resetScope: scope.resetScope,
     modelName: selectedModel.id,
+    errorHandler,
   })
 
   return {

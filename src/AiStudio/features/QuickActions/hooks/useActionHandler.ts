@@ -14,15 +14,21 @@ interface UseActionHandlerProps {
   scope: Scope
   resetScope: () => void
   modelName: string
+  errorHandler?: ReturnType<typeof useErrorHandler>
 }
 
-export const useActionHandler = ({ editor, scope, resetScope, modelName }: UseActionHandlerProps) => {
+export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHandler }: UseActionHandlerProps) => {
   const [processingAction, setProcessingAction] = useState<string | null>(null)
-  const { handleError } = useErrorHandler()
+  const defaultErrorHandler = useErrorHandler()
+  const { handleError } = errorHandler || defaultErrorHandler
 
   const handleActionSelect = useCallback(
     async (action: any, data?: any) => {
       if (action.id === 'grammar') {
+        if (!scope.position.text) {
+          handleError(new Error('Please select some text before using AI actions.'))
+          return
+        }
         setProcessingAction('grammar')
         try {
           await handleGrammarFix(editor, scope, modelName)
@@ -32,17 +38,27 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName }: UseAc
         } finally {
           setProcessingAction(null)
         }
-      } else if (action.id === 'translate' && data?.targetLanguage) {
-        setProcessingAction('translate')
-        try {
-          await handleTranslate(editor, scope, modelName, data.targetLanguage)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
+      } else if (action.id === 'translate') {
+        if (data?.targetLanguage) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('translate')
+          try {
+            await handleTranslate(editor, scope, modelName, data.targetLanguage)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
         }
       } else if (action.id === 'readability') {
+        if (!scope.position.text) {
+          handleError(new Error('Please select some text before using AI actions.'))
+          return
+        }
         setProcessingAction('readability')
         try {
           await handleClarityImprovement(editor, scope, modelName)
@@ -52,35 +68,53 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName }: UseAc
         } finally {
           setProcessingAction(null)
         }
-      } else if (action.id === 'length' && data?.percentage !== undefined) {
-        setProcessingAction('length')
-        try {
-          await handleAdjustLength(editor, scope, modelName, data.percentage)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
+      } else if (action.id === 'length') {
+        if (data?.percentage !== undefined) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('length')
+          try {
+            await handleAdjustLength(editor, scope, modelName, data.percentage)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
         }
-      } else if (action.id === 'readingLevel' && data?.readingLevel !== undefined) {
-        setProcessingAction('readingLevel')
-        try {
-          await handleReadingLevel(editor, scope, modelName, data.readingLevel)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
+      } else if (action.id === 'readingLevel') {
+        if (data?.readingLevel !== undefined) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('readingLevel')
+          try {
+            await handleReadingLevel(editor, scope, modelName, data.readingLevel)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
         }
-      } else if (action.id === 'audience' && data?.targetAudience) {
-        setProcessingAction('audience')
-        try {
-          await handleTargetAudience(editor, scope, modelName, data.targetAudience)
-          resetScope()
-        } catch (error) {
-          handleError(error as Error)
-        } finally {
-          setProcessingAction(null)
+      } else if (action.id === 'audience') {
+        if (data?.targetAudience) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('audience')
+          try {
+            await handleTargetAudience(editor, scope, modelName, data.targetAudience)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
         }
       }
     },
