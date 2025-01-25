@@ -10,7 +10,6 @@ const INTENTS = [
       { code: 'explain', name: 'Explain' },
       { code: 'inform', name: 'Inform' },
       { code: 'describe', name: 'Describe' },
-      { code: 'analyze', name: 'Analyze' },
       { code: 'instruct', name: 'Instruct' },
     ],
   },
@@ -38,7 +37,6 @@ const INTENTS = [
     group: 'Professional',
     intents: [
       { code: 'report', name: 'Report' },
-      { code: 'summarize', name: 'Summarize' },
       { code: 'document', name: 'Document' },
       { code: 'present', name: 'Present' },
       { code: 'review', name: 'Review' },

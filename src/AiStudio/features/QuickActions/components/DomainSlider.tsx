@@ -5,36 +5,30 @@ import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { ActionPopover, PopoverHeader, PopoverContent, ActionPopoverRef } from './ActionPopover'
 
-interface ReadingLevelSliderProps {
+interface DomainSliderProps {
   trigger: React.ReactNode
   onValueChange?: (value: number) => void
-  onReadingLevelSelect?: (level: number) => void
+  onDomainSelect?: (domain: number) => void
   onOpen?: () => void
   onClose?: () => void
 }
 
 const SLIDER_MARKS = [
-  { value: 1, label: 'Very Easy' },
-  { value: 2, label: 'Easy' },
-  { value: 3, label: 'Fairly Easy' },
-  { value: 4, label: 'Standard' },
-  { value: 5, label: 'Fairly Hard' },
-  { value: 6, label: 'Hard' },
-  { value: 7, label: 'Very Hard' },
+  { value: 1, label: 'Journalistic' },
+  { value: 2, label: 'Creative' },
+  { value: 3, label: 'Business' },
+  { value: 4, label: 'General' },
+  { value: 5, label: 'Academic' },
+  { value: 6, label: 'Technical' },
+  { value: 7, label: 'Legal' },
 ]
 
-export const ReadingLevelSlider = ({
-  trigger,
-  onValueChange,
-  onReadingLevelSelect,
-  onOpen,
-  onClose,
-}: ReadingLevelSliderProps) => {
-  const [value, setValue] = useState([4]) // Default to Standard
+export const DomainSlider = ({ trigger, onValueChange, onDomainSelect, onOpen, onClose }: DomainSliderProps) => {
+  const [value, setValue] = useState([4]) // Default to General Writing
   const popoverRef = useRef<ActionPopoverRef>(null)
 
   const resetValue = useCallback(() => {
-    setValue([4]) // Reset to Standard
+    setValue([4]) // Reset to General Writing
     onValueChange?.(4)
   }, [onValueChange])
 
@@ -47,9 +41,9 @@ export const ReadingLevelSlider = ({
   )
 
   const handleConfirm = useCallback(() => {
-    onReadingLevelSelect?.(value[0])
+    onDomainSelect?.(value[0])
     popoverRef.current?.close()
-  }, [value, onReadingLevelSelect])
+  }, [value, onDomainSelect])
 
   const handleOpen = useCallback(() => {
     resetValue()
@@ -61,9 +55,9 @@ export const ReadingLevelSlider = ({
   }
 
   return (
-    <ActionPopover ref={popoverRef} id="readingLevel" trigger={trigger} onOpen={handleOpen} onClose={onClose}>
+    <ActionPopover ref={popoverRef} id="domain" trigger={trigger} onOpen={handleOpen} onClose={onClose}>
       <PopoverContent>
-        <PopoverHeader title="Reading Level">
+        <PopoverHeader title="Writing Domain">
           <div className="flex items-center gap-2">
             <div className="text-right">
               <div className="text-sm text-neutral-500 dark:text-neutral-400">{getCurrentMark(value[0])?.label}</div>
@@ -100,9 +94,9 @@ export const ReadingLevelSlider = ({
             <Slider.Thumb className="block w-5 h-5 bg-white dark:bg-neutral-800 border-2 border-emerald-500 hover:border-emerald-600 dark:border-emerald-400 dark:hover:border-emerald-300 rounded-full focus:outline-none" />
           </Slider.Root>
           <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 mt-4 px-[10px]">
-            <span>Very Easy</span>
-            <span>Standard</span>
-            <span>Very Hard</span>
+            <span>Professional</span>
+            <span>General</span>
+            <span>Specialized</span>
           </div>
         </div>
       </PopoverContent>

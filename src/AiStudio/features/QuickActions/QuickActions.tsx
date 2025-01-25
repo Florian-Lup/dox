@@ -3,17 +3,15 @@ import {
   Languages,
   BookOpen,
   Users,
-  Palette,
   MessageCircle,
-  Target,
   Maximize2,
-  RefreshCw,
   GraduationCap,
   Globe2,
   FileText,
   ListTree,
-  List,
   Quote,
+  Goal,
+  FlaskConical,
 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner'
@@ -25,6 +23,7 @@ import { ReadingLevelSlider } from './components/ReadingLevelSlider'
 import { TargetAudienceInput } from './components/TargetAudienceInput'
 import { IntentPicker } from './components/IntentPicker'
 import { TonePicker } from './components/TonePicker'
+import { DomainSlider } from './components/DomainSlider'
 import { cn } from '@/lib/utils'
 
 const QUICK_ACTIONS = [
@@ -86,17 +85,17 @@ const QUICK_ACTIONS = [
   },
   {
     id: 'intent',
-    icon: <Target className="w-4 h-4 text-red-500" />,
+    icon: <Goal className="w-4 h-4 text-red-500" />,
     color: 'text-red-500',
     label: 'Intent',
     description: 'Optimize text for specific purpose (persuade, inform, engage)',
   },
   {
-    id: 'style',
-    icon: <Palette className="w-4 h-4 text-pink-500" />,
+    id: 'domain',
+    icon: <FlaskConical className="w-4 h-4 text-pink-500" />,
     color: 'text-pink-500',
-    label: 'Style',
-    description: 'Modify writing style (academic, casual, professional)',
+    label: 'Domain',
+    description: 'Modify writing domain (academic, business, technical)',
   },
   {
     id: 'summarize',
@@ -111,13 +110,6 @@ const QUICK_ACTIONS = [
     color: 'text-teal-500',
     label: 'Structure',
     description: 'Organize content hierarchically with headings, paragraphs, and list layouts.',
-  },
-  {
-    id: 'bullets',
-    icon: <List className="w-4 h-4 text-amber-500" />,
-    color: 'text-amber-500',
-    label: 'Bullet Points',
-    description: 'Convert text into organized bullet points or lists',
   },
   {
     id: 'plagiarism',
@@ -262,6 +254,25 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
     [onActionSelect],
   )
 
+  const handleDomainOpen = useCallback(() => {
+    setActivePopover('domain')
+    scrollToButton('domain')
+  }, [scrollToButton])
+
+  const handleDomainChange = useCallback(
+    (action: QuickActionType) => (value: number) => {
+      // This is just for live preview/feedback, not the actual API call
+    },
+    [],
+  )
+
+  const handleDomainSelect = useCallback(
+    (action: QuickActionType) => (domain: number) => {
+      onActionSelect?.(action, { domain })
+    },
+    [onActionSelect],
+  )
+
   const renderActionButton = useCallback(
     (action: QuickActionType) => {
       const isProcessing = processingAction === action.id
@@ -384,6 +395,19 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
         )
       }
 
+      if (action.id === 'domain') {
+        return (
+          <DomainSlider
+            key={action.label}
+            trigger={button}
+            onValueChange={handleDomainChange(action)}
+            onDomainSelect={handleDomainSelect(action)}
+            onOpen={handleDomainOpen}
+            onClose={handlePopoverClose}
+          />
+        )
+      }
+
       return button
     },
     [
@@ -397,6 +421,8 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
       handleTargetAudienceSelect,
       handleToneSelect,
       handleIntentSelect,
+      handleDomainChange,
+      handleDomainSelect,
       handleTranslateOpen,
       handleLocalizeOpen,
       handleLengthOpen,
@@ -404,6 +430,7 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
       handleAudienceOpen,
       handleToneOpen,
       handleIntentOpen,
+      handleDomainOpen,
       handlePopoverClose,
       processingAction,
       handleButtonRef,

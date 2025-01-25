@@ -8,9 +8,6 @@ const TONES = [
     group: 'Professional',
     tones: [
       { code: 'formal', name: 'Formal' },
-      { code: 'business', name: 'Business' },
-      { code: 'academic', name: 'Academic' },
-      { code: 'technical', name: 'Technical' },
       { code: 'diplomatic', name: 'Diplomatic' },
     ],
   },
