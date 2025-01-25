@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import 'cal-sans'
 import { Inter } from 'next/font/google'
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex flex-col h-full">
         <main className="h-full">{children}</main>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
