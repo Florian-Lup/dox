@@ -26,10 +26,13 @@ If percentage is negative ({percentage} < 0):
 
 Critical Requirements:
 - You MUST hit the target length within 5% margin
-- Keep the same language as input (Spanish→Spanish, French→French, etc.)
 - Maintain the original tone and style
 - Stay within the existing context
 - Return ONLY the adjusted text, no explanations
+- Use the SAME LANGUAGE as the input text
+- If the input is in Spanish, respond in Spanish
+- If the input is in French, respond in French
+- And so on for any other language
 
 TEXT TO ADJUST:
 {text}
