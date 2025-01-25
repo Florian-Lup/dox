@@ -16,7 +16,7 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
     }
     return new ChatGoogleGenerativeAI({
       modelName: modelName,
-      temperature: 0.1,
+      temperature: 0.01,
       apiKey: process.env.GOOGLE_API_KEY,
       streaming: true,
     })
@@ -26,7 +26,7 @@ export const initializeAIModel = (modelName: string): BaseChatModel => {
     }
     return new ChatOpenAI({
       modelName,
-      temperature: 0.1,
+      temperature: 0.01,
       openAIApiKey: process.env.OPENAI_API_KEY,
       streaming: true,
     })
