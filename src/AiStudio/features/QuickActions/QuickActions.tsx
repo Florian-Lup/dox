@@ -10,7 +10,10 @@ import {
   RefreshCw,
   GraduationCap,
   Globe2,
-  Search,
+  FileText,
+  ListTree,
+  List,
+  Quote,
 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner'
@@ -20,6 +23,8 @@ import { RegionPicker } from './components/RegionPicker'
 import { LengthSlider } from './components/LengthSlider'
 import { ReadingLevelSlider } from './components/ReadingLevelSlider'
 import { TargetAudienceInput } from './components/TargetAudienceInput'
+import { IntentPicker } from './components/IntentPicker'
+import { TonePicker } from './components/TonePicker'
 import { cn } from '@/lib/utils'
 
 const QUICK_ACTIONS = [
@@ -39,8 +44,8 @@ const QUICK_ACTIONS = [
   },
   {
     id: 'localization',
-    icon: <Globe2 className="w-4 h-4 text-violet-500" />,
-    color: 'text-violet-500',
+    icon: <Globe2 className="w-4 h-4 text-rose-500" />,
+    color: 'text-rose-500',
     label: 'Localization',
     description: 'Adapt content for specific regions and cultures',
   },
@@ -73,13 +78,6 @@ const QUICK_ACTIONS = [
     description: 'Adapt text for a specific audience or expertise level',
   },
   {
-    id: 'style',
-    icon: <Palette className="w-4 h-4 text-pink-500" />,
-    color: 'text-pink-500',
-    label: 'Style',
-    description: 'Modify writing style (academic, casual, professional)',
-  },
-  {
     id: 'tone',
     icon: <MessageCircle className="w-4 h-4 text-yellow-500" />,
     color: 'text-yellow-500',
@@ -94,11 +92,11 @@ const QUICK_ACTIONS = [
     description: 'Optimize text for specific purpose (persuade, inform, engage)',
   },
   {
-    id: 'plagiarism',
-    icon: <Search className="w-4 h-4 text-sky-500" />,
-    color: 'text-sky-500',
-    label: 'Plagiarism Check',
-    description: 'Check for content originality and citations',
+    id: 'style',
+    icon: <Palette className="w-4 h-4 text-pink-500" />,
+    color: 'text-pink-500',
+    label: 'Style',
+    description: 'Modify writing style (academic, casual, professional)',
   },
   {
     id: 'paraphrase',
@@ -106,6 +104,34 @@ const QUICK_ACTIONS = [
     color: 'text-lime-500',
     label: 'Paraphrase',
     description: 'Rewrite text while maintaining original meaning',
+  },
+  {
+    id: 'summarize',
+    icon: <FileText className="w-4 h-4 text-orange-500" />,
+    color: 'text-orange-500',
+    label: 'Summarize',
+    description: 'Generate key points and condensed versions of text',
+  },
+  {
+    id: 'structure',
+    icon: <ListTree className="w-4 h-4 text-teal-500" />,
+    color: 'text-teal-500',
+    label: 'Structure',
+    description: 'Organize content hierarchically with headings, paragraphs, and list layouts.',
+  },
+  {
+    id: 'bullets',
+    icon: <List className="w-4 h-4 text-amber-500" />,
+    color: 'text-amber-500',
+    label: 'Bullet Points',
+    description: 'Convert text into organized bullet points or lists',
+  },
+  {
+    id: 'plagiarism',
+    icon: <Quote className="w-4 h-4 text-sky-500" />,
+    color: 'text-sky-500',
+    label: 'Plagiarism Check',
+    description: 'Check for content originality and citations',
   },
 ] as const
 
@@ -156,6 +182,16 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
   const handleAudienceOpen = useCallback(() => {
     setActivePopover('audience')
     scrollToButton('audience')
+  }, [scrollToButton])
+
+  const handleToneOpen = useCallback(() => {
+    setActivePopover('tone')
+    scrollToButton('tone')
+  }, [scrollToButton])
+
+  const handleIntentOpen = useCallback(() => {
+    setActivePopover('intent')
+    scrollToButton('intent')
   }, [scrollToButton])
 
   const handlePopoverClose = useCallback(() => {
@@ -215,6 +251,20 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
   const handleTargetAudienceSelect = useCallback(
     (action: QuickActionType) => (audience: string) => {
       onActionSelect?.(action, { targetAudience: audience })
+    },
+    [onActionSelect],
+  )
+
+  const handleToneSelect = useCallback(
+    (action: QuickActionType) => (tone: any) => {
+      onActionSelect?.(action, { tone })
+    },
+    [onActionSelect],
+  )
+
+  const handleIntentSelect = useCallback(
+    (action: QuickActionType) => (intent: any) => {
+      onActionSelect?.(action, { intent })
     },
     [onActionSelect],
   )
@@ -317,6 +367,30 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
         )
       }
 
+      if (action.id === 'tone') {
+        return (
+          <TonePicker
+            key={action.label}
+            trigger={button}
+            onToneSelect={handleToneSelect(action)}
+            onOpen={handleToneOpen}
+            onClose={handlePopoverClose}
+          />
+        )
+      }
+
+      if (action.id === 'intent') {
+        return (
+          <IntentPicker
+            key={action.label}
+            trigger={button}
+            onIntentSelect={handleIntentSelect(action)}
+            onOpen={handleIntentOpen}
+            onClose={handlePopoverClose}
+          />
+        )
+      }
+
       return button
     },
     [
@@ -328,11 +402,15 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
       handleReadingLevelChange,
       handleReadingLevelSelect,
       handleTargetAudienceSelect,
+      handleToneSelect,
+      handleIntentSelect,
       handleTranslateOpen,
       handleLocalizeOpen,
       handleLengthOpen,
       handleReadingLevelOpen,
       handleAudienceOpen,
+      handleToneOpen,
+      handleIntentOpen,
       handlePopoverClose,
       processingAction,
       handleButtonRef,

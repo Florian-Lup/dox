@@ -8,6 +8,8 @@ import { handleClarityImprovement } from '../actions/ImproveClarity'
 import { handleAdjustLength } from '../actions/AdjustLength'
 import { handleReadingLevel } from '../actions/ReadingLevel'
 import { handleTargetAudience } from '../actions/TargetAudience'
+import { handleTone } from '../actions/tone'
+import { handleIntent } from '../actions/intent'
 import { useErrorHandler } from '../../../core/error/hooks/useErrorHandler'
 
 interface UseActionHandlerProps {
@@ -126,6 +128,38 @@ export const useActionHandler = ({ editor, scope, resetScope, modelName, errorHa
           setProcessingAction('audience')
           try {
             await handleTargetAudience(editor, scope, modelName, data.targetAudience)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
+        }
+      } else if (action.id === 'tone') {
+        if (data?.tone) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('tone')
+          try {
+            await handleTone(editor, scope, modelName, data.tone)
+            resetScope()
+          } catch (error) {
+            handleError(error as Error)
+          } finally {
+            setProcessingAction(null)
+          }
+        }
+      } else if (action.id === 'intent') {
+        if (data?.intent) {
+          if (!scope.position.text) {
+            handleError(new Error('Please select some text before using AI actions.'))
+            return
+          }
+          setProcessingAction('intent')
+          try {
+            await handleIntent(editor, scope, modelName, data.intent)
             resetScope()
           } catch (error) {
             handleError(error as Error)
