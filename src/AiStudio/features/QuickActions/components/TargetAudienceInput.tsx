@@ -66,7 +66,7 @@ export const TargetAudienceInput = ({
               'relative h-7 w-7 transition-colors rounded-full',
               !audience.trim()
                 ? 'text-neutral-300 dark:text-neutral-600 hover:text-neutral-300 dark:hover:text-neutral-600 cursor-not-allowed'
-                : 'text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-950 before:absolute before:inset-0 before:rounded-full before:border-2 before:border-t-emerald-500 before:border-r-emerald-500 before:border-b-transparent before:border-l-transparent dark:before:border-t-emerald-400 dark:before:border-r-emerald-400 before:animate-[spin_1s_linear_infinite]',
+                : 'text-neutral-600 hover:text-neutral-700 hover:bg-neutral-50 dark:text-neutral-400 dark:hover:text-neutral-300 dark:hover:bg-neutral-800 before:absolute before:inset-0 before:rounded-full before:border-2 before:border-t-neutral-600 before:border-r-neutral-600 before:border-b-transparent before:border-l-transparent dark:before:border-t-neutral-400 dark:before:border-r-neutral-400 before:animate-[spin_1s_linear_infinite]',
             )}
             onClick={handleConfirm}
           >
@@ -79,7 +79,7 @@ export const TargetAudienceInput = ({
             onChange={handleTextareaChange}
             onKeyDown={handleKeyDown}
             placeholder="Describe your target audience (e.g., 'technical professionals', 'high school students', 'marketing executives')"
-            className="w-full h-24 px-3 py-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 resize-none"
+            className="w-full h-24 px-3 py-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-400 resize-none"
           />
           <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 mt-4 px-[10px]">
             <span>Press Enter to confirm</span>

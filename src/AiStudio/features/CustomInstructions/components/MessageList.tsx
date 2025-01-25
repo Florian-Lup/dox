@@ -6,6 +6,16 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ messages }: MessageListProps) => {
+  if (messages.length === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-4">
+        <p className="text-neutral-500 dark:text-neutral-400 text-sm text-center">
+          AI-powered chat features coming soon...
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.map(message => (
@@ -20,7 +30,7 @@ export const MessageList = ({ messages }: MessageListProps) => {
             className={cn(
               'px-4 py-2 rounded-lg',
               message.role === 'user'
-                ? 'bg-emerald-500 text-white'
+                ? 'bg-neutral-600 text-white'
                 : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white',
             )}
           >

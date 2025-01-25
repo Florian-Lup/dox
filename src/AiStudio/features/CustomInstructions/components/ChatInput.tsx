@@ -39,14 +39,14 @@ export const ChatInput = ({ onSend, onClear, isLoading }: ChatInputProps) => {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="flex-1 min-h-[80px] p-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 resize-none"
+          className="flex-1 min-h-[80px] p-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-400 resize-none"
           disabled={isLoading}
         />
         <div className="flex flex-col gap-2">
           <Button
             onClick={handleSend}
             disabled={!message.trim() || isLoading}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white"
+            className="bg-neutral-600 hover:bg-neutral-700 text-white"
           >
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </Button>
