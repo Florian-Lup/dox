@@ -11,7 +11,7 @@ import '@/styles/index.css'
 import { EditorHeader } from './components/EditorHeader'
 import { TextMenu } from '../menus/TextMenu'
 import { ContentItemMenu } from '../menus/ContentItemMenu'
-import { AiStudio } from '@/AiStudio/AiStudio'
+import { AiStudio } from '../AiStudio/AiStudio'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
