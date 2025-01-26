@@ -16,20 +16,20 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://doxai.vercel.app/'),
-  title: 'Dox AI',
+  metadataBase: new URL('https://littera.vercel.app/'),
+  title: 'Littera',
   description:
-    'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+    'Littera is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   robots: 'noindex, nofollow',
   twitter: {
     card: 'summary',
-    site: '@doxai',
-    creator: '@doxai',
+    site: '@littera',
+    creator: '@littera',
   },
   openGraph: {
-    title: 'Dox AI',
+    title: 'Littera',
     description:
-      'Dox AI is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+      'Littera is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
   },
 }
 

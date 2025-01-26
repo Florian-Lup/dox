@@ -1,6 +1,6 @@
-# Dox - AI-Powered Document Editor
+# Littera - AI-Powered Document Editor
 
-Dox is a modern, feature-rich text editor that integrates traditional tools with advanced AI to elevate your content
+Littera is a modern, feature-rich text editor that integrates traditional tools with advanced AI to elevate your content
 creation. Built on TipTap and powered by LangChain, it delivers a seamless and intelligent writing experience.
 
 ## Features
