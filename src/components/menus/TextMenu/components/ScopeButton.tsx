@@ -50,7 +50,7 @@ export const ScopeButton = memo(({ editor, onDrawerOpenChange }: ScopeButtonProp
           disabled={isOverLimit}
           className={cn(isOverLimit && 'opacity-50 cursor-not-allowed')}
         >
-          <Icon name="AtSign" className={getButtonColor()} />
+          <Icon name="Brackets" className={getButtonColor()} />
         </Toolbar.Button>
       </Tooltip>
 

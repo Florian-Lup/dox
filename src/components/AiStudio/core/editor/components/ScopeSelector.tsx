@@ -43,8 +43,8 @@ export const ScopeSelector = ({ className, scope, onReset }: ScopeSelectorProps)
               </Popover.Close>
             </div>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Select text in the editor with (@) button to define the scope of AI actions. The scope determines which
-              part of your text will be affected.
+              Select text in the editor with the brackets button [ ] to define the scope of AI actions. The scope
+              determines which part of your text will be affected. (max 1000 characters)
             </p>
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between gap-3">
