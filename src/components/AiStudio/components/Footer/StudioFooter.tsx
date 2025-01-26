@@ -35,7 +35,7 @@ export const StudioFooter = ({
               <button type="button" className="flex items-center gap-1 text-xs font-medium leading-none group">
                 <Thermometer className="w-3.5 h-3.5 text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300" />
                 <span className="text-neutral-900 dark:text-white group-hover:text-neutral-700 dark:group-hover:text-neutral-300">
-                  {temperature.toFixed(1)}
+                  {temperature.toFixed(2)}
                 </span>
               </button>
             </Popover.Trigger>
