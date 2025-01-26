@@ -21,9 +21,19 @@ export const LLM_MODELS = [
     description: 'Lightweight and fast Llama model',
   },
   {
+    id: 'mistral-large-latest',
+    name: 'Mistral Large',
+    description: 'Most capable Mistral model with enhanced reasoning',
+  },
+  {
+    id: 'mistral-small-latest',
+    name: 'Mistral Small',
+    description: 'Fast and efficient for general tasks',
+  },
+  {
     id: 'accounts/fireworks/models/deepseek-v3',
     name: 'deepseek-v3',
-    description: 'A a strong Mixture-of-Experts (MoE) language model',
+    description: 'A strong Mixture-of-Experts (MoE) language model',
   },
   {
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',

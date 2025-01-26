@@ -2,6 +2,7 @@ import { ChatOpenAI } from '@langchain/openai'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { ChatFireworks } from '@langchain/community/chat_models/fireworks'
+import { ChatMistralAI } from '@langchain/mistralai'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 
 export interface StreamResponse {
@@ -13,6 +14,7 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
   const isGemini = modelName.startsWith('gemini')
   const isClaude = modelName.startsWith('claude')
   const isFireworks = modelName.startsWith('accounts/fireworks')
+  const isMistral = modelName.startsWith('mistral-')
 
   if (isGemini) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -42,6 +44,16 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
       modelName: modelName,
       temperature: temperature,
       fireworksApiKey: process.env.FIREWORKS_API_KEY,
+      streaming: true,
+    })
+  } else if (isMistral) {
+    if (!process.env.MISTRAL_API_KEY) {
+      throw new Error('Mistral API key not found')
+    }
+    return new ChatMistralAI({
+      modelName: modelName,
+      temperature: temperature,
+      apiKey: process.env.MISTRAL_API_KEY,
       streaming: true,
     })
   } else {
