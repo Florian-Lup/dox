@@ -8,6 +8,8 @@ export const LLM_MODELS = [
   { id: 'gpt-4o-mini', name: 'gpt-4o-mini', description: 'Fast and cost-effective model' },
   { id: 'gemini-1.5-pro', name: 'gemini-1.5-pro', description: 'Advanced reasoning and long context' },
   { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash', description: 'Quick responses with high efficiency' },
+  { id: 'claude-3-5-haiku-20241022', name: 'claude-3.5-haiku', description: 'Fast and efficient for shorter tasks' },
+  { id: 'claude-3-5-sonnet-20241022', name: 'claude-3.5-sonnet', description: 'High performance and capabilities' },
 ] as const
 
 export type LLMModel = (typeof LLM_MODELS)[number]

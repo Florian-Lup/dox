@@ -1,5 +1,6 @@
 import { ChatOpenAI } from '@langchain/openai'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
+import { ChatAnthropic } from '@langchain/anthropic'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 
 export interface StreamResponse {
@@ -9,6 +10,7 @@ export interface StreamResponse {
 
 export const initializeAIModel = (modelName: string, temperature: number = 0.5): BaseChatModel => {
   const isGemini = modelName.startsWith('gemini')
+  const isClaude = modelName.startsWith('claude')
 
   if (isGemini) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -18,6 +20,16 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
       modelName: modelName,
       temperature: temperature,
       apiKey: process.env.GOOGLE_API_KEY,
+      streaming: true,
+    })
+  } else if (isClaude) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('Anthropic API key not found')
+    }
+    return new ChatAnthropic({
+      modelName: modelName,
+      temperature: temperature,
+      anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       streaming: true,
     })
   } else {
