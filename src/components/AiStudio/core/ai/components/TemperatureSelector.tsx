@@ -28,7 +28,7 @@ export const TemperatureSelector = ({ temperature, onTemperatureChange }: Temper
             value={[localTemperature]}
             max={1}
             min={0}
-            step={0.1}
+            step={0.01}
             onValueChange={handleValueChange}
           >
             <Slider.Track className="bg-neutral-200 dark:bg-neutral-800 relative grow rounded-full h-1">
@@ -43,7 +43,7 @@ export const TemperatureSelector = ({ temperature, onTemperatureChange }: Temper
             />
           </Slider.Root>
           <span className="text-sm font-medium text-neutral-900 dark:text-white min-w-[36px] text-right">
-            {localTemperature.toFixed(1)}
+            {localTemperature.toFixed(2)}
           </span>
         </div>
       </div>
