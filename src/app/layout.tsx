@@ -16,10 +16,10 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://littera.vercel.app/'),
+  metadataBase: new URL('https://trylittera.vercel.app/'),
   title: 'Littera',
   description:
-    'Littera is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+    'Littera is a modern, feature-rich text editor that integrates traditional tools with advanced AI to elevate your content creation.',
   robots: 'noindex, nofollow',
   twitter: {
     card: 'summary',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Littera',
     description:
-      'Littera is a suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+      'Littera is a modern, feature-rich text editor that integrates traditional tools with advanced AI to elevate your content creation.',
   },
 }
 
