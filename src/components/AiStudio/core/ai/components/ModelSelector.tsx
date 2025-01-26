@@ -4,41 +4,54 @@ import * as Popover from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 
 export const LLM_MODELS = [
-  { id: 'gpt-4o', name: 'gpt-4o', description: 'Most capable for complex tasks' },
-  { id: 'gpt-4o-mini', name: 'gpt-4o-mini', description: 'Fast and cost-effective model' },
-  { id: 'gemini-1.5-pro', name: 'gemini-1.5-pro', description: 'Advanced reasoning and long context' },
-  { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash', description: 'Quick responses with high efficiency' },
-  { id: 'claude-3-5-haiku-20241022', name: 'claude-3.5-haiku', description: 'Fast and efficient for shorter tasks' },
-  { id: 'claude-3-5-sonnet-20241022', name: 'claude-3.5-sonnet', description: 'High performance and capabilities' },
+  { id: 'gpt-4o', name: 'GPT-4o', description: 'Exceptional at complex reasoning and creative tasks' },
+  { id: 'gpt-4o-mini', name: 'GPT-4o-mini', description: 'Balanced performance with faster response times' },
+  { id: 'gemini-1.5-pro', name: 'Gemini-1.5-pro', description: 'Excels at long-form content and analysis' },
+  { id: 'gemini-1.5-flash', name: 'Gemini-1.5-flash', description: 'Optimized for rapid responses and chat' },
+  {
+    id: 'claude-3-5-haiku-20241022',
+    name: 'Claude-3.5-haiku',
+    description: 'Sharp and concise responses with low latency',
+  },
+  {
+    id: 'claude-3-5-sonnet-20241022',
+    name: 'Claude-3.5-sonnet',
+    description: 'Strong at research and detailed explanations',
+  },
   {
     id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
     name: 'Llama 3.3-70b',
-    description: 'Latest Llama model with enhanced capabilities',
+    description: 'Powerful open model with broad capabilities',
   },
   {
     id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
     name: 'Llama 3.2-1b',
-    description: 'Lightweight and fast Llama model',
+    description: 'Fast responses with efficient resource usage',
   },
   {
     id: 'mistral-large-latest',
     name: 'Mistral Large',
-    description: 'Most capable Mistral model with enhanced reasoning',
+    description: 'Excellent at coding and technical writing',
   },
   {
     id: 'mistral-small-latest',
     name: 'Mistral Small',
-    description: 'Fast and efficient for general tasks',
+    description: 'Quick responses for everyday tasks',
+  },
+  {
+    id: 'grok-2-latest',
+    name: 'Grok-2',
+    description: 'Strong at current events and witty responses',
   },
   {
     id: 'accounts/fireworks/models/deepseek-v3',
-    name: 'deepseek-v3',
-    description: 'A strong Mixture-of-Experts (MoE) language model',
+    name: 'Deepseek-v3',
+    description: 'Expert at code, math, and scientific tasks',
   },
   {
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
-    name: 'qwen-2.5-72b',
-    description: 'Qwen2.5 are a series of decoder-only language models',
+    name: 'Qwen-2.5-72b',
+    description: 'Superior multilingual and cross-cultural understanding',
   },
 ] as const
 

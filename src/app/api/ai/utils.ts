@@ -3,6 +3,7 @@ import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatAnthropic } from '@langchain/anthropic'
 import { ChatFireworks } from '@langchain/community/chat_models/fireworks'
 import { ChatMistralAI } from '@langchain/mistralai'
+import { ChatXAI } from '@langchain/xai'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 
 export interface StreamResponse {
@@ -15,6 +16,7 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
   const isClaude = modelName.startsWith('claude')
   const isFireworks = modelName.startsWith('accounts/fireworks')
   const isMistral = modelName.startsWith('mistral-')
+  const isXAI = modelName.startsWith('grok-')
 
   if (isGemini) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -54,6 +56,16 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
       modelName: modelName,
       temperature: temperature,
       apiKey: process.env.MISTRAL_API_KEY,
+      streaming: true,
+    })
+  } else if (isXAI) {
+    if (!process.env.XAI_API_KEY) {
+      throw new Error('XAI API key not found')
+    }
+    return new ChatXAI({
+      model: modelName,
+      temperature: temperature,
+      apiKey: process.env.XAI_API_KEY,
       streaming: true,
     })
   } else {
