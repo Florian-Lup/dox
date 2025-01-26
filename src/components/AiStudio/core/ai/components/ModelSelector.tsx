@@ -10,6 +10,26 @@ export const LLM_MODELS = [
   { id: 'gemini-1.5-flash', name: 'gemini-1.5-flash', description: 'Quick responses with high efficiency' },
   { id: 'claude-3-5-haiku-20241022', name: 'claude-3.5-haiku', description: 'Fast and efficient for shorter tasks' },
   { id: 'claude-3-5-sonnet-20241022', name: 'claude-3.5-sonnet', description: 'High performance and capabilities' },
+  {
+    id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
+    name: 'Llama 3.3-70b',
+    description: 'Latest Llama model with enhanced capabilities',
+  },
+  {
+    id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
+    name: 'Llama 3.2-1b',
+    description: 'Lightweight and fast Llama model',
+  },
+  {
+    id: 'accounts/fireworks/models/deepseek-v3',
+    name: 'deepseek-v3',
+    description: 'A a strong Mixture-of-Experts (MoE) language model',
+  },
+  {
+    id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
+    name: 'qwen-2.5-72b',
+    description: 'Qwen2.5 are a series of decoder-only language models',
+  },
 ] as const
 
 export type LLMModel = (typeof LLM_MODELS)[number]

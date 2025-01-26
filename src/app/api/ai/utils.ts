@@ -1,6 +1,7 @@
 import { ChatOpenAI } from '@langchain/openai'
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { ChatAnthropic } from '@langchain/anthropic'
+import { ChatFireworks } from '@langchain/community/chat_models/fireworks'
 import { BaseChatModel } from '@langchain/core/language_models/chat_models'
 
 export interface StreamResponse {
@@ -11,6 +12,7 @@ export interface StreamResponse {
 export const initializeAIModel = (modelName: string, temperature: number = 0.5): BaseChatModel => {
   const isGemini = modelName.startsWith('gemini')
   const isClaude = modelName.startsWith('claude')
+  const isFireworks = modelName.startsWith('accounts/fireworks')
 
   if (isGemini) {
     if (!process.env.GOOGLE_API_KEY) {
@@ -32,6 +34,16 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
       anthropicApiKey: process.env.ANTHROPIC_API_KEY,
       streaming: true,
     })
+  } else if (isFireworks) {
+    if (!process.env.FIREWORKS_API_KEY) {
+      throw new Error('Fireworks API key not found')
+    }
+    return new ChatFireworks({
+      modelName: modelName,
+      temperature: temperature,
+      fireworksApiKey: process.env.FIREWORKS_API_KEY,
+      streaming: true,
+    })
   } else {
     if (!process.env.OPENAI_API_KEY) {
       throw new Error('OpenAI API key not found')
@@ -47,9 +59,9 @@ export const initializeAIModel = (modelName: string, temperature: number = 0.5):
 
 export const createStreamingResponse = async (
   streamGenerator: AsyncGenerator<string>,
-  chunkSize = 3, // Number of characters to send in each chunk
-  bufferThreshold = 20, // Minimum characters to accumulate before starting to stream
-  streamInterval = 30, // Milliseconds between each chunk sent
+  chunkSize = 3,
+  bufferThreshold = 20,
+  streamInterval = 30,
 ): Promise<Response> => {
   const encoder = new TextEncoder()
   const stream = new TransformStream()
@@ -60,16 +72,12 @@ export const createStreamingResponse = async (
       let buffer = ''
       let isStreaming = false
 
-      // Accumulate initial content
       for await (const chunk of streamGenerator) {
         if (chunk) {
           buffer += chunk
 
-          // Start streaming once we have enough content
           if (!isStreaming && buffer.length >= bufferThreshold) {
             isStreaming = true
-
-            // Start the streaming process in a separate async function
             ;(async () => {
               while (buffer.length > 0) {
                 const sendSize = Math.min(chunkSize, buffer.length)
@@ -88,7 +96,6 @@ export const createStreamingResponse = async (
         }
       }
 
-      // Handle any remaining buffer content
       if (buffer.length > 0) {
         while (buffer.length > 0) {
           const sendSize = Math.min(chunkSize, buffer.length)
