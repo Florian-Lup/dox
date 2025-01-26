@@ -29,7 +29,7 @@ const ModelButton = ({ model, isActive, onClick }: ModelButtonProps) => {
     <button
       onClick={handleClick}
       className={cn(
-        'flex flex-col gap-1 p-2 text-left rounded transition-colors',
+        'flex flex-col gap-0.5 py-1.5 px-2 text-left rounded transition-colors',
         'hover:bg-neutral-100 dark:hover:bg-neutral-800',
         isActive && 'bg-neutral-100 dark:bg-neutral-800',
       )}
@@ -72,9 +72,10 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
             'bg-white dark:bg-neutral-900 rounded-lg',
             'shadow-lg border border-neutral-200 dark:border-neutral-800',
             'focus:outline-none select-none z-[9999]',
+            'max-h-[400px] overflow-hidden',
           )}
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-medium text-neutral-900 dark:text-white">Model</h3>
               <Popover.Close className="w-6 h-6 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none flex items-center justify-center">
@@ -85,7 +86,7 @@ export const ModelSelector = ({ selectedModel, onModelSelect }: ModelSelectorPro
               Choose the AI model that best fits your needs. More capable models can handle complex tasks but may be
               slower.
             </p>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5 overflow-y-auto max-h-[280px] pr-2 -mr-2">
               {LLM_MODELS.map(model => (
                 <ModelButton
                   key={model.id}
