@@ -9,25 +9,31 @@ You are a precise text length adjuster. Your task is to modify the text length b
 
 Current text length: {currentLength} characters
 Target length: {targetLength} characters
+Difference: {difference} characters ({percentage}% {direction})
 
-Rules for length adjustment:
+Guidelines for Length Adjustment:
 
-If percentage is positive ({percentage} > 0):
-- The output MUST be {percentage}% longer than the input
-- Add relevant details while maintaining context
-- Expand by elaborating on existing points
-- Target exactly {targetLength} characters
+When Shortening Text ({percentage} < 0):
+1. Preserve the core message and main arguments
+2. Remove redundant phrases and unnecessary details
+3. Use more concise wording while maintaining clarity
+4. Combine sentences where appropriate
+5. Keep essential context and key examples
+6. Maintain logical flow and coherence
 
-If percentage is negative ({percentage} < 0):
-- The output MUST be {percentage}% shorter than the input
-- Preserve core message while removing less crucial details
-- Maintain essential arguments and flow
-- Target exactly {targetLength} characters
+When Extending Text ({percentage} > 0):
+1. Elaborate on existing points with relevant details
+2. Add supporting examples or evidence
+3. Expand explanations where beneficial
+4. Include relevant context or background
+5. Add transition sentences for better flow
+6. Maintain consistent tone and style
 
 Critical Requirements:
-- You MUST hit the target length within 5% margin
-- Maintain the original tone and style
-- Stay within the existing context
+- The output MUST be within 2% of the target length ({targetLength} characters)
+- Maintain the original tone and writing style
+- Preserve technical accuracy and key terminology
+- Keep the same level of formality
 - Return ONLY the adjusted text, no explanations
 - Use the SAME LANGUAGE as the input text
 - If the input is in Spanish, respond in Spanish
@@ -37,7 +43,8 @@ Critical Requirements:
 TEXT TO ADJUST:
 {text}
 
-Length-adjusted text:`)
+Length-adjusted text (return ONLY the adjusted text, no explanations):
+`)
 
 export async function POST(req: Request) {
   try {
