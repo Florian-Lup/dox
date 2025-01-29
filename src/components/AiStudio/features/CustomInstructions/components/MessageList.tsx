@@ -2,7 +2,7 @@ import { Message } from '../hooks/useChat'
 import { cn } from '@/lib/utils'
 import { Bot, Copy, Check, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { markdownComponents, markdownConfig, markdownStyles } from '../../../utils/markdown'
 
@@ -13,16 +13,7 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ messages, isProcessing = false, onStopProcessing }: MessageListProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
 
   const handleCopy = useCallback(async (text: string, messageId: string) => {
     try {
@@ -55,7 +46,7 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2 relative">
+    <div className="flex-1 overflow-y-auto p-4 space-y-2 relative scroll-smooth">
       {messages
         .filter(message => !message.isSystemSummary)
         .map(message => (
@@ -97,7 +88,6 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
             )}
           </div>
         ))}
-      <div ref={messagesEndRef} />
 
       {/* Floating Stop Button */}
       {isProcessing && onStopProcessing && (
