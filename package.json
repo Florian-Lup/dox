@@ -85,6 +85,8 @@
     "react-colorful": "^5.6.1",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
+    "react-markdown": "^9.0.3",
+    "remark-gfm": "^4.0.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
@@ -95,7 +97,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "20.4.4",

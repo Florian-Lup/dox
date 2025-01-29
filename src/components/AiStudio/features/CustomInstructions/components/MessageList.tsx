@@ -3,6 +3,8 @@ import { cn } from '@/lib/utils'
 import { Bot, Copy, Check, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useEffect, useRef, useState, useCallback } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { markdownComponents, markdownConfig, markdownStyles } from '../../../utils/markdown'
 
 interface MessageListProps {
   messages: Message[]
@@ -64,9 +66,16 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
                 message.role === 'user'
                   ? 'bg-blue-50/50 dark:bg-blue-900/20 text-neutral-800 dark:text-neutral-200'
                   : 'bg-neutral-50 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-200',
+                message.role === 'assistant' && markdownStyles,
               )}
             >
-              <p className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
+              {message.role === 'user' ? (
+                <p className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
+              ) : (
+                <ReactMarkdown {...markdownConfig} components={markdownComponents}>
+                  {message.content}
+                </ReactMarkdown>
+              )}
             </div>
             <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
