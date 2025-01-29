@@ -4,54 +4,66 @@ import * as Popover from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 
 export const LLM_MODELS = [
-  { id: 'gpt-4o', name: 'GPT-4o', description: 'Exceptional at complex reasoning and creative tasks' },
-  { id: 'gpt-4o-mini', name: 'GPT-4o-mini', description: 'Balanced performance with faster response times' },
-  { id: 'gemini-1.5-pro', name: 'Gemini-1.5-pro', description: 'Excels at long-form content and analysis' },
-  { id: 'gemini-1.5-flash', name: 'Gemini-1.5-flash', description: 'Optimized for rapid responses and chat' },
+  {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    description: 'Masterful at crafting nuanced, creative writing and long-form content',
+  },
+  { id: 'gpt-4o-mini', name: 'GPT-4o-mini', description: 'Efficient at producing polished, well-structured text' },
+  {
+    id: 'gemini-1.5-pro',
+    name: 'Gemini-1.5-pro',
+    description: 'Excels at research-based writing and detailed narratives',
+  },
+  {
+    id: 'gemini-1.5-flash',
+    name: 'Gemini-1.5-flash',
+    description: 'Perfect for quick edits and concise writing tasks',
+  },
   {
     id: 'claude-3-5-haiku-20241022',
     name: 'Claude-3.5-haiku',
-    description: 'Sharp and concise responses with low latency',
+    description: 'Specializes in crisp, precise writing with clarity',
   },
   {
     id: 'claude-3-5-sonnet-20241022',
     name: 'Claude-3.5-sonnet',
-    description: 'Strong at research and detailed explanations',
+    description: 'Expert at academic writing and in-depth analysis',
   },
   {
     id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
     name: 'Llama 3.3-70b',
-    description: 'Powerful open model with broad capabilities',
+    description: 'Versatile writer with strong creative capabilities',
   },
   {
     id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
     name: 'Llama 3.2-1b',
-    description: 'Fast responses with efficient resource usage',
+    description: 'Efficient for short-form content and quick revisions',
   },
   {
     id: 'mistral-large-latest',
     name: 'Mistral Large',
-    description: 'Excellent at coding and technical writing',
+    description: 'Skilled at technical writing and documentation',
   },
   {
     id: 'mistral-small-latest',
     name: 'Mistral Small',
-    description: 'Quick responses for everyday tasks',
+    description: 'Great for basic writing tasks and quick edits',
   },
   {
     id: 'grok-2-latest',
     name: 'Grok-2',
-    description: 'Strong at current events and witty responses',
+    description: 'Specializes in engaging, conversational writing',
   },
   {
     id: 'accounts/fireworks/models/deepseek-v3',
     name: 'Deepseek-v3',
-    description: 'Expert at code, math, and scientific tasks',
+    description: 'Excellent for technical and scientific writing',
   },
   {
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
     name: 'Qwen-2.5-72b',
-    description: 'Superior multilingual and cross-cultural understanding',
+    description: 'Expert at multilingual content and cultural adaptation',
   },
 ] as const
 
