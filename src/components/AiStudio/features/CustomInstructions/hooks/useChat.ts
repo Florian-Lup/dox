@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { LLMModel } from '../../../core/ai/components/ModelSelector'
 
 export interface Message {
   id: string
-  role: 'user' | 'assistant'
+  role: 'user' | 'assistant' | 'system'
   content: string
   timestamp: number
+  tags?: string[]
+  isSystemSummary?: boolean
 }
 
 interface UseChatProps {
@@ -16,10 +18,16 @@ interface UseChatProps {
 export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [sessionId, setSessionId] = useState<string>('')
+
+  // Initialize session ID
+  useEffect(() => {
+    setSessionId(crypto.randomUUID())
+  }, [])
 
   const sendMessage = useCallback(
     async (content: string) => {
-      if (!content.trim()) return
+      if (!content.trim() || !sessionId) return
 
       const userMessage: Message = {
         id: crypto.randomUUID(),
@@ -39,10 +47,7 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
             message: content,
             modelName: selectedModel.id,
             temperature,
-            history: messages.map(msg => ({
-              role: msg.role,
-              content: msg.content,
-            })),
+            sessionId,
           }),
         })
 
@@ -60,6 +65,8 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
 
         setMessages(prev => [...prev, assistantMessage])
 
+        let accumulatedChunks = ''
+
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
@@ -74,12 +81,33 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
                 const data = JSON.parse(jsonStr)
 
                 if (data.chunk) {
+                  accumulatedChunks += data.chunk
                   setMessages(prev => {
                     const lastMessage = prev[prev.length - 1]
                     if (lastMessage.role === 'assistant') {
-                      return [...prev.slice(0, -1), { ...lastMessage, content: lastMessage.content + data.chunk }]
+                      return [...prev.slice(0, -1), { ...lastMessage, content: accumulatedChunks }]
                     }
                     return prev
+                  })
+                }
+
+                // Handle system summaries
+                if (data.type === 'system' && data.summary) {
+                  const summaryMessage: Message = {
+                    id: crypto.randomUUID(),
+                    role: 'system',
+                    content: data.summary,
+                    timestamp: Date.now(),
+                    isSystemSummary: true,
+                  }
+                  setMessages(prev => [...prev, summaryMessage])
+                }
+
+                // Handle tags
+                if (data.tags) {
+                  setMessages(prev => {
+                    const lastMessage = prev[prev.length - 1]
+                    return [...prev.slice(0, -1), { ...lastMessage, tags: data.tags }]
                   })
                 }
               } catch (e) {
@@ -94,11 +122,13 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
         setIsLoading(false)
       }
     },
-    [selectedModel.id, temperature, messages],
+    [selectedModel.id, temperature, sessionId],
   )
 
   const clearMessages = useCallback(() => {
     setMessages([])
+    // Generate new session ID when clearing messages
+    setSessionId(crypto.randomUUID())
   }, [])
 
   return {
@@ -106,5 +136,6 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
     isLoading,
     sendMessage,
     clearMessages,
+    sessionId,
   }
 }

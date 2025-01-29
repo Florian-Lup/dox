@@ -56,7 +56,7 @@ export const AiStudio = ({ isOpen, onClose, editor }: AiStudioProps) => {
                 {activeTab === 'quick' ? (
                   <QuickActions onActionSelect={handleActionSelect} processingAction={processingAction} />
                 ) : (
-                  <ChatContainer selectedModel={selectedModel} />
+                  <ChatContainer selectedModel={selectedModel} temperature={temperature} />
                 )}
               </div>
 
