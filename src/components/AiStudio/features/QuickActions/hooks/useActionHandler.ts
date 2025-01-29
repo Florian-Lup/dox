@@ -120,7 +120,7 @@ export const useActionHandler = ({
 
       // Only check for text selection if we're actually executing the action
       if (!scope.position.text) {
-        handleError(new Error('Please select some text before using AI actions.'))
+        handleError(new Error('Select text and define scope with [ ]'))
         return
       }
 

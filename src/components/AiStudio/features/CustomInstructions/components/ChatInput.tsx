@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
-import { Button } from '@/components/ui/Button'
-import { Send, Loader2, Trash2 } from 'lucide-react'
+import { useState, useCallback, useRef, useEffect } from 'react'
+import { ArrowUp, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -10,11 +10,29 @@ interface ChatInputProps {
 
 export const ChatInput = ({ onSend, onClear, isLoading }: ChatInputProps) => {
   const [message, setMessage] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const adjustHeight = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto'
+      const newHeight = Math.min(textarea.scrollHeight, 200) // Max height of 200px
+      textarea.style.height = `${Math.max(50, newHeight)}px` // Min height of 50px
+    }
+  }
+
+  useEffect(() => {
+    adjustHeight()
+  }, [message])
 
   const handleSend = useCallback(() => {
     if (!message.trim() || isLoading) return
     onSend(message)
     setMessage('')
+    // Reset height after sending
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '50px'
+    }
   }, [message, isLoading, onSend])
 
   const handleKeyDown = useCallback(
@@ -32,32 +50,49 @@ export const ChatInput = ({ onSend, onClear, isLoading }: ChatInputProps) => {
   }, [])
 
   return (
-    <div className="flex flex-col gap-2 p-4 border-t border-neutral-200 dark:border-neutral-800">
-      <div className="flex gap-2">
+    <div className="p-2 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+      <div className="bg-neutral-100 dark:bg-neutral-800 rounded-[4px] overflow-hidden">
         <textarea
+          ref={textareaRef}
           value={message}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="flex-1 min-h-[80px] p-2 text-sm bg-transparent border border-neutral-200 dark:border-neutral-800 rounded-md focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-400 resize-none"
+          className={cn(
+            'w-full p-3 text-sm',
+            'bg-transparent',
+            'border-none',
+            'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
+            'focus:outline-none',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            'resize-none break-all overflow-x-hidden transition-[height]',
+          )}
           disabled={isLoading}
         />
-        <div className="flex flex-col gap-2">
-          <Button
+        <div className="flex items-center justify-between px-3 py-2">
+          <div className="flex items-center gap-2">{/* Space for future buttons */}</div>
+          <button
             onClick={handleSend}
             disabled={!message.trim() || isLoading}
-            className="bg-neutral-600 hover:bg-neutral-700 text-white"
+            className={cn(
+              'flex items-center justify-center',
+              'rounded-full',
+              'w-8 h-8',
+              'bg-blue-500',
+              'enabled:hover:bg-blue-600',
+              'enabled:active:bg-blue-700',
+              'disabled:bg-neutral-200 dark:disabled:bg-neutral-700',
+              'disabled:cursor-not-allowed',
+              'transition-all duration-200',
+              'transform enabled:hover:scale-105 enabled:active:scale-95',
+              'text-white disabled:text-neutral-400',
+              'shadow-sm enabled:hover:shadow-md',
+            )}
+            aria-label="Send message"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          </Button>
-          <Button onClick={onClear} variant="ghost" className="text-neutral-500">
-            <Trash2 className="w-4 h-4" />
-          </Button>
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+          </button>
         </div>
-      </div>
-      <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 px-2">
-        <span>Press Enter to send</span>
-        <span>Shift + Enter for new line</span>
       </div>
     </div>
   )
