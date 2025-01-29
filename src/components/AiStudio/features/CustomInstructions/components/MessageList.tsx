@@ -64,7 +64,7 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
               className={cn(
                 'px-4 py-3 text-sm w-full rounded-lg',
                 message.role === 'user'
-                  ? 'bg-blue-50/50 dark:bg-blue-900/20 text-neutral-800 dark:text-neutral-200'
+                  ? 'bg-neutral-100/80 dark:bg-neutral-800/50 text-neutral-800 dark:text-neutral-200'
                   : 'bg-neutral-50 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-200',
                 message.role === 'assistant' && markdownStyles,
               )}
@@ -77,22 +77,24 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
                 </ReactMarkdown>
               )}
             </div>
-            <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button
-                variant="ghost"
-                buttonSize="small"
-                className={cn(
-                  'h-6 px-2',
-                  copiedId === message.id
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300',
-                )}
-                onClick={createHandleCopyClick(message)}
-              >
-                {copiedId === message.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className="ml-1 text-xs">{copiedId === message.id ? 'Copied!' : 'Copy'}</span>
-              </Button>
-            </div>
+            {(!isProcessing || message.role === 'user') && (
+              <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="ghost"
+                  buttonSize="small"
+                  className={cn(
+                    'h-6 px-2',
+                    copiedId === message.id
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300',
+                  )}
+                  onClick={createHandleCopyClick(message)}
+                >
+                  {copiedId === message.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span className="ml-1 text-xs">{copiedId === message.id ? 'Copied!' : 'Copy'}</span>
+                </Button>
+              </div>
+            )}
           </div>
         ))}
       <div ref={messagesEndRef} />
