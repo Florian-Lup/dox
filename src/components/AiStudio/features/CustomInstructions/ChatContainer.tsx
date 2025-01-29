@@ -6,11 +6,12 @@ import { cn } from '@/lib/utils'
 
 interface ChatContainerProps {
   selectedModel: LLMModel
+  temperature?: number
   className?: string
 }
 
-export const ChatContainer = ({ selectedModel, className }: ChatContainerProps) => {
-  const { messages, isLoading, sendMessage, clearMessages } = useChat({ selectedModel })
+export const ChatContainer = ({ selectedModel, temperature = 0.5, className }: ChatContainerProps) => {
+  const { messages, isLoading, sendMessage, clearMessages } = useChat({ selectedModel, temperature })
 
   return (
     <div

@@ -10,9 +10,10 @@ export interface Message {
 
 interface UseChatProps {
   selectedModel: LLMModel
+  temperature?: number
 }
 
-export const useChat = ({ selectedModel }: UseChatProps) => {
+export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -37,6 +38,11 @@ export const useChat = ({ selectedModel }: UseChatProps) => {
           body: JSON.stringify({
             message: content,
             modelName: selectedModel.id,
+            temperature,
+            history: messages.map(msg => ({
+              role: msg.role,
+              content: msg.content,
+            })),
           }),
         })
 
@@ -88,7 +94,7 @@ export const useChat = ({ selectedModel }: UseChatProps) => {
         setIsLoading(false)
       }
     },
-    [selectedModel.id],
+    [selectedModel.id, temperature, messages],
   )
 
   const clearMessages = useCallback(() => {
