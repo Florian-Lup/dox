@@ -26,7 +26,7 @@ export const TemperatureSelector = ({ temperature, onTemperatureChange }: Temper
           <Slider.Root
             className="relative flex items-center select-none touch-none w-full h-5"
             value={[localTemperature]}
-            max={1}
+            max={2}
             min={0}
             step={0.01}
             onValueChange={handleValueChange}
@@ -48,8 +48,8 @@ export const TemperatureSelector = ({ temperature, onTemperatureChange }: Temper
         </div>
       </div>
       <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400 px-1">
-        <span>Consistent</span>
-        <span>Creative</span>
+        <span>Focused</span>
+        <span>Very Creative</span>
       </div>
     </div>
   )
