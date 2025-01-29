@@ -58,8 +58,8 @@ export const MessageList = ({ messages }: MessageListProps) => {
             className={cn(
               'px-4 py-3 text-sm w-full rounded-[4px]',
               message.role === 'user'
-                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-300'
-                : 'bg-neutral-50 dark:bg-neutral-850 text-neutral-800 dark:text-neutral-300',
+                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100'
+                : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-900 dark:text-emerald-100',
             )}
           >
             <p className="whitespace-pre-wrap break-all leading-relaxed">{message.content}</p>
