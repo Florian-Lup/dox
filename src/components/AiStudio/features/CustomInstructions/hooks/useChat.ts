@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { LLMModel } from '../../../core/ai/components/ModelSelector'
 
 export interface Message {
@@ -19,15 +19,27 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [sessionId, setSessionId] = useState<string>('')
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   // Initialize session ID
   useEffect(() => {
     setSessionId(crypto.randomUUID())
   }, [])
 
+  const stopGenerating = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      abortControllerRef.current = null
+      setIsLoading(false)
+    }
+  }, [])
+
   const sendMessage = useCallback(
     async (content: string) => {
       if (!content.trim() || !sessionId) return
+
+      // Create new AbortController for this request
+      abortControllerRef.current = new AbortController()
 
       const userMessage: Message = {
         id: crypto.randomUUID(),
@@ -49,6 +61,7 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
             temperature,
             sessionId,
           }),
+          signal: abortControllerRef.current.signal,
         })
 
         if (!response.ok) throw new Error('Failed to send message')
@@ -116,10 +129,22 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
             }
           }
         }
-      } catch (error) {
-        console.error('Chat error:', error)
+      } catch (error: any) {
+        if (error.name === 'AbortError') {
+          // Handle aborted request
+          setMessages(prev => {
+            const lastMessage = prev[prev.length - 1]
+            if (lastMessage.role === 'assistant') {
+              return [...prev.slice(0, -1), { ...lastMessage, content: lastMessage.content + ' [stopped]' }]
+            }
+            return prev
+          })
+        } else {
+          console.error('Chat error:', error)
+        }
       } finally {
         setIsLoading(false)
+        abortControllerRef.current = null
       }
     },
     [selectedModel.id, temperature, sessionId],
@@ -137,5 +162,6 @@ export const useChat = ({ selectedModel, temperature = 0.5 }: UseChatProps) => {
     sendMessage,
     clearMessages,
     sessionId,
+    stopGenerating,
   }
 }

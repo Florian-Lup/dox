@@ -1,14 +1,16 @@
 import { Message } from '../hooks/useChat'
 import { cn } from '@/lib/utils'
-import { Bot, Copy, Check } from 'lucide-react'
+import { Bot, Copy, Check, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useEffect, useRef, useState, useCallback } from 'react'
 
 interface MessageListProps {
   messages: Message[]
+  isProcessing?: boolean
+  onStopProcessing?: () => void
 }
 
-export const MessageList = ({ messages }: MessageListProps) => {
+export const MessageList = ({ messages, isProcessing = false, onStopProcessing }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
@@ -51,29 +53,30 @@ export const MessageList = ({ messages }: MessageListProps) => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2">
+    <div className="flex-1 overflow-y-auto p-4 space-y-2 relative">
       {messages
         .filter(message => !message.isSystemSummary)
         .map(message => (
           <div key={message.id} className="group min-w-0">
             <div
               className={cn(
-                'px-4 py-3 text-sm w-full rounded-[4px]',
+                'px-4 py-3 text-sm w-full rounded-lg',
                 message.role === 'user'
-                  ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100'
-                  : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-900 dark:text-emerald-100',
+                  ? 'bg-blue-50/50 dark:bg-blue-900/20 text-neutral-800 dark:text-neutral-200'
+                  : 'bg-neutral-50 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-200',
               )}
             >
-              <p className="whitespace-pre-wrap break-all leading-relaxed">{message.content}</p>
+              <p className="whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
             </div>
             <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
                 variant="ghost"
+                buttonSize="small"
                 className={cn(
                   'h-6 px-2',
                   copiedId === message.id
-                    ? 'text-green-600 dark:text-green-500 hover:text-green-600 dark:hover:text-green-500'
-                    : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200',
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300',
                 )}
                 onClick={createHandleCopyClick(message)}
               >
@@ -84,6 +87,29 @@ export const MessageList = ({ messages }: MessageListProps) => {
           </div>
         ))}
       <div ref={messagesEndRef} />
+
+      {/* Floating Stop Button */}
+      {isProcessing && onStopProcessing && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+          <Button
+            variant="ghost"
+            buttonSize="small"
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1.5',
+              'text-neutral-500 dark:text-neutral-400',
+              'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm',
+              'border border-neutral-200 dark:border-neutral-800',
+              'shadow-sm hover:shadow-md transition-all duration-200',
+              'hover:bg-neutral-50 dark:hover:bg-neutral-800/80',
+              'rounded-full',
+            )}
+            onClick={onStopProcessing}
+          >
+            <XCircle className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">Stop generating</span>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

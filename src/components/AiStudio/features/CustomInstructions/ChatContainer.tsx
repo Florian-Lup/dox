@@ -11,7 +11,7 @@ interface ChatContainerProps {
 }
 
 export const ChatContainer = ({ selectedModel, temperature = 0.5, className }: ChatContainerProps) => {
-  const { messages, isLoading, sendMessage, clearMessages } = useChat({ selectedModel, temperature })
+  const { messages, isLoading, sendMessage, clearMessages, stopGenerating } = useChat({ selectedModel, temperature })
 
   return (
     <div
@@ -21,7 +21,7 @@ export const ChatContainer = ({ selectedModel, temperature = 0.5, className }: C
         className,
       )}
     >
-      <MessageList messages={messages} />
+      <MessageList messages={messages} isProcessing={isLoading} onStopProcessing={stopGenerating} />
       <ChatInput onSend={sendMessage} isLoading={isLoading} onClear={clearMessages} />
     </div>
   )
