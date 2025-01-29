@@ -2,7 +2,7 @@ import { Message } from '../hooks/useChat'
 import { cn } from '@/lib/utils'
 import { Bot, Copy, Check, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { markdownComponents, markdownConfig, markdownStyles } from '../../../utils/markdown'
 
@@ -14,6 +14,37 @@ interface MessageListProps {
 
 export const MessageList = ({ messages, isProcessing = false, onStopProcessing }: MessageListProps) => {
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true)
+  const lastMessageRef = useRef<string>('')
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior, block: 'end' })
+  }, [])
+
+  // Handle automatic scrolling
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1]
+    const isNewMessage = lastMessage?.content !== lastMessageRef.current
+
+    if (isNewMessage) {
+      lastMessageRef.current = lastMessage?.content || ''
+    }
+
+    if (shouldAutoScroll && isNewMessage) {
+      scrollToBottom()
+    }
+  }, [messages, shouldAutoScroll, scrollToBottom])
+
+  // Handle scroll events
+  const handleScroll = useCallback(() => {
+    if (!containerRef.current) return
+
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+    const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50
+    setShouldAutoScroll(isAtBottom)
+  }, [])
 
   const handleCopy = useCallback(async (text: string, messageId: string) => {
     try {
@@ -46,7 +77,11 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-2 relative scroll-smooth">
+    <div
+      ref={containerRef}
+      onScroll={handleScroll}
+      className="flex-1 overflow-y-auto p-4 space-y-2 relative scroll-smooth"
+    >
       {messages
         .filter(message => !message.isSystemSummary)
         .map(message => (
@@ -111,6 +146,7 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
           </Button>
         </div>
       )}
+      <div ref={messagesEndRef} />
     </div>
   )
 }
