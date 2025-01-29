@@ -21,8 +21,8 @@ export const ChatContainer = ({ selectedModel, temperature = 0.5, className }: C
         className,
       )}
     >
-      <MessageList messages={messages} isProcessing={isLoading} onStopProcessing={stopGenerating} />
-      <ChatInput onSend={sendMessage} isLoading={isLoading} onClear={clearMessages} />
+      <MessageList messages={messages} isProcessing={isLoading} />
+      <ChatInput onSend={sendMessage} isLoading={isLoading} onClear={clearMessages} onStopGenerating={stopGenerating} />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { Message } from '../hooks/useChat'
 import { cn } from '@/lib/utils'
-import { Bot, Copy, Check, XCircle } from 'lucide-react'
+import { Bot, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -103,50 +103,29 @@ export const MessageList = ({ messages, isProcessing = false, onStopProcessing }
                 </ReactMarkdown>
               )}
             </div>
-            {(!isProcessing || message.role === 'user') && (
-              <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="ghost"
-                  buttonSize="small"
-                  className={cn(
-                    'h-6 px-2',
-                    copiedId === message.id
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300',
-                  )}
-                  onClick={createHandleCopyClick(message)}
-                >
-                  {copiedId === message.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span className="ml-1 text-xs">{copiedId === message.id ? 'Copied!' : 'Copy'}</span>
-                </Button>
-              </div>
-            )}
+            <div className="flex gap-1 mt-1 px-1">
+              {(!isProcessing || message.role === 'user') && (
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    variant="ghost"
+                    buttonSize="small"
+                    className={cn(
+                      'h-6 px-2',
+                      copiedId === message.id
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300',
+                    )}
+                    onClick={createHandleCopyClick(message)}
+                  >
+                    {copiedId === message.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span className="ml-1 text-xs">{copiedId === message.id ? 'Copied!' : 'Copy'}</span>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         ))}
-
-      {/* Floating Stop Button */}
-      {isProcessing && onStopProcessing && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <Button
-            variant="ghost"
-            buttonSize="small"
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5',
-              'text-neutral-500 dark:text-neutral-400',
-              'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm',
-              'border border-neutral-200 dark:border-neutral-800',
-              'shadow-sm hover:shadow-md transition-all duration-200',
-              'hover:bg-neutral-50 dark:hover:bg-neutral-800/80',
-              'rounded-full',
-            )}
-            onClick={onStopProcessing}
-          >
-            <XCircle className="w-3.5 h-3.5" />
-            <span className="text-xs font-medium">Stop generating</span>
-          </Button>
-        </div>
-      )}
-      <div ref={messagesEndRef} />
+      <div ref={messagesEndRef} className="pt-2" />
     </div>
   )
 }
