@@ -20,7 +20,7 @@ export const StudioFooter = ({
   onResetScope,
   selectedModel,
   onModelSelect,
-  temperature = 1.0,
+  temperature = 0.5,
   onTemperatureChange = () => {},
 }: StudioFooterProps) => {
   return (

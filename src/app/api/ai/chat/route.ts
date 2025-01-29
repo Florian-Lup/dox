@@ -9,13 +9,8 @@ import { initializeAIModel, createStreamingResponse } from '../utils'
 // Memory storage to persist conversations between requests
 const memoryStorage = new Map<string, EnhancedBufferMemory>()
 
-// Debug logging function
-const debug = (message: string, data?: any) => {
-  console.log(`[DEBUG] ${message}`, data ? JSON.stringify(data, null, 2) : '')
-}
-
 // Constants
-const MESSAGE_COUNT_THRESHOLD = 3 // Changed from 10 to 3 for testing
+const MESSAGE_COUNT_THRESHOLD = 10
 
 // Helper function to format message for conversation text
 const formatMessage = (message: BaseMessage) => {
@@ -58,7 +53,6 @@ class EnhancedBufferMemory extends BufferMemory {
     super(options)
     this.model = model
     this.sessionId = sessionId
-    debug(`Initializing EnhancedBufferMemory for session ${sessionId}`)
 
     // Initialize summarizer chain
     this.summarizer = RunnableSequence.from([
@@ -83,14 +77,10 @@ class EnhancedBufferMemory extends BufferMemory {
 
   async saveContext(inputValues: any, outputValues: any): Promise<void> {
     this.messageCount++
-    debug(
-      `Saving context for session ${this.sessionId}. Message count: ${this.messageCount}/${MESSAGE_COUNT_THRESHOLD}`,
-    )
 
     try {
       // Get tags for the input message
       const tags = await this.tagger.invoke(inputValues.input)
-      debug('Generated tags:', tags)
 
       // Create enhanced messages with tags
       const enhancedInput = new HumanMessage({
@@ -105,21 +95,15 @@ class EnhancedBufferMemory extends BufferMemory {
 
       // Add to memory
       await super.saveContext({ input: enhancedInput }, { output: enhancedOutput })
-      debug('Saved messages to memory')
 
       // Check if we need to summarize
       const memoryVariables = await this.loadMemoryVariables({})
       const chatHistory = memoryVariables.chat_history || []
-      debug('Current chat history length:', chatHistory.length)
 
       if (this.messageCount >= MESSAGE_COUNT_THRESHOLD) {
-        debug('Starting conversation summarization')
         // Summarize after threshold is reached
         const conversationText = chatHistory.map((msg: BaseMessage) => formatMessage(msg)).join('\n')
-        debug('Conversation to summarize:', conversationText)
-
         const summary = await this.summarizer.invoke(conversationText)
-        debug('Generated summary:', summary)
 
         // Clear old messages and add summary as system message
         await this.clear()
@@ -128,7 +112,6 @@ class EnhancedBufferMemory extends BufferMemory {
           { input: new SystemMessage(summary) },
           { output: new AIMessage('Summary processed and saved to memory') },
         )
-        debug('Saved summary to memory')
       }
     } catch (error) {
       console.error('Error in saveContext:', error)
@@ -137,14 +120,7 @@ class EnhancedBufferMemory extends BufferMemory {
   }
 
   async loadMemoryVariables(inputs: any): Promise<{ [key: string]: any }> {
-    const variables = await super.loadMemoryVariables(inputs)
-    debug(`Loading memory variables for session ${this.sessionId}:`, {
-      history: variables.chat_history?.map((msg: BaseMessage) => ({
-        role: msg instanceof HumanMessage ? 'user' : msg instanceof AIMessage ? 'assistant' : 'system',
-        content: msg.content,
-      })),
-    })
-    return variables
+    return super.loadMemoryVariables(inputs)
   }
 }
 
@@ -160,7 +136,6 @@ const createResponseGenerator = (response: string) => {
 export async function POST(req: Request) {
   try {
     const { message, modelName, temperature = 0.5, sessionId } = await req.json()
-    debug('Received request:', { message, modelName, temperature, sessionId })
 
     if (!message || !modelName || !sessionId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -171,7 +146,6 @@ export async function POST(req: Request) {
     // Get or create memory for this session
     let memory = memoryStorage.get(sessionId)
     if (!memory) {
-      debug('Creating new memory for session:', sessionId)
       memory = new EnhancedBufferMemory(
         model,
         {
@@ -183,18 +157,7 @@ export async function POST(req: Request) {
         sessionId,
       )
       memoryStorage.set(sessionId, memory)
-    } else {
-      debug('Found existing memory for session:', sessionId)
     }
-
-    // Load current chat history
-    const currentHistory = await memory.loadMemoryVariables({})
-    debug('Current chat history:', {
-      messages: currentHistory.chat_history?.map((msg: BaseMessage) => ({
-        role: msg instanceof HumanMessage ? 'user' : msg instanceof AIMessage ? 'assistant' : 'system',
-        content: msg.content,
-      })),
-    })
 
     const chain = RunnableSequence.from([
       {
@@ -216,9 +179,7 @@ export async function POST(req: Request) {
 
     while (attempts < maxAttempts) {
       try {
-        debug(`Attempt ${attempts + 1} to generate response`)
         response = await chain.invoke({ message })
-        debug('Generated response:', response)
         break
       } catch (error) {
         attempts++
@@ -234,17 +195,7 @@ export async function POST(req: Request) {
     }
 
     // Save the interaction to memory with the actual response
-    debug('Saving interaction to memory')
     await memory.saveContext({ input: message }, { output: response })
-
-    // Log memory state after saving
-    const updatedHistory = await memory.loadMemoryVariables({})
-    debug('Updated chat history:', {
-      messages: updatedHistory.chat_history?.map((msg: BaseMessage) => ({
-        role: msg instanceof HumanMessage ? 'user' : msg instanceof AIMessage ? 'assistant' : 'system',
-        content: msg.content,
-      })),
-    })
 
     return createStreamingResponse(createResponseGenerator(response)())
   } catch (error) {
