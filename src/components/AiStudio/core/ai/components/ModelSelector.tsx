@@ -61,6 +61,11 @@ export const LLM_MODELS = [
     description: 'Excellent for technical and scientific writing',
   },
   {
+    id: 'accounts/fireworks/models/deepseek-r1',
+    name: 'Deepseek R1',
+    description: 'Advanced reasoning and analytical capabilities for complex tasks',
+  },
+  {
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
     name: 'Qwen-2.5-72b',
     description: 'Expert at multilingual content and cultural adaptation',
