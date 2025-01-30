@@ -61,6 +61,8 @@ export async function POST(req: Request) {
         percentage: (input: any) => input.percentage,
         currentLength: (input: any) => input.text.length,
         targetLength: (input: any) => Math.round(input.text.length * (1 + input.percentage / 100)),
+        direction: (input: any) => (input.percentage > 0 ? 'increase' : 'decrease'),
+        difference: (input: any) => Math.abs(Math.round(input.text.length * (input.percentage / 100))),
       },
       AdjustLengthPrompt,
       model,
