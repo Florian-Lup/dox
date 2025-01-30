@@ -3,6 +3,7 @@ import { ArrowUp, Loader2, XCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import * as Popover from '@radix-ui/react-popover'
 import { Button } from '@/components/ui/Button'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -14,19 +15,29 @@ interface ChatInputProps {
 export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: ChatInputProps) => {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
-  const adjustHeight = () => {
+  const adjustHeight = useCallback(() => {
     const textarea = textareaRef.current
     if (textarea) {
       textarea.style.height = 'auto'
-      const newHeight = Math.min(textarea.scrollHeight, 200) // Max height of 200px
-      textarea.style.height = `${Math.max(50, newHeight)}px` // Min height of 50px
+      // Adjust max height based on device
+      const maxHeight = isMobile ? 120 : 200
+      const newHeight = Math.min(textarea.scrollHeight, maxHeight)
+      textarea.style.height = `${Math.max(44, newHeight)}px` // Slightly smaller min height on mobile
     }
-  }
+  }, [isMobile])
 
   useEffect(() => {
     adjustHeight()
-  }, [message])
+  }, [message, isMobile, adjustHeight])
+
+  // Focus the textarea when the component mounts on desktop
+  useEffect(() => {
+    if (!isMobile && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [isMobile])
 
   const handleSend = useCallback(() => {
     if (!message.trim() || isLoading) return
@@ -34,22 +45,33 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
     setMessage('')
     // Reset height after sending
     if (textareaRef.current) {
-      textareaRef.current.style.height = '50px'
+      textareaRef.current.style.height = isMobile ? '44px' : '50px'
+      textareaRef.current.focus()
     }
-  }, [message, isLoading, onSend])
+  }, [message, isLoading, onSend, isMobile])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      // Only use Enter to send on desktop
+      if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
         e.preventDefault()
         handleSend()
       }
     },
-    [handleSend],
+    [handleSend, isMobile],
   )
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value)
+  }, [])
+
+  // Handle touch events for better mobile interaction
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'scale(0.95)'
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.transform = 'scale(1)'
   }, [])
 
   return (
@@ -98,22 +120,30 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
         </Popover.Root>
       )}
 
-      <div className="p-2 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-        <div className="bg-neutral-100 dark:bg-neutral-800 rounded-[4px] overflow-hidden">
+      <div
+        className={cn(
+          'p-2 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900',
+          'sticky bottom-0',
+        )}
+      >
+        <div className={cn('bg-neutral-100 dark:bg-neutral-800 rounded-[4px] overflow-hidden', 'shadow-sm')}>
           <textarea
             ref={textareaRef}
             value={message}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
+            placeholder={isMobile ? 'Type message...' : 'Type your message...'}
             className={cn(
-              'w-full p-3 text-sm',
+              'w-full p-3',
+              'text-[16px] leading-[1.3]', // Ensure 16px font size to prevent zoom
               'bg-transparent',
               'border-none',
               'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
               'focus:outline-none',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               'resize-none break-all overflow-x-hidden transition-[height]',
+              'md:text-sm md:leading-normal', // Smaller text on desktop
+              'touch-manipulation', // Improves touch response
             )}
             disabled={isLoading}
           />
@@ -121,11 +151,13 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
             <div className="flex items-center gap-2">{/* Space for future buttons */}</div>
             <button
               onClick={handleSend}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
               disabled={!message.trim() || isLoading}
               className={cn(
                 'flex items-center justify-center',
                 'rounded-full',
-                'w-8 h-8',
+                'w-10 h-10 md:w-8 md:h-8', // Larger touch target on mobile
                 'bg-blue-500',
                 'enabled:hover:bg-blue-600',
                 'enabled:active:bg-blue-700',
@@ -135,10 +167,15 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
                 'transform enabled:hover:scale-105 enabled:active:scale-95',
                 'text-white disabled:text-neutral-400',
                 'shadow-sm enabled:hover:shadow-md',
+                'touch-manipulation', // Improves touch response
               )}
               aria-label="Send message"
             >
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 md:w-4 md:h-4 animate-spin" />
+              ) : (
+                <ArrowUp className="w-5 h-5 md:w-4 md:h-4" />
+              )}
             </button>
           </div>
         </div>
