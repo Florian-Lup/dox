@@ -1,6 +1,6 @@
 export const userNames = [
   'Happy Hamster',
-  'Sleepy Sloth',
+  'Sleepy Dog',
   'Dancing Duck',
   'Jumping Jaguar',
   'Friendly Fox',
@@ -13,18 +13,19 @@ export const userNames = [
   'Smart Snake',
   'Gentle Giraffe',
   'Swift Swallow',
-  'Noisy Newt',
+  'Noisy Monkey',
   'Wild Wolf',
   'Pretty Peacock',
   'Dashing Deer',
   'Jolly Jellyfish',
   'Lucky Lemur',
   'Silly Seal',
+
   'Wise Walrus',
   'Shy Sheep',
   'Brave Bear',
   'Proud Penguin',
-  'Peaceful Platypus',
+  'Peaceful Moose',
   'Great Gorilla',
 ]
 
