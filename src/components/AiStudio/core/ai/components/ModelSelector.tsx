@@ -70,6 +70,11 @@ export const LLM_MODELS = [
     name: 'Qwen-2.5-72b',
     description: 'Expert at multilingual content and cultural adaptation',
   },
+  {
+    id: 'accounts/fireworks/models/qwen-qwq-32b-preview',
+    name: 'Qwen-QWQ-32b',
+    description: 'Expert at multilingual content and cultural adaptation',
+  },
 ] as const
 
 export type LLMModel = (typeof LLM_MODELS)[number]

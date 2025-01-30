@@ -25,6 +25,7 @@ import { IntentPicker } from './components/IntentPicker'
 import { TonePicker } from './components/TonePicker'
 import { DomainSlider } from './components/DomainSlider'
 import { cn } from '@/lib/utils'
+import { LLM_MODELS } from '../../core/ai/components/ModelSelector'
 
 const QUICK_ACTIONS = [
   {
@@ -33,6 +34,10 @@ const QUICK_ACTIONS = [
     color: 'text-blue-500',
     label: 'Fix Grammar',
     description: 'Correct grammar, punctuation and spelling',
+    modelRecommendation: {
+      model: 'Gemini-1.5-pro',
+      temperature: 0.1,
+    },
   },
   {
     id: 'translate',
@@ -40,6 +45,10 @@ const QUICK_ACTIONS = [
     color: 'text-green-500',
     label: 'Translate',
     description: 'Translate text to another language',
+    modelRecommendation: {
+      model: 'Gemini-1.5-pro',
+      temperature: 0.3,
+    },
   },
   {
     id: 'localization',
@@ -47,6 +56,10 @@ const QUICK_ACTIONS = [
     color: 'text-rose-500',
     label: 'Localization',
     description: 'Adapt content for specific regions and cultures',
+    modelRecommendation: {
+      model: 'Qwen-QWQ-32b',
+      temperature: 0.7,
+    },
   },
   {
     id: 'readability',
@@ -54,6 +67,10 @@ const QUICK_ACTIONS = [
     color: 'text-purple-500',
     label: 'Improve Clarity',
     description: 'Enhance sentence flow and refine word choice',
+    modelRecommendation: {
+      model: 'Claude-3.5-haiku',
+      temperature: 0.4,
+    },
   },
   {
     id: 'length',
@@ -61,6 +78,10 @@ const QUICK_ACTIONS = [
     color: 'text-amber-500',
     label: 'Adjust Length',
     description: 'Expand and condense text while preserving key information',
+    modelRecommendation: {
+      model: 'Gemini-1.5-flash',
+      temperature: 0.5,
+    },
   },
   {
     id: 'readingLevel',
@@ -68,6 +89,10 @@ const QUICK_ACTIONS = [
     color: 'text-emerald-500',
     label: 'Reading Level',
     description: 'Analyze and adjust text complexity',
+    modelRecommendation: {
+      model: 'Claude-3.5-sonnet',
+      temperature: 0.3,
+    },
   },
   {
     id: 'audience',
@@ -75,6 +100,10 @@ const QUICK_ACTIONS = [
     color: 'text-indigo-500',
     label: 'Target Audience',
     description: 'Adapt text for a specific audience or expertise level',
+    modelRecommendation: {
+      model: 'GPT-4o',
+      temperature: 0.6,
+    },
   },
   {
     id: 'tone',
@@ -82,6 +111,10 @@ const QUICK_ACTIONS = [
     color: 'text-yellow-500',
     label: 'Tone',
     description: 'Adjust emotional tone (friendly, formal, enthusiastic)',
+    modelRecommendation: {
+      model: 'Grok-2',
+      temperature: 0.8,
+    },
   },
   {
     id: 'intent',
@@ -89,6 +122,10 @@ const QUICK_ACTIONS = [
     color: 'text-red-500',
     label: 'Intent',
     description: 'Optimize text for specific purpose (persuade, inform, engage)',
+    modelRecommendation: {
+      model: 'GPT-4o',
+      temperature: 0.7,
+    },
   },
   {
     id: 'domain',
@@ -96,6 +133,10 @@ const QUICK_ACTIONS = [
     color: 'text-pink-500',
     label: 'Domain',
     description: 'Modify writing domain (academic, business, technical)',
+    modelRecommendation: {
+      model: 'Deepseek-v3',
+      temperature: 0.5,
+    },
   },
   {
     id: 'summarize',
@@ -103,6 +144,10 @@ const QUICK_ACTIONS = [
     color: 'text-lime-500',
     label: 'Summarize',
     description: 'Generate key points and condensed versions of text',
+    modelRecommendation: {
+      model: 'Mistral Small',
+      temperature: 0.3,
+    },
   },
   {
     id: 'structure',
@@ -110,6 +155,10 @@ const QUICK_ACTIONS = [
     color: 'text-teal-500',
     label: 'Structure (coming soon)',
     description: 'Organize content hierarchically with headings, paragraphs, and list layouts.',
+    modelRecommendation: {
+      model: 'Llama 3.3-70b',
+      temperature: 0.4,
+    },
   },
   {
     id: 'plagiarism',
@@ -117,10 +166,21 @@ const QUICK_ACTIONS = [
     color: 'text-sky-500',
     label: 'Plagiarism Check (coming soon)',
     description: 'Check for content originality and citations',
+    modelRecommendation: {
+      model: 'Deepseek R1',
+      temperature: 0.1,
+    },
   },
 ] as const
 
-type QuickActionType = (typeof QUICK_ACTIONS)[number]
+type ModelRecommendation = {
+  model: (typeof LLM_MODELS)[number]['name']
+  temperature: number
+}
+
+type QuickActionType = (typeof QUICK_ACTIONS)[number] & {
+  modelRecommendation: ModelRecommendation
+}
 
 interface QuickActionsProps {
   onActionSelect?: (action: QuickActionType, data?: any) => void
@@ -304,6 +364,14 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
             <div className="text-sm font-medium text-neutral-900 dark:text-white truncate">{action.label}</div>
             <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate leading-4">
               {action.description}
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300">
+                {action.modelRecommendation.model}
+              </span>
+              <span className="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-900/30 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+                temp: {action.modelRecommendation.temperature}
+              </span>
             </div>
           </div>
         </Button>
