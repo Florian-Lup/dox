@@ -167,7 +167,7 @@ const QUICK_ACTIONS = [
     label: 'Plagiarism Check (coming soon)',
     description: 'Check for content originality and citations',
     modelRecommendation: {
-      model: 'Deepseek R1',
+      model: 'Deepseek-v3',
       temperature: 0.1,
     },
   },

@@ -1,5 +1,5 @@
-import { ChevronDown, Cpu, X } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { Cpu, X } from 'lucide-react'
+import { useCallback } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 
@@ -59,11 +59,6 @@ export const LLM_MODELS = [
     id: 'accounts/fireworks/models/deepseek-v3',
     name: 'Deepseek-v3',
     description: 'Excellent for technical and scientific writing',
-  },
-  {
-    id: 'accounts/fireworks/models/deepseek-r1',
-    name: 'Deepseek R1',
-    description: 'Advanced reasoning and analytical capabilities for complex tasks',
   },
   {
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
