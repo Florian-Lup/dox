@@ -366,10 +366,13 @@ export const QuickActions = ({ onActionSelect, processingAction }: QuickActionsP
               {action.description}
             </div>
             <div className="mt-1 flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                Suggested:
+              </span>
               <span className="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300">
                 {action.modelRecommendation.model}
               </span>
-              <span className="inline-flex items-center rounded-md bg-gray-50 dark:bg-gray-900/30 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400">
+              <span className="inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-700 px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300">
                 temp: {action.modelRecommendation.temperature}
               </span>
             </div>
