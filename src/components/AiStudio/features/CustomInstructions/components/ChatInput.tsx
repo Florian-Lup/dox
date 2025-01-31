@@ -133,6 +133,9 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder={isMobile ? 'Type message...' : 'Type your message...'}
+            spellCheck={false}
+            autoCorrect="off"
+            autoCapitalize="off"
             className={cn(
               'w-full p-3',
               'text-[16px] leading-[1.3]', // Ensure 16px font size to prevent zoom
@@ -141,7 +144,7 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
               'placeholder:text-neutral-500 dark:placeholder:text-neutral-400',
               'focus:outline-none',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              'resize-none break-all overflow-x-hidden transition-[height]',
+              'resize-none break-words overflow-x-hidden transition-[height]',
               'md:text-sm md:leading-normal', // Smaller text on desktop
               'touch-manipulation', // Improves touch response
             )}
