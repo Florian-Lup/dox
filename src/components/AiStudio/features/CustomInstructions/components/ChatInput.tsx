@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { ArrowUp, Loader2, XCircle } from 'lucide-react'
+import { ArrowUp, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import * as Popover from '@radix-ui/react-popover'
 import { Button } from '@/components/ui/Button'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
@@ -9,10 +8,9 @@ interface ChatInputProps {
   onSend: (message: string) => void
   onClear: () => void
   isLoading: boolean
-  onStopGenerating?: () => void
 }
 
-export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: ChatInputProps) => {
+export const ChatInput = ({ onSend, onClear, isLoading }: ChatInputProps) => {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const isMobile = useMediaQuery('(max-width: 768px)')
@@ -76,50 +74,6 @@ export const ChatInput = ({ onSend, onClear, isLoading, onStopGenerating }: Chat
 
   return (
     <div className="flex flex-col">
-      {/* Stop Generation Popover */}
-      {isLoading && onStopGenerating && (
-        <Popover.Root defaultOpen={true}>
-          <Popover.Trigger asChild>
-            <div className="h-0 flex justify-center">
-              <div className="w-1 h-1 -translate-y-2" />
-            </div>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              side="top"
-              align="center"
-              sideOffset={8}
-              className={cn(
-                'z-50 rounded-lg shadow-lg',
-                'bg-white dark:bg-neutral-900',
-                'border border-neutral-200 dark:border-neutral-800',
-                'animate-in fade-in-0 zoom-in-95',
-                'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-                'data-[side=top]:slide-in-from-bottom-2',
-              )}
-            >
-              <div className="p-2">
-                <Button
-                  variant="ghost"
-                  buttonSize="small"
-                  onClick={onStopGenerating}
-                  className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5',
-                    'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300',
-                    'hover:bg-neutral-100 dark:hover:bg-neutral-800',
-                    'rounded-md transition-colors',
-                  )}
-                >
-                  <XCircle className="w-4 h-4" />
-                  <span className="text-sm font-medium">Stop generating</span>
-                </Button>
-              </div>
-              <Popover.Arrow className="fill-white dark:fill-neutral-900" />
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
-      )}
-
       <div
         className={cn(
           'p-2 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900',
